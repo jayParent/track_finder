@@ -1,0 +1,38 @@
+body{
+    background: rgb(55, 63, 63);
+}
+
+#main_window{
+    background-color: lightgray;
+    height: 90vh;
+}
+
+#gh_logo{
+    font-size: 2rem;
+}
+
+.scrollableBody thead,
+tbody tr{
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+#top_tracks_table_body{
+    display: block;
+    overflow-y: scroll;
+    max-height: 60vh;
+}
+
+.trackTitle{
+    cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+    #gh_logo{
+        display: none;
+    }
+    #main_window{
+        height: 100vh;
+    }
+  }

@@ -22,17 +22,17 @@ app.listen(port, function () {
  * @param  {number} length The length of the string
  * @return {string} The generated string
  */
-var generateRandomString = function (length) {
-  var text = "";
-  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+let generateRandomString = function (length) {
+  let text = "";
+  let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-  for (var i = 0; i < length; i++) {
+  for (let i = 0; i < length; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   }
   return text;
 };
 
-var stateKey = "spotify_auth_state";
+let stateKey = "spotify_auth_state";
 
 app
   .use(cookieParser())
@@ -44,10 +44,10 @@ app.get("/", function (req, res) {
 });
 
 app.get("/login", function (req, res) {
-  var state = generateRandomString(16);
+  let state = generateRandomString(16);
   res.cookie(stateKey, state);
 
-  var scope = "user-read-private user-read-email";
+  let scope = "user-top-read";
   res.redirect(
     "https://accounts.spotify.com/authorize?" +
       querystring.stringify({
@@ -61,9 +61,9 @@ app.get("/login", function (req, res) {
 });
 
 app.get("/callback", function (req, res) {
-  var code = req.query.code || null;
-  var state = req.query.state || null;
-  var storedState = req.cookies ? req.cookies[stateKey] : null;
+  let code = req.query.code || null;
+  let state = req.query.state || null;
+  let storedState = req.cookies ? req.cookies[stateKey] : null;
 
   if (state === null || state !== storedState) {
     res.redirect(
@@ -74,7 +74,7 @@ app.get("/callback", function (req, res) {
     );
   } else {
     res.clearCookie(stateKey);
-    var authOptions = {
+    let authOptions = {
       url: "https://accounts.spotify.com/api/token",
       form: {
         code: code,
@@ -89,7 +89,26 @@ app.get("/callback", function (req, res) {
 
     request.post(authOptions, function (error, response, body) {
       if (!error && response.statusCode === 200) {
-        getUserInfo(body, res);
+        let access_token = body.access_token,
+          refresh_token = body.refresh_token;
+
+        // Get user profile
+        let options = {
+          url: "https://api.spotify.com/v1/me",
+          headers: { Authorization: "Bearer " + access_token },
+          json: true,
+        };
+        fetch(options.url, { headers: options.headers })
+          .then((res) => res.json())
+          .catch((err) => console.log(err));
+        res.redirect(
+          "/user?" +
+            querystring.stringify({
+              access_token: access_token,
+              refresh_token: refresh_token
+            })
+        );
+
       } else {
         res.redirect(
           "/#" +
@@ -101,21 +120,19 @@ app.get("/callback", function (req, res) {
     });
   }
 });
-function getUserInfo(body, res) {
-    var access_token = body.access_token, refresh_token = body.refresh_token;
-    var options = {
-        url: "https://api.spotify.com/v1/me",
-        headers: { Authorization: "Bearer " + access_token },
-        json: true,
-    };
-    fetch(options.url, { headers: options.headers })
-        .then((res) => res.json())
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
-    res.redirect("/#" +
-        querystring.stringify({
-            access_token: access_token,
-            refresh_token: refresh_token,
-        }));
-}
 
+app.get("/?:access_token", function (req, res) {
+  let access_token = req.query.access_token,
+    refresh_token = req.query.refresh_token;
+  // Get top tracks
+  let options = {
+    url: "https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=50&offset=0",
+    headers: { Authorization: "Bearer " + access_token },
+    json: true,
+  };
+  fetch(options.url, { headers: options.headers })
+    .then((res) => res.json())
+    .then((res) => data = res)
+    .catch((err) => console.log(err));
+  res.render("main", { tracks: data });
+});
