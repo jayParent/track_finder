@@ -47,7 +47,7 @@ app.get("/login", function (req, res) {
   let state = generateRandomString(16);
   res.cookie(stateKey, state);
 
-  let scope = "user-top-read";
+  let scope = "user-read-email user-read-private user-top-read";
   res.redirect(
     "https://accounts.spotify.com/authorize?" +
       querystring.stringify({
@@ -133,6 +133,40 @@ app.get("/?:access_token", function (req, res) {
   fetch(options.url, { headers: options.headers })
     .then((res) => res.json())
     .then((res) => data = res)
+    .then(function(){
+      res.render("main", { tracks: data, access_token: access_token });
+    })
     .catch((err) => console.log(err));
-  res.render("main", { tracks: data });
+  
+});
+
+app.get("/chosen_tracks/:access_token/:trackIds", function (req, res) {
+  // Get audio features for picked tracks
+  let access_token = req.params.access_token,
+    refresh_token = req.query.refresh_token;
+  let trackIds = req.params.trackIds;
+  let options = {
+    url: "https://api.spotify.com/v1/audio-features/?ids=" + trackIds,
+    headers: { Authorization: "Bearer " + access_token },
+    json: true,
+  };
+  fetch(options.url, { headers: options.headers })
+    .then((res) => res.json())
+    .then((res) => (data = res))
+    .then(function () {
+      // Get track titles
+      let options = {
+        url: "https://api.spotify.com/v1/tracks/?ids=" + trackIds,
+        headers: { Authorization: "Bearer " + access_token },
+        json: true,
+      };
+      fetch(options.url, { headers: options.headers })
+        .then((res) => res.json())
+        .then((res) => (titles = res))
+        .then(function () {
+          res.render("features", { tracks: data, titles: titles, access_token: access_token });
+        })
+        .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));
 });

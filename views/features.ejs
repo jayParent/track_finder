@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Track Finder</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" />
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css"
+        rel="stylesheet" />
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.15.0/css/mdb.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <a href="https://github.com/jayParent/track_finder" target="_blank"><i
+                        class="fab fa-github text-dark mt-3 ml-1" aria-hidden="true" id="gh_logo"></i></a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col mx-auto">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col mx-auto text-center">
+                            <h1>Audio Features for picked tracks</h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-8 mx-auto text-center">
+                            <table class="table table-sm table-striped table-dark">
+                                <thead>
+                                    <tr>
+                                        <th>Track</th>
+                                        <th>Acousticness</th>
+                                        <th>Danceability</th>
+                                        <th>Energy</th>
+                                        <th>Instrumentalness</th>
+                                        <th>Liveness</th>
+                                        <th>Loudness</th>
+                                        <th>Speechiness</th>
+                                        <th>Valence</th>
+                                        <th>Tempo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% for(var i = 0; i < tracks.audio_features.length; i++){ %>
+                                        <tr>
+                                            <td><%= titles.tracks[i].name %></td>
+                                            <td class="acousticness"><%= tracks.audio_features[i].acousticness %></td>
+                                            <td class="danceability"><%= tracks.audio_features[i].danceability %></td>
+                                            <td><%= tracks.audio_features[i].energy %></td>
+                                            <td><%= tracks.audio_features[i].instrumentalness %></td>
+                                            <td><%= tracks.audio_features[i].liveness %></td>
+                                            <td><%= tracks.audio_features[i].loudness %></td>
+                                            <td><%= tracks.audio_features[i].speechiness %></td>
+                                            <td><%= tracks.audio_features[i].valence %></td>
+                                            <td><%= tracks.audio_features[i].tempo %></td>
+                                        </tr>       
+                                    <% } %>
+                                    <tr>
+                                        <td>Average</td>
+                                        <td id="avg_acousticness"></td>
+                                        <td id="avg_danceability"></td>
+                                        <td id="avg_energy"></td>
+                                        <td id="avg_instrumentalness"></td>
+                                        <td id="avg_liveness"></td>
+                                        <td id="avg_loudness"></td>
+                                        <td id="avg_speechiness"></td>
+                                        <td id="avg_valence"></td>
+                                        <td id="avg_tempo"></td>
+                                    </tr>                            
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col text-center">
+                            <a href="" class="btn btn-outline-elegant font-weight-bold" id="next_btn">Next</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+<script>
+    // Calculate average audio features for picked tracks
+
+    window.onload = function () {
+        let acousticnessObj = document.getElementsByClassName("acousticness");
+        let danceabilityObj = document.getElementsByClassName("danceability");
+        let acousticnessTotal = 0, danceabilityTotal = 0;
+
+        for (i = 0; i < acousticnessObj.length; i++) {
+            var value = parseFloat(acousticnessObj[i].textContent);
+            acousticnessTotal += value;
+            value = parseFloat(danceabilityObj[i].textContent);
+            danceabilityTotal += value;
+        }
+
+        document.getElementById("avg_acousticness").innerHTML = acousticnessTotal.toPrecision(3);
+        document.getElementById("avg_danceability").innerHTML = danceabilityTotal.toPrecision(3);
+    };
+</script>
+</body>
+
+</html>
