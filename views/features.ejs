@@ -37,7 +37,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xl-8 mx-auto text-center">
-                            <table class="table table-sm table-striped table-dark">
+                            <table class="table table-responsive-sm table-sm table-striped table-dark">
                                 <thead>
                                     <tr>
                                         <th>Track</th>
@@ -54,20 +54,26 @@
                                 </thead>
                                 <tbody>
                                     <% for(var i = 0; i < tracks.audio_features.length; i++){ %>
-                                        <tr>
-                                            <td><%= titles.tracks[i].name %></td>
-                                            <td class="acousticness"><%= tracks.audio_features[i].acousticness %></td>
-                                            <td class="danceability"><%= tracks.audio_features[i].danceability %></td>
-                                            <td><%= tracks.audio_features[i].energy %></td>
-                                            <td><%= tracks.audio_features[i].instrumentalness %></td>
-                                            <td><%= tracks.audio_features[i].liveness %></td>
-                                            <td><%= tracks.audio_features[i].loudness %></td>
-                                            <td><%= tracks.audio_features[i].speechiness %></td>
-                                            <td><%= tracks.audio_features[i].valence %></td>
-                                            <td><%= tracks.audio_features[i].tempo %></td>
-                                        </tr>       
+                                    <tr class="trackItem">
+                                        <td id="title<%= i %>"><%= titles.tracks[i].name %></td>
+                                        <td class="acousticness" id="a<%= i %>">
+                                            <%= tracks.audio_features[i].acousticness %></td>
+                                        <td class="danceability" id="d<%= i %>">
+                                            <%= tracks.audio_features[i].danceability %></td>
+                                        <td class="energy" id="e<%= i %>"><%= tracks.audio_features[i].energy %></td>
+                                        <td class="instrumentalness" id="ins<%= i %>">
+                                            <%= tracks.audio_features[i].instrumentalness %>
+                                        </td>
+                                        <td class="liveness" id="li<%= i %>"><%= tracks.audio_features[i].liveness %>
+                                        </td>
+                                        <td class="loudness"><%= tracks.audio_features[i].loudness %></td>
+                                        <td class="speechiness" id="s<%= i %>">
+                                            <%= tracks.audio_features[i].speechiness %></td>
+                                        <td class="valence" id="v<%= i %>"><%= tracks.audio_features[i].valence %></td>
+                                        <td class="tempo"><%= tracks.audio_features[i].tempo %></td>
+                                    </tr>
                                     <% } %>
-                                    <tr>
+                                    <tr class="bg-dark">
                                         <td>Average</td>
                                         <td id="avg_acousticness"></td>
                                         <td id="avg_danceability"></td>
@@ -78,9 +84,21 @@
                                         <td id="avg_speechiness"></td>
                                         <td id="avg_valence"></td>
                                         <td id="avg_tempo"></td>
-                                    </tr>                            
+                                    </tr>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6 mx-auto">
+                            <div class="card bg-transparent text-center my-5">
+                                <div class="card-header">
+                                    <h4 class="card-title">Audio Features</h4>
+                                </div>
+                                <div class="card-body graph-card" style="padding: 0;">
+                                    <canvas id="audio_features_linechart" class="mx-auto my-3"></canvas>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -88,30 +106,165 @@
                             <a href="" class="btn btn-outline-elegant font-weight-bold" id="next_btn">Next</a>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col">
+                            <%- include ("partials/footer") %>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     </div>
-<script>
-    // Calculate average audio features for picked tracks
+    <script>
+        // Calculate average audio features for picked tracks
+        function calcAvgAudioFeatures() {
+            let acousticnessObj = document.getElementsByClassName("acousticness"),
+                danceabilityObj = document.getElementsByClassName("danceability"),
+                energyObj = document.getElementsByClassName("energy"),
+                instrumentalnessObj = document.getElementsByClassName("instrumentalness"),
+                livenessObj = document.getElementsByClassName("liveness"),
+                loudnessObj = document.getElementsByClassName("loudness"),
+                speechinessObj = document.getElementsByClassName("speechiness"),
+                valenceObj = document.getElementsByClassName("valence"),
+                tempoObj = document.getElementsByClassName("tempo");
 
-    window.onload = function () {
-        let acousticnessObj = document.getElementsByClassName("acousticness");
-        let danceabilityObj = document.getElementsByClassName("danceability");
-        let acousticnessTotal = 0, danceabilityTotal = 0;
+            let audioFeaturesAvg = { a: 0, d: 0, e: 0, ins: 0, li: 0, lo: 0, s: 0, v: 0, t: 0 }
 
-        for (i = 0; i < acousticnessObj.length; i++) {
-            var value = parseFloat(acousticnessObj[i].textContent);
-            acousticnessTotal += value;
-            value = parseFloat(danceabilityObj[i].textContent);
-            danceabilityTotal += value;
+            for (var i = 0; i < acousticnessObj.length; i++) {
+                var value = parseFloat(acousticnessObj[i].textContent);
+                audioFeaturesAvg.a += value;
+                value = parseFloat(danceabilityObj[i].textContent);
+                audioFeaturesAvg.d += value;
+                value = parseFloat(energyObj[i].textContent);
+                audioFeaturesAvg.e += value;
+                value = parseFloat(instrumentalnessObj[i].textContent);
+                audioFeaturesAvg.ins += value;
+                value = parseFloat(livenessObj[i].textContent);
+                audioFeaturesAvg.li += value;
+                value = parseFloat(loudnessObj[i].textContent);
+                audioFeaturesAvg.lo += value;
+                value = parseFloat(speechinessObj[i].textContent);
+                audioFeaturesAvg.s += value;
+                value = parseFloat(valenceObj[i].textContent);
+                audioFeaturesAvg.v += value;
+                value = parseFloat(tempoObj[i].textContent);
+                audioFeaturesAvg.t += value;
+            }
+            audioFeaturesAvg.a /= acousticnessObj.length;
+            audioFeaturesAvg.d /= danceabilityObj.length;
+            audioFeaturesAvg.e /= energyObj.length;
+            audioFeaturesAvg.ins /= instrumentalnessObj.length;
+            audioFeaturesAvg.li /= livenessObj.length;
+            audioFeaturesAvg.lo /= loudnessObj.length;
+            audioFeaturesAvg.s /= speechinessObj.length;
+            audioFeaturesAvg.v /= valenceObj.length;
+            audioFeaturesAvg.t /= tempoObj.length;
+
+            return audioFeaturesAvg;
+        };
+
+        let audioFeaturesAvg = calcAvgAudioFeatures();
+        document.getElementById("avg_acousticness").textContent = audioFeaturesAvg.a.toPrecision(3);
+        document.getElementById("avg_danceability").textContent = audioFeaturesAvg.d.toPrecision(3);
+        document.getElementById("avg_energy").textContent = audioFeaturesAvg.e.toPrecision(3);
+        document.getElementById("avg_instrumentalness").textContent = audioFeaturesAvg.ins.toPrecision(3);
+        document.getElementById("avg_liveness").textContent = audioFeaturesAvg.li.toPrecision(3);
+        document.getElementById("avg_loudness").textContent = audioFeaturesAvg.lo.toPrecision(3);
+        document.getElementById("avg_speechiness").textContent = audioFeaturesAvg.s.toPrecision(3);
+        document.getElementById("avg_valence").textContent = audioFeaturesAvg.v.toPrecision(3);
+        document.getElementById("avg_tempo").textContent = audioFeaturesAvg.t.toPrecision(3);
+
+        let a = document.getElementById("avg_acousticness").textContent,
+            d = document.getElementById("avg_danceability").textContent,
+            e = document.getElementById("avg_energy").textContent,
+            ins = document.getElementById("avg_instrumentalness").textContent,
+            li = document.getElementById("avg_liveness").textContent,
+            lo = document.getElementById("avg_loudness").textContent,
+            s = document.getElementById("avg_speechiness").textContent,
+            v = document.getElementById("avg_valence").textContent,
+            t = document.getElementById("avg_tempo").textContent;
+
+        // Audio features Line Chart
+        var ctxL_audio = document.getElementById("audio_features_linechart").getContext("2d");
+        var myLineChart = new Chart(ctxL_audio, {
+            type: "line",
+            data: {
+                labels: [
+                    "Acousticness",
+                    "Danceability",
+                    "Energy",
+                    "Instrumentalness",
+                    "Liveness",
+                    "Speechiness",
+                    "Valence",
+                ],
+                datasets: [
+                    {
+                        label: "Average",
+                        data: [
+                            a,
+                            d,
+                            e,
+                            ins,
+                            li,
+                            s,
+                            v,
+                        ],
+                        borderColor: ["rgba(0, 0, 0)"],
+                        backgroundColor: "rgba(255, 255, 255, 0)",
+                        borderWidth: 2,
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: 0,
+                            max: 1
+                        }
+                    }]
+                },
+                layout: {
+                    padding: {
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 0
+                    }
+                }
+            },
+        });
+
+        window.onload = function () {
+            let trackItems = document.getElementsByClassName("trackItem");
+            for (var i = 0; i < trackItems.length; i++) {
+                let borderColors = ["rgb(170, 11, 181)", "rbg(255, 230, 14)", "rgb(224, 125, 0)", "rgb(13, 19, 126)", "rgb(0, 97, 50)"];
+                trackItems[i].style.backgroundColor = borderColors[i];
+
+                let title = document.getElementById("title" + i).textContent,
+                    a = document.getElementById("a" + i).textContent,
+                    d = document.getElementById("d" + i).textContent,
+                    e = document.getElementById("e" + i).textContent,
+                    ins = document.getElementById("ins" + i).textContent,
+                    li = document.getElementById("li" + i).textContent,
+                    s = document.getElementById("s" + i).textContent,
+                    v = document.getElementById("v" + i).textContent;
+                myLineChart.data.datasets.push({
+                    label: title,
+                    borderColor: borderColors[i],
+                    backgroundColor: "rgba(255, 255, 255, 0)",
+                    borderWidth: 2,
+                    data: [a, d, e, ins, li, s, v]
+                });
+                myLineChart.update();
+            }
         }
 
-        document.getElementById("avg_acousticness").innerHTML = acousticnessTotal.toPrecision(3);
-        document.getElementById("avg_danceability").innerHTML = danceabilityTotal.toPrecision(3);
-    };
-</script>
+
+    </script>
 </body>
 
 </html>

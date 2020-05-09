@@ -28,6 +28,10 @@ tbody tr{
     cursor: pointer;
 }
 
+.graph-card{
+    padding: 0 !important;
+}
+
 @media screen and (max-width: 600px) {
     #gh_logo{
         display: none;
