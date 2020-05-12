@@ -31,13 +31,8 @@
             <div class="col mx-auto">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col mx-auto text-center">
-                            <h1>Audio Features for picked tracks</h1>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-xl-8 mx-auto text-center">
-                            <table class="table table-responsive-sm table-sm table-striped table-dark">
+                            <table class="table table-responsive-sm table-sm table-dark my-3">
                                 <thead>
                                     <tr>
                                         <th>Track</th>
@@ -90,19 +85,65 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xl-6 mx-auto">
-                            <div class="card bg-transparent text-center my-5">
+                        <div class="col-xl-8 mx-auto">
+                            <div class="card bg-dark text-white text-center my-3">
                                 <div class="card-header">
                                     <h4 class="card-title">Audio Features</h4>
+                                    <h6>Click on a track to hide it</h6>
                                 </div>
                                 <div class="card-body graph-card" style="padding: 0;">
-                                    <canvas id="audio_features_linechart" class="mx-auto my-3"></canvas>
+                                    <canvas id="audio_features_linechart" style="min-height: 50vh;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-8 mx-auto text-center my-3">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2>Why?</h2>
+                                    <h6>What do you want the results to be based on?</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="btn-group btn-group-toggle flex-wrap" data-toggle="buttons">
+                                        <label class="btn btn-info active">
+                                            <input type="checkbox" autocomplete="off"> Acousticness
+                                        </label>
+                                        <label class="btn btn-info active">
+                                            <input type="checkbox" autocomplete="off"> Danceability
+                                        </label>
+                                        <label class="btn btn-info active">
+                                            <input type="checkbox" autocomplete="off"> Energy
+                                        </label>
+                                        <label class="btn btn-info active">
+                                            <input type="checkbox" autocomplete="off"> Instrumentalness
+                                        </label>
+                                        <label class="btn btn-info active">
+                                            <input type="checkbox" autocomplete="off"> Liveness
+                                        </label>
+                                        <label class="btn btn-info active">
+                                            <input type="checkbox" autocomplete="off"> Loudness
+                                        </label>
+                                        <label class="btn btn-info active">
+                                            <input type="checkbox" autocomplete="off"> Speechiness
+                                        </label>
+                                        <label class="btn btn-info active">
+                                            <input type="checkbox" autocomplete="off"> Valence
+                                        </label>
+                                        <label class="btn btn-info active">
+                                            <input type="checkbox" autocomplete="off" id="tempo"> Tempo
+                                        </label>
+                                    </div>
+                                    <div id="slider_container">
+                                        
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col text-center">
+                            <a class="btn btn-outline-elegant font-weight-bold" id="back_btn">Back</a>
                             <a href="" class="btn btn-outline-elegant font-weight-bold" id="next_btn">Next</a>
                         </div>
                     </div>
@@ -213,17 +254,24 @@
                         ],
                         borderColor: ["rgba(0, 0, 0)"],
                         backgroundColor: "rgba(255, 255, 255, 0)",
-                        borderWidth: 2,
+                        borderWidth: 3,
                     },
                 ],
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     yAxes: [{
                         ticks: {
                             min: 0,
-                            max: 1
+                            max: 1,
+                            fontColor: "white"
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            fontColor: "white"
                         }
                     }]
                 },
@@ -234,6 +282,11 @@
                         top: 0,
                         bottom: 0
                     }
+                },
+                legend: {
+                    labels: {
+                        fontColor: "white"
+                    }
                 }
             },
         });
@@ -241,7 +294,7 @@
         window.onload = function () {
             let trackItems = document.getElementsByClassName("trackItem");
             for (var i = 0; i < trackItems.length; i++) {
-                let borderColors = ["rgb(170, 11, 181)", "rbg(255, 230, 14)", "rgb(224, 125, 0)", "rgb(13, 19, 126)", "rgb(0, 97, 50)"];
+                let borderColors = ["rgb(106, 38, 111)", "rgb(66, 114, 19)", "rgb(124, 67, 19)", "rgb(38, 89, 106)", "rgb(124, 19, 19)"];
                 trackItems[i].style.backgroundColor = borderColors[i];
 
                 let title = document.getElementById("title" + i).textContent,
@@ -256,15 +309,66 @@
                     label: title,
                     borderColor: borderColors[i],
                     backgroundColor: "rgba(255, 255, 255, 0)",
-                    borderWidth: 2,
+                    borderWidth: 3,
                     data: [a, d, e, ins, li, s, v]
                 });
                 myLineChart.update();
             }
         }
 
+    document.getElementById("back_btn").addEventListener("click", goBack);
+    function goBack() {
+        window.history.back();
+    }
 
+    // Sliders
+
+    let checkBtns = document.getElementsByTagName("input");
+    let sliderContainer = document.getElementById("slider_container");
+
+    function setAttributes(element, attributes) {
+        for (var key in attributes) {
+            element.setAttribute(key, attributes[key]);
+        }
+    }
+
+    function createSliders(e) {
+        console.log(e.target.id);
+        for (var i = 0; i < checkBtns.length; i++) {
+            if (checkBtns[i].type === "checkbox" && checkBtns[i].checked === true) {
+                let div = document.createElement("div");
+                div.setAttribute("class", "slider-group");
+
+                let slider = document.createElement("input");
+                setAttributes(slider, {
+                    "type": "range", "class": "custom-range", "min": "0", "max": "1",
+                    "step": "0.01", "value": "0.5", "id": ""
+                });
+
+                let label = document.createElement("label");
+                label.setAttribute("for", "");
+
+                div.appendChild(slider);
+                sliderContainer.appendChild(div);
+            }
+        }
+    };
+
+    checkBtns.forEach(function (btn) {
+        btn.addEventListener("click", createSliders);
+    });
+
+    function updateSliderValue(value) {
+        document.getElementById("inputValue").value = value;
+        document.getElementById("sliderValue").value = value;
+    }
     </script>
+
+    <!-- <div class="slider-group">
+        <input type="range" class="custom-range" min="0" max="1" step="0.01" value="0.5" name="" id="sliderValue"
+        onchange="updateSliderValue(this.value);">
+        <input type="number" name="" id="inputValue" onchange="updateSliderValue(this.value);">
+    </div> -->
 </body>
 
 </html>

@@ -140,7 +140,7 @@ app.get("/?:access_token", function (req, res) {
   
 });
 
-app.get("/chosen_tracks/:access_token/:trackIds", function (req, res) {
+app.get("/features/:access_token/:trackIds", function (req, res) {
   // Get audio features for picked tracks
   let access_token = req.params.access_token,
     refresh_token = req.query.refresh_token;
@@ -168,5 +168,23 @@ app.get("/chosen_tracks/:access_token/:trackIds", function (req, res) {
         })
         .catch((err) => console.log(err));
     })
+    .catch((err) => console.log(err));
+});
+
+app.get("/recommendations/:access_token/:trackIds", function (req, res) {
+  let access_token = req.params.access_token,
+    refresh_token = req.query.refresh_token;
+  let trackIds = req.params.trackIds;
+
+  let options = {
+    url: "https://api.spotify.com/v1/audio-features/?ids=" + trackIds,
+    headers: { Authorization: "Bearer " + access_token },
+    json: true,
+  };
+
+  fetch(options.url, { headers: options.headers })
+    .then((res) => res.json())
+    .then((res) => (data = res))
+    .then(function () {})
     .catch((err) => console.log(err));
 });
