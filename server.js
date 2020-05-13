@@ -171,13 +171,13 @@ app.get("/features/:access_token/:trackIds", function (req, res) {
     .catch((err) => console.log(err));
 });
 
-app.get("/recommendations/:access_token/:trackIds", function (req, res) {
+app.get("/recommendations/:access_token/:queryString", function (req, res) {
   let access_token = req.params.access_token,
     refresh_token = req.query.refresh_token;
-  let trackIds = req.params.trackIds;
+  let queryString = req.params.queryString;
 
   let options = {
-    url: "https://api.spotify.com/v1/audio-features/?ids=" + trackIds,
+    url: "https://api.spotify.com/v1/recommendations?" + queryString,
     headers: { Authorization: "Bearer " + access_token },
     json: true,
   };
@@ -185,6 +185,12 @@ app.get("/recommendations/:access_token/:trackIds", function (req, res) {
   fetch(options.url, { headers: options.headers })
     .then((res) => res.json())
     .then((res) => (data = res))
-    .then(function () {})
+    .then(function () {
+      res.render("results", { recommendations: data });
+    })
     .catch((err) => console.log(err));
 });
+
+// TODO
+// Tempo slider range values
+// Optional target and max values

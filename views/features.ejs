@@ -107,36 +107,35 @@
                                 <div class="card-body">
                                     <div class="btn-group btn-group-toggle flex-wrap" data-toggle="buttons">
                                         <label class="btn btn-info active">
-                                            <input type="checkbox" autocomplete="off"> Acousticness
+                                            <input type="checkbox" autocomplete="off" id="Acousticness"> Acousticness
                                         </label>
                                         <label class="btn btn-info active">
-                                            <input type="checkbox" autocomplete="off"> Danceability
+                                            <input type="checkbox" autocomplete="off" id="Danceability"> Danceability
                                         </label>
                                         <label class="btn btn-info active">
-                                            <input type="checkbox" autocomplete="off"> Energy
+                                            <input type="checkbox" autocomplete="off" id="Energy"> Energy
                                         </label>
                                         <label class="btn btn-info active">
-                                            <input type="checkbox" autocomplete="off"> Instrumentalness
+                                            <input type="checkbox" autocomplete="off" id="Instrumentalness">
+                                            Instrumentalness
                                         </label>
                                         <label class="btn btn-info active">
-                                            <input type="checkbox" autocomplete="off"> Liveness
+                                            <input type="checkbox" autocomplete="off" id="Liveness"> Liveness
                                         </label>
                                         <label class="btn btn-info active">
-                                            <input type="checkbox" autocomplete="off"> Loudness
+                                            <input type="checkbox" autocomplete="off" id="Loudness"> Loudness
                                         </label>
                                         <label class="btn btn-info active">
-                                            <input type="checkbox" autocomplete="off"> Speechiness
+                                            <input type="checkbox" autocomplete="off" id="Speechiness"> Speechiness
                                         </label>
                                         <label class="btn btn-info active">
-                                            <input type="checkbox" autocomplete="off"> Valence
+                                            <input type="checkbox" autocomplete="off" id="Valence"> Valence
                                         </label>
                                         <label class="btn btn-info active">
-                                            <input type="checkbox" autocomplete="off" id="tempo"> Tempo
+                                            <input type="checkbox" autocomplete="off" id="Tempo"> Tempo
                                         </label>
                                     </div>
-                                    <div id="slider_container">
-                                        
-                                    </div>
+                                    <div id="slider_container"></div>
                                 </div>
                             </div>
                         </div>
@@ -158,6 +157,13 @@
     </div>
     </div>
     <script>
+        // Set multiple attributes at once on hmtl element
+        function setAttributes(element, attributes) {
+            for (var key in attributes) {
+                element.setAttribute(key, attributes[key]);
+            }
+        }
+
         // Calculate average audio features for picked tracks
         function calcAvgAudioFeatures() {
             let acousticnessObj = document.getElementsByClassName("acousticness"),
@@ -295,7 +301,7 @@
             let trackItems = document.getElementsByClassName("trackItem");
             for (var i = 0; i < trackItems.length; i++) {
                 let borderColors = ["rgb(106, 38, 111)", "rgb(66, 114, 19)", "rgb(124, 67, 19)", "rgb(38, 89, 106)", "rgb(124, 19, 19)"];
-                trackItems[i].style.backgroundColor = borderColors[i];
+                // trackItems[i].style.backgroundColor = borderColors[i];
 
                 let title = document.getElementById("title" + i).textContent,
                     a = document.getElementById("a" + i).textContent,
@@ -316,59 +322,125 @@
             }
         }
 
-    document.getElementById("back_btn").addEventListener("click", goBack);
-    function goBack() {
-        window.history.back();
-    }
-
-    // Sliders
-
-    let checkBtns = document.getElementsByTagName("input");
-    let sliderContainer = document.getElementById("slider_container");
-
-    function setAttributes(element, attributes) {
-        for (var key in attributes) {
-            element.setAttribute(key, attributes[key]);
+        document.getElementById("back_btn").addEventListener("click", goBack);
+        function goBack() {
+            window.history.back();
         }
-    }
 
-    function createSliders(e) {
-        console.log(e.target.id);
-        for (var i = 0; i < checkBtns.length; i++) {
-            if (checkBtns[i].type === "checkbox" && checkBtns[i].checked === true) {
-                let div = document.createElement("div");
-                div.setAttribute("class", "slider-group");
+        // Sliders
+        let checkBtns = document.getElementsByTagName("input");
+        let sliderContainer = document.getElementById("slider_container");
+        let featureData = new Object();
 
-                let slider = document.createElement("input");
-                setAttributes(slider, {
+        function createSliders(e) {
+            let id = e.target.id;
+            if (e.target.type === "checkbox" && e.target.checked === true) {
+                let container = document.createElement("div");
+                setAttributes(container, { "class": "slider-group my-3 container-fluid", "id": id + "_container" });
+
+                let row = document.createElement("div");
+                setAttributes(row, {"class": "row"});
+                let colOne = document.createElement("div");
+                setAttributes(colOne, {"class": "col-4 mx-auto"});
+                let colTwo = document.createElement("div");
+                setAttributes(colTwo, {"class": "col-4 mx-auto"});
+
+                let targetSlider = document.createElement("input");
+                setAttributes(targetSlider, {
                     "type": "range", "class": "custom-range", "min": "0", "max": "1",
-                    "step": "0.01", "value": "0.5", "id": ""
+                    "step": "0.01", "value": "0.5", "id": id + "_target", "name": "target_" + id, "oninput": "updateSliderValue(this.value, this.name);"
+                });
+                let maxSlider = document.createElement("input");
+                setAttributes(maxSlider, {
+                    "type": "range", "class": "custom-range", "min": "0", "max": "1",
+                    "step": "0.01", "value": "0.5", "id": id + "_max", "name": "max_" + id, "oninput": "updateSliderValue(this.value, this.name);"
                 });
 
-                let label = document.createElement("label");
-                label.setAttribute("for", "");
+                // let targetNumInput = document.createElement("input");
+                // setAttributes(targetNumInput, { "type": "number", "id": id + "_targetNumInput", "onchange": "updateSliderValue(this.value);" });
 
-                div.appendChild(slider);
-                sliderContainer.appendChild(div);
+                // let maxNumInput = document.createElement("input");
+                // setAttributes(maxNumInput, { "type": "number", "id": id + "_maxNumInput", "onchange": "updateSliderValue(this.value);" });
+
+                let targetNumDisplay = document.createElement("p");
+                setAttributes(targetNumDisplay, {"class": "feature-display", "id": "target_" + id});
+                targetNumDisplay.textContent = "0.5";
+
+                let maxNumDisplay = document.createElement("p");
+                setAttributes(maxNumDisplay, {"class": "feature-display", "id": "max_" + id});
+                maxNumDisplay.textContent = "0.5";
+
+
+                let targetLabel = document.createElement("label");
+                let maxLabel = document.createElement("label");
+                targetLabel.setAttribute("for", "target_" + id);
+                maxLabel.setAttribute("for", "max_" + id);
+                targetLabel.textContent = "Target " + id;
+                maxLabel.textContent = "Max " + id;
+
+                colOne.appendChild(targetLabel);
+                colOne.appendChild(targetNumDisplay);
+                colOne.appendChild(targetSlider);
+                row.appendChild(colOne);
+
+                colTwo.appendChild(maxLabel);
+                colTwo.appendChild(maxNumDisplay);
+                colTwo.appendChild(maxSlider);
+                row.appendChild(colTwo);
+
+                container.appendChild(row);
+
+                sliderContainer.appendChild(container);
+            } else {
+                let removedDiv = document.getElementById(e.target.id + "_container");
+                sliderContainer.removeChild(removedDiv);
             }
+        };
+
+        checkBtns.forEach(function (btn) {
+            btn.addEventListener("click", createSliders);
+        });
+
+        function updateSliderValue(value, name) {
+            document.getElementById(name).innerHTML = value;
         }
-    };
 
-    checkBtns.forEach(function (btn) {
-        btn.addEventListener("click", createSliders);
-    });
+        // Send data to next page
+        let nextBtn = document.getElementById("next_btn");
+        function sendData() {
+            let access_token = '<%= access_token %>';
+            let trackIds = "";
+            let queryString = "seed_tracks=";
 
-    function updateSliderValue(value) {
-        document.getElementById("inputValue").value = value;
-        document.getElementById("sliderValue").value = value;
-    }
+            for (var i = 0; i < '<%= tracks.audio_features.length %>'; i++) {
+                trackIds = trackIds + '<%= tracks.audio_features[0].id %>' + ",";
+            }
+            trackIds = trackIds.slice(0, -1);
+            trackIds += "&";
+            queryString += trackIds;
+      
+            let featureDisplays = document.getElementsByClassName("feature-display");
+            let featureData = new Object();
+            for (var i = 0; i < featureDisplays.length; i++) {
+                let key = featureDisplays[i].id;
+                let value = parseFloat(featureDisplays[i].textContent);
+                featureData[key] = value;
+            }
+            console.log(featureData);
+                        
+            const entries = Object.entries(featureData);
+            for (const [key, value] of entries){
+                queryString = queryString + key + "=" + value + "&";
+            }
+            queryString = queryString.slice(0, -1);
+
+            let url = "/recommendations/" + access_token + "/" + queryString;
+            console.log(url);
+            nextBtn.href = url;
+        }
+        
+        nextBtn.addEventListener("click", sendData);
     </script>
-
-    <!-- <div class="slider-group">
-        <input type="range" class="custom-range" min="0" max="1" step="0.01" value="0.5" name="" id="sliderValue"
-        onchange="updateSliderValue(this.value);">
-        <input type="number" name="" id="inputValue" onchange="updateSliderValue(this.value);">
-    </div> -->
 </body>
 
 </html>
