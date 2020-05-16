@@ -10,7 +10,7 @@ function addTrackForAnalysis(trackTitle) {
     let btn = document.createElement("button");
     let title = trackTitle.innerHTML;
     btn.innerHTML =  title + " <i class='fas fa-times'></i>";
-    btn.classList = "btn btn-sm btn-outline-unique";
+    btn.classList = "btn btn-sm btn-outline-light-green";
     let trackId = trackTitle.getAttribute("data-track-id");
     btn.addEventListener("click", function () {
       trackContainer.removeChild(btn);

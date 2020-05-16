@@ -106,32 +106,32 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="btn-group btn-group-toggle flex-wrap" data-toggle="buttons">
-                                        <label class="btn btn-info active">
+                                        <label class="btn btn-elegant active">
                                             <input type="checkbox" autocomplete="off" id="Acousticness"> Acousticness
                                         </label>
-                                        <label class="btn btn-info active">
+                                        <label class="btn btn-elegant active">
                                             <input type="checkbox" autocomplete="off" id="Danceability"> Danceability
                                         </label>
-                                        <label class="btn btn-info active">
+                                        <label class="btn btn-elegant active">
                                             <input type="checkbox" autocomplete="off" id="Energy"> Energy
                                         </label>
-                                        <label class="btn btn-info active">
+                                        <label class="btn btn-elegant active">
                                             <input type="checkbox" autocomplete="off" id="Instrumentalness">
                                             Instrumentalness
                                         </label>
-                                        <label class="btn btn-info active">
+                                        <label class="btn btn-elegant active">
                                             <input type="checkbox" autocomplete="off" id="Liveness"> Liveness
                                         </label>
-                                        <label class="btn btn-info active">
+                                        <label class="btn btn-elegant active">
                                             <input type="checkbox" autocomplete="off" id="Loudness"> Loudness
                                         </label>
-                                        <label class="btn btn-info active">
+                                        <label class="btn btn-elegant active">
                                             <input type="checkbox" autocomplete="off" id="Speechiness"> Speechiness
                                         </label>
-                                        <label class="btn btn-info active">
+                                        <label class="btn btn-elegant active">
                                             <input type="checkbox" autocomplete="off" id="Valence"> Valence
                                         </label>
-                                        <label class="btn btn-info active">
+                                        <label class="btn btn-elegant active">
                                             <input type="checkbox" autocomplete="off" id="Tempo"> Tempo
                                         </label>
                                     </div>
@@ -409,16 +409,18 @@
         let nextBtn = document.getElementById("next_btn");
         function sendData() {
             let access_token = '<%= access_token %>';
-            let trackIds = "";
-            let queryString = "seed_tracks=";
+            let trackIds = '<%= trackIds %>';
+            let queryString = "limit=10&seed_tracks=";
 
-            for (var i = 0; i < '<%= tracks.audio_features.length %>'; i++) {
-                trackIds = trackIds + '<%= tracks.audio_features[0].id %>' + ",";
-            }
-            trackIds = trackIds.slice(0, -1);
+            // Track IDs
+            // for (var i = 0; i < '<%= tracks.audio_features.length %>'; i++) {
+            //     trackIds = trackIds + '<%= tracks.audio_features[0].id %>' + ",";
+            // }
+            // trackIds = trackIds.slice(0, -1);
             trackIds += "&";
             queryString += trackIds;
       
+            // Audio Feature values
             let featureDisplays = document.getElementsByClassName("feature-display");
             let featureData = new Object();
             for (var i = 0; i < featureDisplays.length; i++) {
@@ -426,7 +428,6 @@
                 let value = parseFloat(featureDisplays[i].textContent);
                 featureData[key] = value;
             }
-            console.log(featureData);
                         
             const entries = Object.entries(featureData);
             for (const [key, value] of entries){
@@ -434,8 +435,17 @@
             }
             queryString = queryString.slice(0, -1);
 
-            let url = "/recommendations/" + access_token + "/" + queryString;
-            console.log(url);
+            // Desired Audio features
+            let audioFeatures = "",
+                checkBoxes = document.getElementsByTagName("input");
+
+            for(var i = 0; i < checkBoxes.length; i++){
+                if(checkBoxes[i].type === "checkbox" && checkBoxes[i].checked === true){
+                    audioFeatures += checkBoxes[i].id;
+                }
+            }
+
+            let url = "/recommendations/" + access_token + "/" + queryString + "/" + audioFeatures + "/" + trackIds;
             nextBtn.href = url;
         }
         

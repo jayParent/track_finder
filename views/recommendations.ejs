@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Track Finder</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" />
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css"
+        rel="stylesheet" />
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.15.0/css/mdb.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <!-- Recommendations header -->
+                <div class="text-center mt-5 animated fadeInLeft">
+                    <h1 id="">
+                        Recommendations
+                    </h1>
+                    <a href="" class="btn btn-outline-mdb-color font-weight-bold" id="create_playlist_button">Create
+                        Playlist</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Recommendations Cards -->
+            <% recommendations.tracks.forEach(function(track){ %>
+            <div class="col-md-6 col-xl-4 mx-auto">
+                <div class="card bg-dark my-3 mx-auto text-center text-white animated fadeInUpBig">
+                    <div class="card-header">
+                        <h4><a href="" class="text-white"><%= track.name %></a></h4>
+                        <div style="display: none;" class="recommendation_uri"><%= track.uri %></div>
+                        <p><%= track.album.name %></p>
+                        <p>
+                            <i class="fas fa-fire text-danger"></i>
+                            <span class="track_popularity"><%= track.popularity %></span>
+                        </p>
+
+                        <p class="card-feature-icons"></p>
+
+                        <% track.artists.forEach(function(artist){ %>
+                        <a href="/artist/<%= artist.id %>"
+                            class="btn btn-sm btn-outline-light-green font-weight-bold my-1 mx-1"><%= artist.name %>
+                        </a>
+                        <% }) %>
+
+                    </div>
+                    <div class="card-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <% if(track.preview_url != null){ %>
+                                    <iframe src="https://open.spotify.com/embed/track/<%= track.id %> " width="300"
+                                        height="80" frameborder="1" allowtransparency="true"
+                                        allow="encrypted-media"></iframe>
+                                    <% } %>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/save/<%= track.id %>"
+                                        class="btn btn-sm btn-outline-white font-weight-bold"><i
+                                            class="fas fa-heart"></i> Add to "Liked Songs"</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+    <script>
+        window.onload = function () {
+            let recommendationCards = document.getElementsByClassName("card-feature-icons");
+            let featuresString = '<%= featuresList %>';
+            let featuresOptions = ["Acousticness", "Danceability", "Energy", "Instrumentalness",
+                "Liveness", "Loudness", "Speechiness", "Valence", "Tempo"];
+
+            for (var j = 0; j < recommendationCards.length; j++) {
+                let audioFeatures = '<%= featuresData %>';
+                // console.log(audioFeatures.audio_features[j].acousticness);
+                for (var i = 0; i < featuresOptions.length; i++) {
+
+                    if (featuresString.includes(featuresOptions[i])) {    
+
+                        let container = document.createElement("span");
+                        recommendationCards[j].appendChild(container);
+
+                        switch (featuresOptions[i]) {
+                            case "Acousticness":
+                                container.innerHTML = '<i class="fas fa-guitar"></i>';
+                                break;
+                            case "Danceability":
+                                container.innerHTML = '<i class="fas fa-child"></i>';
+                                break;
+                            case "Energy":
+                                container.innerHTML = '<i class="fas fa-battery-three-quarters"></i>';
+                                break;
+                            case "Instrumentalness":
+                                container.innerHTML = '<i class="far fa-surprise"></i>';
+                                break;
+                            case "Liveness":
+                                container.innerHTML = '<i class="fas fa-tv"></i>';
+                                break;
+                            case "Loudness":
+                                container.innerHTML = '<i class="fas fa-volume-up"></i>';
+                                break;
+                            case "Speechiness":
+                                container.innerHTML = '<i class="far fa-comment-dots"></i>';
+                                break;
+                            case "Valence":
+                                container.innerHTML = '<i class="far fa-smile-beam"></i>';
+                                break;
+                            case "Tempo":
+                                container.innerHTML = '<i class="fas fa-drum"></i>';
+                                break;
+                        }
+                    }
+                }
+            }
+
+        }
+    </script>
+</body>
+
+</html>

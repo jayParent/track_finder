@@ -164,17 +164,19 @@ app.get("/features/:access_token/:trackIds", function (req, res) {
         .then((res) => res.json())
         .then((res) => (titles = res))
         .then(function () {
-          res.render("features", { tracks: data, titles: titles, access_token: access_token });
+          res.render("features", { tracks: data, titles: titles, access_token: access_token, trackIds: trackIds });
         })
         .catch((err) => console.log(err));
     })
     .catch((err) => console.log(err));
 });
 
-app.get("/recommendations/:access_token/:queryString", function (req, res) {
+app.get("/recommendations/:access_token/:queryString/:features/:trackIds", function (req, res) {
   let access_token = req.params.access_token,
-    refresh_token = req.query.refresh_token;
-  let queryString = req.params.queryString;
+    refresh_token = req.query.refresh_token,
+    queryString = req.params.queryString,
+    featuresList = req.params.features,
+    trackIds = req.params.trackIds;
 
   let options = {
     url: "https://api.spotify.com/v1/recommendations?" + queryString,
@@ -186,7 +188,18 @@ app.get("/recommendations/:access_token/:queryString", function (req, res) {
     .then((res) => res.json())
     .then((res) => (data = res))
     .then(function () {
-      res.render("results", { recommendations: data });
+      let options = {
+        url: "https://api.spotify.com/v1/audio-features/?ids=" + trackIds,
+        headers: { Authorization: "Bearer " + access_token },
+        json: true,
+      };
+      fetch(options.url, {headers: options.headers})
+      .then((res) => res.json())
+      .then((res) => featuresData = res)
+      .then(function(){
+        res.render("recommendations", { recommendations: data, featuresList: featuresList, featuresData: featuresData });
+      })
+      
     })
     .catch((err) => console.log(err));
 });

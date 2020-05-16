@@ -2,8 +2,23 @@ body{
     background: rgb(55, 63, 63);
 }
 
+.index-container{
+    max-height: 100vh;
+    overflow: hidden;
+}
+
+#index_header{
+    padding-top: 35vh;
+    position: absolute;
+    z-index: 1;
+}
+
+#index_linechart{
+    height: 110vh;
+    margin-left: -10px;
+}
+
 #main_window{
-    background-color: lightgray;
     height: 90vh;
 }
 
