@@ -35,28 +35,44 @@
                             <h1 class="mt-3">Pick up to 5 Tracks</h1>
                             <button type="button" class="btn btn-outline-white font-weight-bold" id="top_tracks_button">My Top Tracks</button>
                             <button type="button" class="btn btn-outline-white font-weight-bold" id="search_tracks_btn">Search For Tracks</button>
-                            <div id="main-content"></div>
-                                <table class="table table-sm table-striped table-dark mt-2 mb-2 scrollableBody" id="top_tracks_table" style="display: none;">
-                                    <thead>
-                                        <tr>
-                                            <th>Track Title</th>
-                                            <th>Artists</th>
-                                            <th>Album</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="top_tracks_table_body">
-                                        <% tracks.items.forEach(function(track){ %>
-                                        <tr>
-                                            <td class="trackTitle" data-track-id="<%= track.id %>" onclick="addTrackForAnalysis(this)">
-                                                <%= track.name %>
-                                            </td>
-                                            <td><%= track.artists[0].name %> </td>
-                                            <td><%= track.album.name %> </td>
-                                        </tr>
-                                        <% }) %>
-                                    </tbody>
-                                </table>
-                                <div id="search_snippet" style="display: none;">HEELELE</div>
+                                
+                            <!-- Long term top tracks table -->
+                            <table class="table table-sm table-striped table-dark mt-2 mb-2 scrollableBody" id="top_tracks_table" style="display: none;">
+                                <thead>
+                                    <tr>
+                                        <th>Track Title</th>
+                                        <th>Artists</th>
+                                        <th>Album</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="top_tracks_table_body">
+                                    <% long_tracks.items.forEach(function(track){ %>
+                                    <tr>
+                                        <td class="trackTitle" data-track-id="<%= track.id %>" onclick="addTrackForAnalysis(this)">
+                                            <%= track.name %>
+                                        </td>
+                                        <td><%= track.artists[0].name %> </td>
+                                        <td><%= track.album.name %> </td>
+                                    </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5 mx-auto">
+                            <div id="search_snippet" style="display: none;">
+                                <div class="input-group my-3">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                                  </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col text-center">
                             <div id="picked_tracks"></div>
                         </div>
                     </div>

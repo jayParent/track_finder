@@ -11,7 +11,7 @@ app.set("view engine", "ejs");
 
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
-const redirect_uri = "http://localhost:8888/callback";
+const redirect_uri = "https://spotify-track-finder.herokuapp.com/";
 
 app.listen(port, function () {
   console.log(`Server Started: ${port}`);
@@ -132,9 +132,20 @@ app.get("/?:access_token", function (req, res) {
   };
   fetch(options.url, { headers: options.headers })
     .then((res) => res.json())
-    .then((res) => data = res)
+    .then((res) => long_tracks = res)
     .then(function(){
-      res.render("main", { tracks: data, access_token: access_token });
+      let options = {
+        url: "https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=50&offset=0",
+        headers: { Authorization: "Bearer " + access_token },
+        json: true,
+      };
+      fetch(options.url, {headers: options.headers})
+      .then((res) => res.json())
+      .then((res) => short_tracks = res)
+      .then(function(){
+        res.render("main", { long_tracks: long_tracks, short_tracks: short_tracks, access_token: access_token });
+      })
+      .catch((err) => console.log(err));
     })
     .catch((err) => console.log(err));
   
