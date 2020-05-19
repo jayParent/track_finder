@@ -11,7 +11,7 @@ app.set("view engine", "ejs");
 
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
-const redirect_uri = "https://spotify-track-finder.herokuapp.com/";
+const redirect_uri = "https://spotify-track-finder.herokuapp.com/callback";
 
 app.listen(port, function () {
   console.log(`Server Started: ${port}`);
@@ -60,7 +60,7 @@ app.get("/login", function (req, res) {
   );
 });
 
-app.get("/https://spotify-track-finder.herokuapp.com/", function (req, res) {
+app.get("/callback", function (req, res) {
   let code = req.query.code || null;
   let state = req.query.state || null;
   let storedState = req.cookies ? req.cookies[stateKey] : null;
