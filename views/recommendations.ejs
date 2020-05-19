@@ -37,7 +37,7 @@
             <!-- Recommendations Cards -->
             <% for(var i = 0; i < recommendations.tracks.length; i++){ %>
             <div class="col-md-6 col-xl-4 mx-auto">
-                <div class="card bg-dark my-3 mx-auto text-center text-white animated fadeInUpBig">
+                <div class="card bg-dark my-3 mx-auto text-center text-white animated fadeInUpBig" id="track_card<%= i %>">
                     <div class="card-header">
                         <h4><a href="" class="text-white"><%= recommendations.tracks[i].name %></a></h4>
                         <div style="display: none;" class="recommendation_uri"><%= recommendations.tracks[i].uri %></div>
@@ -105,6 +105,33 @@
         }
 
         window.onload = function addSelectedAudioFeatures () {
+
+            let params = '<%= featuresParams %>';
+            let max_energy = 0;
+            let tracks = document.getElementsByClassName("card");
+
+            for (var i = 0; i < tracks.length; i++) {
+                if (params.includes("max_Energy")) {
+                    max_energy = parseFloat(params.split("max_Energy=").pop());
+
+                    let target = document.getElementById("energy" + i);
+                    let targetValue = parseFloat(target.textContent);
+                    if(targetValue > max_energy){
+                        tracks[i].classList.replace("bg-dark", "bg-light");
+                    }
+                }
+                if (params.includes("max_Valence")) {
+                    max_energy = parseFloat(params.split("max_Valence=").pop());
+
+                    let target = document.getElementById("valence" + i);
+                    let targetValue = parseFloat(target.textContent);
+                    if(targetValue > max_energy){
+                        tracks[i].classList.replace("bg-dark", "bg-light");
+                    }
+                }
+            }
+
+
             let recommendationCards = document.getElementsByClassName("card-feature-icons");
             let featuresString = '<%= featuresList %>';
             let featuresOptions = ["Acousticness", "Danceability", "Energy", "Instrumentalness",
@@ -168,7 +195,7 @@
                         }
                     }
                 }
-            }
+            }     
         }
         // For Bootstrap tooltip
         $(document).ready(function () {

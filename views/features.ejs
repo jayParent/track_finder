@@ -347,22 +347,22 @@
 
                 let targetSlider, maxSlider;
                 if (id === "Tempo") {
-                    targetSlider = document.createElement("input");
-                    setAttributes(targetSlider, {
-                        "type": "range", "class": "custom-range", "min": "0", "max": "255",
-                        "step": "1", "value": "120", "id": id + "_target", "name": "target_" + id, "oninput": "updateSliderValue(this.value, this.name);"
-                    });
+                    // targetSlider = document.createElement("input");
+                    // setAttributes(targetSlider, {
+                    //     "type": "range", "class": "custom-range", "min": "0", "max": "255",
+                    //     "step": "1", "value": "120", "id": id + "_target", "name": "target_" + id, "oninput": "updateSliderValue(this.value, this.name);"
+                    // });
                     maxSlider = document.createElement("input");
                     setAttributes(maxSlider, {
                         "type": "range", "class": "custom-range", "min": "0", "max": "255",
                         "step": "1", "value": "120", "id": id + "_max", "name": "max_" + id, "oninput": "updateSliderValue(this.value, this.name);"
                     });
                 } else {
-                    targetSlider = document.createElement("input");
-                    setAttributes(targetSlider, {
-                        "type": "range", "class": "custom-range", "min": "0", "max": "1",
-                        "step": "0.01", "value": "0.5", "id": id + "_target", "name": "target_" + id, "oninput": "updateSliderValue(this.value, this.name);"
-                    });
+                    // targetSlider = document.createElement("input");
+                    // setAttributes(targetSlider, {
+                    //     "type": "range", "class": "custom-range", "min": "0", "max": "1",
+                    //     "step": "0.01", "value": "0.5", "id": id + "_target", "name": "target_" + id, "oninput": "updateSliderValue(this.value, this.name);"
+                    // });
                     maxSlider = document.createElement("input");
                     setAttributes(maxSlider, {
                         "type": "range", "class": "custom-range", "min": "0", "max": "1",
@@ -377,9 +377,9 @@
                 // let maxNumInput = document.createElement("input");
                 // setAttributes(maxNumInput, { "type": "number", "id": id + "_maxNumInput", "onchange": "updateSliderValue(this.value);" });
 
-                let targetNumDisplay = document.createElement("p");
-                setAttributes(targetNumDisplay, { "class": "feature-display", "id": "target_" + id });
-                targetNumDisplay.textContent = "0.5";
+                // let targetNumDisplay = document.createElement("p");
+                // setAttributes(targetNumDisplay, { "class": "feature-display", "id": "target_" + id });
+                // targetNumDisplay.textContent = "0.5";
 
                 let maxNumDisplay = document.createElement("p");
                 setAttributes(maxNumDisplay, { "class": "feature-display", "id": "max_" + id });
@@ -394,8 +394,8 @@
                 maxLabel.textContent = "Max " + id;
 
                 colOne.appendChild(targetLabel);
-                colOne.appendChild(targetNumDisplay);
-                colOne.appendChild(targetSlider);
+                // colOne.appendChild(targetNumDisplay);
+                // colOne.appendChild(targetSlider);
                 row.appendChild(colOne);
 
                 colTwo.appendChild(maxLabel);
@@ -427,11 +427,6 @@
             let trackIds = '<%= trackIds %>';
             let queryString = "limit=10&seed_tracks=";
 
-            // Track IDs
-            // for (var i = 0; i < '<%= tracks.audio_features.length %>'; i++) {
-            //     trackIds = trackIds + '<%= tracks.audio_features[0].id %>' + ",";
-            // }
-            // trackIds = trackIds.slice(0, -1);
             trackIds += "&";
             queryString += trackIds;
       

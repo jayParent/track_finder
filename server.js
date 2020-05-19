@@ -11,7 +11,7 @@ app.set("view engine", "ejs");
 
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
-const redirect_uri = "https://spotify-track-finder.herokuapp.com/callback";
+const redirect_uri = "http://localhost:8888/callback";
 
 app.listen(port, function () {
   console.log(`Server Started: ${port}`);
@@ -215,7 +215,8 @@ app.get("/recommendations/:access_token/:queryString/:features/:trackIds", funct
       .then((res) => res.json())
       .then((res) => featuresData = res)
       .then(function(){
-        res.render("recommendations", { recommendations: data, featuresList: featuresList, features: featuresData });
+        res.render("recommendations", { recommendations: data, featuresList: featuresList, features: featuresData, featuresParams: queryString });
+        console.log(queryString);
       })
       
     })
@@ -227,5 +228,5 @@ app.get("*", function(req, res){
 })
 
 // TODO
-// Tempo slider range values
+// create playlist or create with good tracks only
 // Optional target and max values
