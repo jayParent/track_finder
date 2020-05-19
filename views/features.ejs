@@ -334,57 +334,89 @@
 
         function createSliders(e) {
             let id = e.target.id;
+            let targetSlider, maxSlider, targetNumDisplay, maxNumDisplay, sliders;
+            let avg_acousticness = parseFloat(document.getElementById("avg_acousticness").textContent),
+            avg_danceability = parseFloat(document.getElementById("avg_danceability").textContent),
+            avg_energy = parseFloat(document.getElementById("avg_energy").textContent),
+            avg_instrumentalness = parseFloat(document.getElementById("avg_instrumentalness").textContent),
+            avg_liveness = parseFloat(document.getElementById("avg_liveness").textContent),
+            avg_loudness = parseFloat(document.getElementById("avg_loudness").textContent),
+            avg_speechiness = parseFloat(document.getElementById("avg_speechiness").textContent),
+            avg_valence = parseFloat(document.getElementById("avg_valence").textContent),
+            avg_tempo = parseFloat(document.getElementById("avg_tempo").textContent);
+
+            function makeSliders(value, id){
+                    targetSlider = document.createElement("input");
+                    setAttributes(targetSlider, {
+                        "type": "range", "class": "custom-range", "min": "0", "max": "1",
+                        "step": "0.01", "value": value, "id": id + "_target", "name": "target_" + id, "oninput": "updateSliderValue(this.value, this.name);"
+                    });
+                    maxSlider = document.createElement("input");
+                    setAttributes(maxSlider, {
+                        "type": "range", "class": "custom-range", "min": "0", "max": "1",
+                        "step": "0.01", "value": value, "id": id + "_max", "name": "max_" + id, "oninput": "updateSliderValue(this.value, this.name);"
+                    });
+
+                    targetNumDisplay = document.createElement("p");
+                    setAttributes(targetNumDisplay, { "class": "feature-display", "id": "target_" + id });
+                    targetNumDisplay.textContent = value;
+
+                    maxNumDisplay = document.createElement("p");
+                    setAttributes(maxNumDisplay, { "class": "feature-display", "id": "max_" + id });
+                    maxNumDisplay.textContent = value;
+
+                    sliders = [targetNumDisplay, targetSlider, maxNumDisplay, maxSlider];
+                    return sliders;
+                }
+
             if (e.target.type === "checkbox" && e.target.checked === true) {
                 let container = document.createElement("div");
                 setAttributes(container, { "class": "slider-group my-3 container-fluid", "id": id + "_container" });
 
                 let row = document.createElement("div");
                 setAttributes(row, { "class": "row" });
-                let colOne = document.createElement("div");
+                colOne = document.createElement("div");
                 setAttributes(colOne, { "class": "col-4 mx-auto" });
-                let colTwo = document.createElement("div");
+                colTwo = document.createElement("div");
                 setAttributes(colTwo, { "class": "col-4 mx-auto" });
 
-                let targetSlider, maxSlider;
-                if (id === "Tempo") {
-                    // targetSlider = document.createElement("input");
-                    // setAttributes(targetSlider, {
-                    //     "type": "range", "class": "custom-range", "min": "0", "max": "255",
-                    //     "step": "1", "value": "120", "id": id + "_target", "name": "target_" + id, "oninput": "updateSliderValue(this.value, this.name);"
-                    // });
-                    maxSlider = document.createElement("input");
-                    setAttributes(maxSlider, {
-                        "type": "range", "class": "custom-range", "min": "0", "max": "255",
-                        "step": "1", "value": "120", "id": id + "_max", "name": "max_" + id, "oninput": "updateSliderValue(this.value, this.name);"
-                    });
-                } else {
-                    // targetSlider = document.createElement("input");
-                    // setAttributes(targetSlider, {
-                    //     "type": "range", "class": "custom-range", "min": "0", "max": "1",
-                    //     "step": "0.01", "value": "0.5", "id": id + "_target", "name": "target_" + id, "oninput": "updateSliderValue(this.value, this.name);"
-                    // });
-                    maxSlider = document.createElement("input");
-                    setAttributes(maxSlider, {
-                        "type": "range", "class": "custom-range", "min": "0", "max": "1",
-                        "step": "0.01", "value": "0.5", "id": id + "_max", "name": "max_" + id, "oninput": "updateSliderValue(this.value, this.name);"
-                    });
+                switch (id) {
+                    case "Acousticness":
+                        sliders = makeSliders(avg_acousticness, id);
+                        break;
+
+                    case "Danceability":
+                        sliders = makeSliders(avg_danceability, id);
+                        break;
+
+                    case "Energy":
+                        sliders = makeSliders(avg_energy, id);
+                        break;
+
+                    case "Instrumentalness":
+                        sliders = makeSliders(avg_instrumentalness, id);
+                        break;
+
+                    case "Liveness":
+                        sliders = makeSliders(avg_liveness, id);
+                        break;
+
+                    case "Loudness":
+                        sliders = makeSliders(avg_loudness, id);
+                        break;
+
+                    case "Speechiness":
+                        sliders = makeSliders(avg_speechiness, id);
+                        break;
+
+                    case "Valence":
+                        sliders = makeSliders(avg_valence, id);
+                    break;
+
+                    case "Tempo":
+                        sliders = makeSliders(avg_tempo, id);
+                    break;
                 }
-
-
-                // let targetNumInput = document.createElement("input");
-                // setAttributes(targetNumInput, { "type": "number", "id": id + "_targetNumInput", "onchange": "updateSliderValue(this.value);" });
-
-                // let maxNumInput = document.createElement("input");
-                // setAttributes(maxNumInput, { "type": "number", "id": id + "_maxNumInput", "onchange": "updateSliderValue(this.value);" });
-
-                // let targetNumDisplay = document.createElement("p");
-                // setAttributes(targetNumDisplay, { "class": "feature-display", "id": "target_" + id });
-                // targetNumDisplay.textContent = "0.5";
-
-                let maxNumDisplay = document.createElement("p");
-                setAttributes(maxNumDisplay, { "class": "feature-display", "id": "max_" + id });
-                maxNumDisplay.textContent = "0.5";
-
 
                 let targetLabel = document.createElement("label");
                 let maxLabel = document.createElement("label");
@@ -394,13 +426,13 @@
                 maxLabel.textContent = "Max " + id;
 
                 colOne.appendChild(targetLabel);
-                // colOne.appendChild(targetNumDisplay);
-                // colOne.appendChild(targetSlider);
+                colOne.appendChild(sliders[0]);
+                colOne.appendChild(sliders[1]);
                 row.appendChild(colOne);
 
                 colTwo.appendChild(maxLabel);
-                colTwo.appendChild(maxNumDisplay);
-                colTwo.appendChild(maxSlider);
+                colTwo.appendChild(sliders[2]);
+                colTwo.appendChild(sliders[3]);
                 row.appendChild(colTwo);
 
                 container.appendChild(row);

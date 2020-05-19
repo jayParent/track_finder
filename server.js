@@ -11,7 +11,7 @@ app.set("view engine", "ejs");
 
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
-const redirect_uri = "https://spotify-track-finder.herokuapp.com/callback";
+const redirect_uri = "http://localhost:8888/callback";
 
 app.listen(port, function () {
   console.log(`Server Started: ${port}`);
@@ -228,5 +228,6 @@ app.get("*", function(req, res){
 })
 
 // TODO
+// Tempo % bug on recommendations page
 // create playlist or create with good tracks only
-// Optional target and max values
+// Optional target and max values - Maybe
