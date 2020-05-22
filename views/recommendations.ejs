@@ -16,7 +16,7 @@
         rel="stylesheet" />
     <!-- Material Design Bootstrap -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.15.0/css/mdb.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="/../css/style.css">
 </head>
 
 <body>
@@ -24,38 +24,45 @@
         <div class="row">
             <div class="col">
                 <!-- Recommendations header -->
-                <div class="text-center mt-5 animated fadeInLeft">
+                <div class="text-center text-white mt-5 animated fadeInLeft">
                     <h1>
                         Recommendations
                     </h1>
                     <h4>
-                        <span id="perfect_counter">
+                        <span class="custom-green">
                             <span id="perfect_qty">0</span> Perfect -
                         </span>
-                        <span id="good_counter">
+                        <span class="custom-yellow">
                             <span id="good_qty">0 </span> Good -
                         </span>
-                        <span id="acceptable_counter">
+                        <span class="custom-red">
                             <span id="acceptable_qty">0</span> Acceptable
                         </span>
                     </h4>
                     <h2>Create Playlist</h2>
-                    <a href="" class="btn btn-outline-mdb-color font-weight-bold" id="create_playlist_button">Only Perfect</a>
-                    <a href="" class="btn btn-outline-mdb-color font-weight-bold" id="create_playlist_button">Perfect & Good</a>
-                    <a href="" class="btn btn-outline-mdb-color font-weight-bold" id="create_playlist_button">All Tracks</a>
+                    <a href="" class="btn btn-outline-default font-weight-bold" id="create_perfect_button">Only
+                        Perfect</a>
+                    <a href="" class="btn btn-outline-default font-weight-bold" id="create_good_button">Perfect &
+                        Good</a>
+                    <a href="" class="btn btn-outline-default font-weight-bold" id="create_all_button">All Tracks</a>
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center animated fadeInLeft">
+                <a class="btn btn-outline-white font-weight-bold" id="back_btn">Change Parameters</a>
+                <a href="" class="btn btn-outline-white font-weight-bold">Refresh</a>
             </div>
         </div>
         <div class="row">
             <!-- Recommendations Cards -->
             <% for(var i = 0; i < recommendations.tracks.length; i++){ %>
             <div class="col-md-6 col-xl-4 mx-auto">
-                <div class="card bg-dark my-3 mx-auto text-center text-white animated fadeInUpBig"
+                <div class="card track-card bg-dark my-3 mx-auto text-center text-white animated fadeInUpBig"
                     id="track_card<%= i %>">
                     <div class="card-header">
                         <h4><a href="" class="text-white"><%= recommendations.tracks[i].name %></a></h4>
-                        <div style="display: none;" class="recommendation_uri"><%= recommendations.tracks[i].uri %>
-                        </div>
+                        <div style="display: none;" class="recommendation_uri"><%= recommendations.tracks[i].uri %></div>
                         <p><%= recommendations.tracks[i].album.name %></p>
                         <p>
                             <i class="fas fa-fire text-danger"></i>
@@ -81,8 +88,7 @@
                         <p class="card-feature-icons"></p>
 
                         <% recommendations.tracks[i].artists.forEach(function(artist){ %>
-                        <a href="/artist/<%= artist.id %>"
-                            class="btn btn-sm btn-outline-white font-weight-bold my-1 mx-1"><%= artist.name %>
+                        <a href="" class="btn btn-sm btn-outline-white font-weight-bold my-1 mx-1"><%= artist.name %>
                         </a>
                         <% }) %>
 
@@ -126,76 +132,187 @@
             }
         }
 
-        window.onload = function addSelectedAudioFeatures() {
+        // Back button
+        document.getElementById("back_btn").addEventListener("click", goBack);
+        function goBack() {
+            window.history.back();
+        }
 
+        function createPlaylistUrl() {
+            let createAllBtn = document.getElementById("create_all_button"),
+            createGoodBtn = document.getElementById("create_good_button"),
+            createPerfectBtn = document.getElementById("create_perfect_button");
+
+            let trackUris = document.getElementsByClassName("recommendation_uri");
+
+            let createPlaylistUri = "",
+                featuresList = '<%= featuresList %>';
+            let access_token = '<%= access_token %>';
+
+            // Perfect
+            for (var i = 0; i < trackUris.length; i++) {
+                if(trackUris[i].classList.contains("perfect")){
+                    createPlaylistUri = createPlaylistUri + trackUris[i].innerHTML + ",";
+                }
+            }
+            createPlaylistUri = createPlaylistUri.slice(0, -1);
+            createPerfectBtn.href = "/create_playlist/" + access_token + "/" + createPlaylistUri + "/" + featuresList;
+            createPlaylistUri = "";
+
+            // Good
+            for (var i = 0; i < trackUris.length; i++) {
+                if(trackUris[i].classList.contains("good") || trackUris[i].classList.contains("perfect")){
+                    createPlaylistUri = createPlaylistUri + trackUris[i].innerHTML + ",";
+                }
+            }
+            createPlaylistUri = createPlaylistUri.slice(0, -1);
+            createGoodBtn.href = "/create_playlist/" + access_token + "/" + createPlaylistUri + "/" + featuresList;
+            createPlaylistUri = "";
+            
+            // Acceptable
+            for (var i = 0; i < trackUris.length; i++) {
+                createPlaylistUri = createPlaylistUri + trackUris[i].innerHTML + ",";
+            }
+            createPlaylistUri = createPlaylistUri.slice(0, -1);
+            createAllBtn.href = "/create_playlist/" + access_token + "/" + createPlaylistUri + "/" + featuresList;
+        }
+
+        function checkMaxValues(feature, data, container) {
             let params = '<%= featuresParams %>';
-            let tracks = document.getElementsByClassName("card");
-            let recommendationCards = document.getElementsByClassName("card-feature-icons");
+            if (params.includes(feature)) {
+                let max_value, difference;
+                let perfect = true,
+                    good = true,
+                    result = "";
+
+                if (feature === "max_Tempo") {
+                    max_value = parseFloat(params.split(feature + "=").pop());
+
+                    if (data < max_value) {
+                        container.classList.add("custom-green");
+                    } else if ((data - max_value) <= 10) {
+                        container.classList.add("custom-yellow");
+                        perfect = false;
+                    } else {
+                        container.classList.add("custom-red");
+                        perfect = false, good = false;
+                    }
+
+                } else if (feature === "max_Loudness") {
+                    max_value = parseFloat(params.split(feature + "=").pop());
+                    let difference = Math.abs(max_value - data);
+
+                    if (data < max_value) {
+                        container.classList.add("custom-green");
+                    } else if (difference < 3) {
+                        container.classList.add("custom-yellow");
+                        perfect = false;
+                    } else {
+                        container.classList.add("custom-red");
+                        perfect = false, good = false;
+                    }
+
+                } else {
+                    max_value = parseFloat(params.split(feature + "=").pop());
+
+                    if (data < max_value) {
+                        container.classList.add("custom-green");
+                    } else if ((data - max_value) <= 0.1) {
+                        container.classList.add("custom-yellow");
+                        perfect = false;
+                    } else {
+                        container.classList.add("custom-red");
+                        perfect = false, good = false;
+                    }
+                }
+
+                if (perfect) {
+                    result = "perfect";
+                } else if (good) {
+                    result = "good";
+                } else {
+                    result = "acceptable";
+                }
+                return result;
+            }
+        }
+
+        function getTrackScore(featureData, featureCluster, uri) {
+            let perfect = true, good = true;
+            featureData.forEach(function (feature) {
+                if (feature.classList.contains("good") || feature.classList.contains("acceptable")) {
+                    perfect = false;
+                    if (feature.classList.contains("acceptable")) {
+                        good = false;
+                    }
+                }
+            })
+            if (perfect) {
+                featureCluster.classList.add("perfect");
+                uri.classList.add("perfect");
+            } else if (good) {
+                featureCluster.classList.add("good");
+                uri.classList.add("good");
+            } else {
+                featureCluster.classList.add("acceptable");
+                uri.classList.add("acceptable");
+            }
+        }
+
+        function updateScoreCounters() {
+            let perfectCounter = document.getElementById("perfect_qty"),
+                goodCounter = document.getElementById("good_qty"),
+                acceptableCounter = document.getElementById("acceptable_qty"),
+                featureClusters = document.getElementsByClassName("card-feature-icons"),
+                perfectCount = 0,
+                goodCount = 0,
+                acceptableCount = 0;
+
+            featureClusters.forEach(function (cluster) {
+                if (cluster.classList.contains("perfect")) {
+                    perfectCount++;
+                } else if (cluster.classList.contains("good")) {
+                    goodCount++;
+                } else if (cluster.classList.contains("acceptable")) {
+                    acceptableCount++;
+                }
+            })
+            perfectCounter.innerHTML = perfectCount, goodCounter.innerHTML = goodCount, acceptableCounter.innerHTML = acceptableCount;
+        }
+
+        window.onload = function () {
+            let featureClusters = document.getElementsByClassName("card-feature-icons"),
+                recommendationUris = document.getElementsByClassName("recommendation_uri");
             let featuresString = '<%= featuresList %>';
             let featuresOptions = ["Acousticness", "Danceability", "Energy", "Instrumentalness",
                 "Liveness", "Loudness", "Speechiness", "Valence", "Tempo"];
-            let data, feature;
+            let data, feature, result;
 
-            function checkMaxValues(feature, data, container) {
-                if (params.includes(feature)) {
-                    let max_value, difference;
-                    let perfect = true,
-                        good = true;
-                
-                    if (feature != "max_Tempo") {
-                        max_value = parseFloat(params.split(feature + "=").pop());
+            for (var j = 0; j < featureClusters.length; j++) {
+                let featureData = featureClusters[j].children;
 
-                        if (data < max_value) {
-                            container.style.color = "rgb(46, 184, 46)";
-                        } else if ((data - max_value) <= 0.1) {
-                            container.style.color = "yellow";
-                            perfect = false;
-                        } else {
-                            container.style.color = "rgb(255, 51, 51)";
-                            perfect = false, good = false;
-                        }
-                    }
-                    
-                    
-
-                    // else {
-                    //     max_value = parseInt(params.split(feature + "=").pop());
-                    //     difference = data - max_value;
-
-                    //     if (difference <= 10) {
-                    //         container.style.color = "rgb(46, 184, 46)";
-                    //     }else if(difference > 10 && difference < 20){
-                    //         container.style.color = "yellow";
-                    //     } else {
-                    //         container.style.color = "rgb(46, 184, 46)";
-                    //     }
-                    // }
-                }
-            }
-
-            for (var j = 0; j < recommendationCards.length; j++) {
                 for (var i = 0; i < featuresOptions.length; i++) {
-
                     if (featuresString.includes(featuresOptions[i])) {
-
                         let container = document.createElement("span");
-                        recommendationCards[j].appendChild(container);
+                        featureClusters[j].appendChild(container);
 
                         switch (featuresOptions[i]) {
                             case "Acousticness":
                                 feature = "max_Acousticness";
                                 data = parseFloat(document.getElementById("acousticness" + j).textContent).toPrecision(3);
                                 container.innerHTML = '<i class="fas fa-guitar"></i> ' + data;
-                                setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Acousticness. 1.0 represents high confidence track is acoustic.", "style": "cursor: help" })
-                                checkMaxValues(feature, data, container);
+                                setAttributes(container, { "class": "mx-2 feature", "data-toggle": "tooltip", "data-placement": "right", "title": "Acousticness. 1.0 represents high confidence track is acoustic.", "style": "cursor: help" })
+                                result = checkMaxValues(feature, data, container);
+                                container.classList.add(result);
                                 break;
 
                             case "Danceability":
                                 feature = "max_Danceability";
                                 data = parseFloat(document.getElementById("danceability" + j).textContent).toPrecision(3);
                                 container.innerHTML = '<i class="fas fa-child"></i> ' + data;
-                                setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Danceability. A value of 0.0 is least danceable and 1.0 is most danceable.", "style": "cursor: help" })
-                                checkMaxValues(feature, data, container);
+                                setAttributes(container, { "class": "mx-2 feature", "data-toggle": "tooltip", "data-placement": "right", "title": "Danceability. A value of 0.0 is least danceable and 1.0 is most danceable.", "style": "cursor: help" })
+                                result = checkMaxValues(feature, data, container);
+                                container.classList.add(result);
                                 break;
 
                             case "Energy":
@@ -203,7 +320,8 @@
                                 data = parseFloat(document.getElementById("energy" + j).textContent).toPrecision(3);
                                 container.innerHTML = '<i class="fas fa-battery-three-quarters"></i> ' + data;
                                 setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Energy. Measure from 0.0 to 1.0, reprensents intensity and energy.", "style": "cursor: help" })
-                                checkMaxValues(feature, data, container);
+                                result = checkMaxValues(feature, data, container);
+                                container.classList.add(result);
                                 break;
 
                             case "Instrumentalness":
@@ -211,7 +329,8 @@
                                 data = parseFloat(document.getElementById("instrumentalness" + j).textContent).toPrecision(3);
                                 container.innerHTML = '<i class="far fa-surprise"></i> ' + data;
                                 setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Instrumentalness. Closer value to 1.0, greater likelyhood the track contains no vocals.", "style": "cursor: help" })
-                                checkMaxValues(feature, data, container);
+                                result = checkMaxValues(feature, data, container);
+                                container.classList.add(result);
                                 break;
 
                             case "Liveness":
@@ -219,7 +338,8 @@
                                 data = parseFloat(document.getElementById("liveness" + j).textContent).toPrecision(3);
                                 container.innerHTML = '<i class="fas fa-tv"></i> ' + data;
                                 setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Liveness. A value of 0.8 provides a string likelyhood that the track is live.", "style": "cursor: help" })
-                                checkMaxValues(feature, data, container);
+                                result = checkMaxValues(feature, data, container);
+                                container.classList.add(result);
                                 break;
 
                             case "Loudness":
@@ -227,7 +347,8 @@
                                 data = parseFloat(document.getElementById("loudness" + j).textContent).toPrecision(3);
                                 container.innerHTML = '<i class="fas fa-volume-up"></i> ' + data;
                                 setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Loudness. Overall loudness of the track in decibels(dB).", "style": "cursor: help" })
-                                checkMaxValues(feature, data, container);
+                                result = checkMaxValues(feature, data, container);
+                                container.classList.add(result);
                                 break;
 
                             case "Speechiness":
@@ -235,7 +356,8 @@
                                 data = parseFloat(document.getElementById("speechiness" + j).textContent).toPrecision(3);
                                 container.innerHTML = '<i class="far fa-comment-dots"></i> ' + data;
                                 setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Speechiness. Values below 0.33 most likely represent music and other non-speech-like tracks.", "style": "cursor: help" })
-                                checkMaxValues(feature, data, container);
+                                result = checkMaxValues(feature, data, container);
+                                container.classList.add(result);
                                 break;
 
                             case "Valence":
@@ -243,7 +365,8 @@
                                 data = parseFloat(document.getElementById("valence" + j).textContent).toPrecision(3);
                                 container.innerHTML = '<i class="far fa-smile-beam"></i> ' + data;
                                 setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Valence. Measure from 0.0 to 1.0 describing the musical positiveness conveyed by the track.", "style": "cursor: help" })
-                                checkMaxValues(feature, data, container);
+                                result = checkMaxValues(feature, data, container);
+                                container.classList.add(result);
                                 break;
 
                             case "Tempo":
@@ -251,12 +374,16 @@
                                 data = parseFloat(document.getElementById("tempo" + j).textContent).toPrecision(3);
                                 container.innerHTML = '<i class="fas fa-drum"></i> ' + data;
                                 setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Tempo. Overall estimated tempo in beats per minute(BPM).", "style": "cursor: help" })
-                                checkMaxValues(feature, data, container);
+                                result = checkMaxValues(feature, data, container);
+                                container.classList.add(result);
                                 break;
                         }
                     }
                 }
+                getTrackScore(featureData, featureClusters[j], recommendationUris[j]);
             }
+            createPlaylistUrl();
+            updateScoreCounters();
         }
 
         // For Bootstrap tooltip

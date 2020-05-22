@@ -1,7 +1,19 @@
+/* Global */
 body{
     background: rgb(55, 63, 63);
 }
 
+.custom-green{
+    color: rgb(46, 184, 46);
+}
+.custom-yellow{
+    color: rgb(251, 245, 19);
+}
+.custom-red{
+    color: rgb(255, 51, 51);
+}
+
+/* Index */
 .index-container{
     max-height: 100vh;
     overflow: hidden;
@@ -18,6 +30,7 @@ body{
     margin-left: -10px;
 }
 
+/* Main */
 #main_window{
     height: 90vh;
 }
@@ -26,14 +39,21 @@ body{
     font-size: 2rem;
 }
 
-.scrollableBody thead,
-tbody tr{
+.scrollableBody#top_tracks_table thead,
+tbody#top_tracks_table_body tr{
     display: table;
     width: 100%;
     table-layout: fixed;
 }
 
-#top_tracks_table_body{
+.scrollableBody#recent_tracks_table thead,
+tbody#recent_tracks_table_body tr{
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+#top_tracks_table_body, #recent_tracks_table_body{
     display: block;
     overflow-y: scroll;
     max-height: 60vh;

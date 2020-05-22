@@ -16,7 +16,7 @@
         rel="stylesheet" />
     <!-- Material Design Bootstrap -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.15.0/css/mdb.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="/../css/style.css">
 </head>
 
 <body>
@@ -98,9 +98,9 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xl-8 mx-auto text-center my-3">
-                            <div class="card">
-                                <div class="card-header">
+                        <div class="col-xl-8 mx-auto">
+                            <div class="card bg-dark text-white text-center my-3">
+                                <div class="card-header" id="checkbox_instructions">
                                     <h2>Why?</h2>
                                     <h6>What do you want the results to be based on?</h6>
                                 </div>
@@ -142,8 +142,8 @@
                     </div>
                     <div class="row">
                         <div class="col text-center">
-                            <a class="btn btn-outline-elegant font-weight-bold" id="back_btn">Back</a>
-                            <a href="" class="btn btn-outline-elegant font-weight-bold" id="next_btn">Next</a>
+                            <a class="btn btn-outline-white font-weight-bold" id="back_btn">Back</a>
+                            <a href="#checkbox_instructions" class="btn btn-outline-white font-weight-bold" id="next_btn">Next</a>
                         </div>
                     </div>
                     <div class="row">
@@ -336,16 +336,40 @@
             let id = e.target.id;
             let targetSlider, maxSlider, targetNumDisplay, maxNumDisplay, sliders;
             let avg_acousticness = parseFloat(document.getElementById("avg_acousticness").textContent),
-            avg_danceability = parseFloat(document.getElementById("avg_danceability").textContent),
-            avg_energy = parseFloat(document.getElementById("avg_energy").textContent),
-            avg_instrumentalness = parseFloat(document.getElementById("avg_instrumentalness").textContent),
-            avg_liveness = parseFloat(document.getElementById("avg_liveness").textContent),
-            avg_loudness = parseFloat(document.getElementById("avg_loudness").textContent),
-            avg_speechiness = parseFloat(document.getElementById("avg_speechiness").textContent),
-            avg_valence = parseFloat(document.getElementById("avg_valence").textContent),
-            avg_tempo = parseFloat(document.getElementById("avg_tempo").textContent);
+                avg_danceability = parseFloat(document.getElementById("avg_danceability").textContent),
+                avg_energy = parseFloat(document.getElementById("avg_energy").textContent),
+                avg_instrumentalness = parseFloat(document.getElementById("avg_instrumentalness").textContent),
+                avg_liveness = parseFloat(document.getElementById("avg_liveness").textContent),
+                avg_loudness = parseFloat(document.getElementById("avg_loudness").textContent),
+                avg_speechiness = parseFloat(document.getElementById("avg_speechiness").textContent),
+                avg_valence = parseFloat(document.getElementById("avg_valence").textContent),
+                avg_tempo = parseFloat(document.getElementById("avg_tempo").textContent);
 
-            function makeSliders(value, id){
+            function makeSliders(value, id) {
+                if (id === "Tempo") {
+                    targetSlider = document.createElement("input");
+                    setAttributes(targetSlider, {
+                        "type": "range", "class": "custom-range", "min": "0", "max": "255",
+                        "step": "1", "value": value, "id": id + "_target", "name": "target_" + id, "oninput": "updateSliderValue(this.value, this.name);"
+                    });
+                    maxSlider = document.createElement("input");
+                    setAttributes(maxSlider, {
+                        "type": "range", "class": "custom-range", "min": "0", "max": "255",
+                        "step": "1", "value": value, "id": id + "_max", "name": "max_" + id, "oninput": "updateSliderValue(this.value, this.name);"
+                    });
+
+                } else if (id === "Loudness") {
+                    targetSlider = document.createElement("input");
+                    setAttributes(targetSlider, {
+                        "type": "range", "class": "custom-range", "min": "-60", "max": "0",
+                        "step": "1", "value": value, "id": id + "_target", "name": "target_" + id, "oninput": "updateSliderValue(this.value, this.name);"
+                    });
+                    maxSlider = document.createElement("input");
+                    setAttributes(maxSlider, {
+                        "type": "range", "class": "custom-range", "min": "-60", "max": "0",
+                        "step": "1", "value": value, "id": id + "_max", "name": "max_" + id, "oninput": "updateSliderValue(this.value, this.name);"
+                    });
+                } else {
                     targetSlider = document.createElement("input");
                     setAttributes(targetSlider, {
                         "type": "range", "class": "custom-range", "min": "0", "max": "1",
@@ -356,20 +380,22 @@
                         "type": "range", "class": "custom-range", "min": "0", "max": "1",
                         "step": "0.01", "value": value, "id": id + "_max", "name": "max_" + id, "oninput": "updateSliderValue(this.value, this.name);"
                     });
-
-                    targetNumDisplay = document.createElement("p");
-                    setAttributes(targetNumDisplay, { "class": "feature-display", "id": "target_" + id });
-                    targetNumDisplay.textContent = value;
-
-                    maxNumDisplay = document.createElement("p");
-                    setAttributes(maxNumDisplay, { "class": "feature-display", "id": "max_" + id });
-                    maxNumDisplay.textContent = value;
-
-                    sliders = [targetNumDisplay, targetSlider, maxNumDisplay, maxSlider];
-                    return sliders;
                 }
 
+                targetNumDisplay = document.createElement("p");
+                setAttributes(targetNumDisplay, { "class": "feature-display", "id": "target_" + id });
+                targetNumDisplay.textContent = value;
+
+                maxNumDisplay = document.createElement("p");
+                setAttributes(maxNumDisplay, { "class": "feature-display", "id": "max_" + id });
+                maxNumDisplay.textContent = value;
+
+                sliders = [targetNumDisplay, targetSlider, maxNumDisplay, maxSlider];
+                return sliders;
+            }
+
             if (e.target.type === "checkbox" && e.target.checked === true) {
+                checkedBtnCount++;
                 let container = document.createElement("div");
                 setAttributes(container, { "class": "slider-group my-3 container-fluid", "id": id + "_container" });
 
@@ -411,11 +437,11 @@
 
                     case "Valence":
                         sliders = makeSliders(avg_valence, id);
-                    break;
+                        break;
 
                     case "Tempo":
                         sliders = makeSliders(avg_tempo, id);
-                    break;
+                        break;
                 }
 
                 let targetLabel = document.createElement("label");
@@ -439,6 +465,7 @@
 
                 sliderContainer.appendChild(container);
             } else {
+                checkedBtnCount--;
                 let removedDiv = document.getElementById(e.target.id + "_container");
                 sliderContainer.removeChild(removedDiv);
             }
@@ -454,43 +481,56 @@
 
         // Send data to next page
         let nextBtn = document.getElementById("next_btn");
+        let checkedBtnCount = 0;
+
         function sendData() {
-            let access_token = '<%= access_token %>';
-            let trackIds = '<%= trackIds %>';
-            let queryString = "limit=10&seed_tracks=";
+            if (checkedBtnCount > 0) {
+                let access_token = '<%= access_token %>';
+                let trackIds = '<%= trackIds %>';
+                let queryString = "limit=40&seed_tracks=";
 
-            trackIds += "&";
-            queryString += trackIds;
-      
-            // Audio Feature values
-            let featureDisplays = document.getElementsByClassName("feature-display");
-            let featureData = new Object();
-            for (var i = 0; i < featureDisplays.length; i++) {
-                let key = featureDisplays[i].id;
-                let value = parseFloat(featureDisplays[i].textContent);
-                featureData[key] = value;
-            }
-                        
-            const entries = Object.entries(featureData);
-            for (const [key, value] of entries){
-                queryString = queryString + key + "=" + value + "&";
-            }
-            queryString = queryString.slice(0, -1);
+                trackIds += "&";
+                queryString += trackIds;
 
-            // Desired Audio features
-            let audioFeatures = "",
-                checkBoxes = document.getElementsByTagName("input");
-
-            for(var i = 0; i < checkBoxes.length; i++){
-                if(checkBoxes[i].type === "checkbox" && checkBoxes[i].checked === true){
-                    audioFeatures += checkBoxes[i].id;
+                // Audio Feature values
+                let featureDisplays = document.getElementsByClassName("feature-display");
+                let featureData = new Object();
+                for (var i = 0; i < featureDisplays.length; i++) {
+                    let key = featureDisplays[i].id;
+                    let value = parseFloat(featureDisplays[i].textContent);
+                    featureData[key] = value;
                 }
+
+                const entries = Object.entries(featureData);
+                for (const [key, value] of entries) {
+                    queryString = queryString + key + "=" + value + "&";
+                }
+                queryString = queryString.slice(0, -1);
+
+                // Desired Audio features
+                let featuresList = "",
+                    checkBoxes = document.getElementsByTagName("input");
+
+                for (var i = 0; i < checkBoxes.length; i++) {
+                    if (checkBoxes[i].type === "checkbox" && checkBoxes[i].checked === true) {
+                        featuresList = featuresList + checkBoxes[i].id + ", ";
+                    }
+                }
+                featuresList = featuresList.slice(0, -2);
+
+                let url = "/recommendations/" + access_token + "/" + queryString + "/" + featuresList + "/" + trackIds;
+                nextBtn.href = url;
+            }else{
+                let instructions = document.getElementById("checkbox_instructions");
+                let alert = document.createElement("h6");
+                alert.textContent = "Please select at least 1 audio feature.";
+                alert.setAttribute("class", "text-danger");
+
+                instructions.appendChild(alert);
             }
 
-            let url = "/recommendations/" + access_token + "/" + queryString + "/" + audioFeatures + "/" + trackIds;
-            nextBtn.href = url;
         }
-        
+
         nextBtn.addEventListener("click", sendData);
     </script>
 </body>

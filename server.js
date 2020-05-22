@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const request = require("request");
 const fetch = require("node-fetch");
 const cors = require("cors");
@@ -11,7 +12,7 @@ app.set("view engine", "ejs");
 
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
-const redirect_uri = "http://localhost:8888/callback";
+const redirect_uri = "https://spotify-track-finder.herokuapp.com/callback";
 
 app.listen(port, function () {
   console.log(`Server Started: ${port}`);
@@ -36,7 +37,7 @@ let stateKey = "spotify_auth_state";
 
 app
   .use(cookieParser())
-  .use(express.static(__dirname + "/static"))
+  .use(express.static(path.join(__dirname, 'static')))
   .use(cors());
 
 app.get("/", function (req, res) {
@@ -47,7 +48,7 @@ app.get("/login", function (req, res) {
   let state = generateRandomString(16);
   res.cookie(stateKey, state);
 
-  let scope = "user-read-email user-read-private user-top-read";
+  let scope = "user-read-email user-read-private user-top-read playlist-modify-public";
   res.redirect(
     "https://accounts.spotify.com/authorize?" +
       querystring.stringify({
@@ -182,11 +183,11 @@ app.get("/features/:access_token/:trackIds", function (req, res) {
     .catch((err) => console.log(err));
 });
 
-app.get("/recommendations/:access_token/:queryString/:features/:trackIds", function (req, res) {
+app.get("/recommendations/:access_token/:queryString/:featuresList/:trackIds", function (req, res) {
   let access_token = req.params.access_token,
     refresh_token = req.query.refresh_token,
     queryString = req.params.queryString,
-    featuresList = req.params.features,
+    featuresList = req.params.featuresList,
     trackIds = req.params.trackIds;
 
   let options = {
@@ -215,19 +216,71 @@ app.get("/recommendations/:access_token/:queryString/:features/:trackIds", funct
       .then((res) => res.json())
       .then((res) => featuresData = res)
       .then(function(){
-        res.render("recommendations", { recommendations: data, featuresList: featuresList, features: featuresData, featuresParams: queryString });
-        console.log(queryString);
+        res.render("recommendations", { recommendations: data, featuresList: featuresList, features: featuresData, featuresParams: queryString, access_token: access_token });
       })
       
     })
     .catch((err) => console.log(err));
 });
 
-app.get("*", function(req, res){
-  res.redirect("/");
+// Create playlist with recommendations"
+app.get("/create_playlist/:access_token/:trackUris/:featuresList", function (req, res) {
+  let trackUris = req.params.trackUris,
+  access_token = req.params.access_token,
+  featuresList = req.params.featuresList;
+  console.log(trackUris);
+
+  let options = {
+    url: "https://api.spotify.com/v1/me",
+    headers: {
+    Authorization: "Bearer " + access_token,
+    },
+    json: true,
+};
+
+fetch(options.url, {
+  headers: options.headers,
 })
+  .then((res) => res.json())
+  .then((res) => (userInfo = res))
+  .then(function (){
+    let options = {
+      url: "https://api.spotify.com/v1/users/" + userInfo.id + "/playlists",
+      headers: { Authorization: "Bearer " + access_token },
+      body: {
+        name: "Recommendations by TrackFinder",
+        description:
+          "Based on the tracks you picked, trying to match the following audio features: " + featuresList,
+        public: true,
+      },
+      json: true,
+    };
+
+    request.post(options, function(error, response, body){
+      let playlistId = body.id;
+      let options = {
+        url: "https://api.spotify.com/v1/playlists/" + playlistId + "/tracks?uris=" + trackUris,
+        headers: {
+        Authorization: "Bearer " + access_token,
+        },
+        json: true,
+    };
+      request.post(options, function(error, response, body){
+        res.redirect(
+          "/user?" +
+            querystring.stringify({
+              access_token: access_token
+            })
+        );
+      })
+    });
+  })
+  .catch((err) => console.error(err));       
+});
+
+app.get("*", function (req, res) {
+  res.redirect("/");
+});
 
 // TODO
-// Tempo % bug on recommendations page
 // create playlist or create with good tracks only
-// Optional target and max values - Maybe

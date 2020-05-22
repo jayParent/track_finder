@@ -38,6 +38,7 @@
                                 
                             <!-- Long term top tracks table -->
                             <table class="table table-sm table-striped table-dark mt-2 mb-2 scrollableBody" id="top_tracks_table" style="display: none;">
+                                <caption class="text-white text-center">All-Time Top Tracks</caption>
                                 <thead>
                                     <tr>
                                         <th>Track Title</th>
@@ -57,6 +58,30 @@
                                     <% }) %>
                                 </tbody>
                             </table>
+
+                            <!-- Recent term top tracks table -->
+                            <table class="table table-sm table-striped table-dark mt-2 mb-2 scrollableBody" id="recent_tracks_table" style="display: none;">
+                                <caption class="text-white text-center">Recent Top Tracks (last ~4 weeks)</caption>
+                                <thead>
+                                    <tr>
+                                        <th>Track Title</th>
+                                        <th>Artists</th>
+                                        <th>Album</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent_tracks_table_body">
+                                    <% short_tracks.items.forEach(function(track){ %>
+                                    <tr>
+                                        <td class="trackTitle" data-track-id="<%= track.id %>" onclick="addTrackForAnalysis(this)">
+                                            <%= track.name %>
+                                        </td>
+                                        <td><%= track.artists[0].name %> </td>
+                                        <td><%= track.album.name %> </td>
+                                    </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+
                         </div>
                     </div>
                     <div class="row">
@@ -78,7 +103,7 @@
                     </div>
                     <div class="row">
                         <div class="col text-center">
-                            <a href="/features/<%= access_token %>/" class="btn btn-outline-white font-weight-bold" id="next_btn">Next</a>
+                            <a href="/features/<%= access_token %>/" class="btn btn-outline-white font-weight-bold disabled" id="next_btn">Next</a>
                         </div>
                     </div>
                 </div>
@@ -95,20 +120,33 @@
     }
 
     // Fill content with top tracks when button is pressed
-    document.getElementById("top_tracks_button").addEventListener("click", getTopTracks);
+    let topTracksBtn = document.getElementById("top_tracks_button");
+    topTracksBtn.addEventListener("click", getTopTracks);
 
     let topTracksTable = document.getElementById("top_tracks_table");
+    let recentTracksTable = document.getElementById("recent_tracks_table");
     let searchSnippet = document.getElementById("search_snippet");
 
     function getTopTracks() {
-        topTracksTable.style.display = "table";
-        searchSnippet.style.display = "none";
+        if(topTracksBtn.textContent == "My Top Tracks"){
+            topTracksBtn.textContent = "My Recent Top Tracks";
+            topTracksTable.style.display = "table";
+            recentTracksTable.style.display = "none";
+            searchSnippet.style.display = "none";
+        }else{
+            topTracksTable.style.display = "none";
+            recentTracksTable.style.display = "table";
+            searchSnippet.style.display = "none";
+            topTracksBtn.textContent = "My Top Tracks";
+        }
+        
     }
-
+    
     // Display search
     document.getElementById("search_tracks_btn").addEventListener("click", getSearchSnippet);
     function getSearchSnippet(){
         topTracksTable.style.display = "none";
+        recentTracksTable.style.display = "none";
         searchSnippet.style.display = "block";
     }
 
@@ -131,16 +169,25 @@
                 trackIds.pop(trackId);
                 trackTitles.pop(title);
                 count--;
+                if(count === 0){
+                    nextBtn.classList.add("disabled");
+                }
             });
             trackIds.push(trackId);
             trackTitles.push(title);
             trackContainer.appendChild(btn);
             count++;
+
+            if (count > 0) {
+                nextBtn.classList.remove("disabled");
+            }
         }
+        
     }
 
     // Send tracks for analysis
     let nextBtn = document.getElementById("next_btn");
+    
     nextBtn.addEventListener("click", function () {
         let idString = "";
         let titleString = "";
