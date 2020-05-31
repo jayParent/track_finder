@@ -23,6 +23,17 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col">
+                <div class="alert alert-info" role="alert" style="display: none;" id="liked_song_alert"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <a href="https://github.com/jayParent/track_finder" target="_blank"><i class="fab fa-github mt-3 ml-1"
+                        aria-hidden="true" id="gh_logo"></i></a>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col">
                 <!-- Recommendations header -->
                 <div class="text-center text-white mt-5 animated fadeInLeft">
                     <h1>
@@ -40,18 +51,18 @@
                         </span>
                     </h4>
                     <h2>Create Playlist</h2>
-                    <a href="" class="btn btn-outline-default font-weight-bold" id="create_perfect_button">Only
+                    <a href="" class="btn btn-custom-secondary font-weight-bold" id="create_perfect_button">Only
                         Perfect</a>
-                    <a href="" class="btn btn-outline-default font-weight-bold" id="create_good_button">Perfect &
+                    <a href="" class="btn btn-custom-secondary font-weight-bold" id="create_good_button">Perfect &
                         Good</a>
-                    <a href="" class="btn btn-outline-default font-weight-bold" id="create_all_button">All Tracks</a>
+                    <a href="" class="btn btn-custom-secondary font-weight-bold" id="create_all_button">All Tracks</a>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col text-center animated fadeInLeft">
-                <a class="btn btn-outline-white font-weight-bold" id="back_btn">Change Parameters</a>
-                <a href="" class="btn btn-outline-white font-weight-bold">Refresh</a>
+                <a class="btn btn-custom-primary font-weight-bold" id="back_btn">Change Parameters</a>
+                <a href="" class="btn btn-custom-primary font-weight-bold">Refresh</a>
             </div>
         </div>
         <div class="row">
@@ -107,8 +118,8 @@
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <a href="/save/<%= recommendations.tracks[i].id %>"
-                                        class="btn btn-sm btn-outline-white font-weight-bold"><i
+                                    <a href="/save/<%= recommendations.tracks[i].id %>/<%= access_token %>"
+                                        class="btn btn-sm btn-outline-white font-weight-bold like_song_btn"><i
                                             class="fas fa-heart"></i> Add to "Liked Songs"</a>
                                 </div>
                             </div>
@@ -138,13 +149,14 @@
             window.history.back();
         }
 
-        function createPlaylistUrl() {
-            let createAllBtn = document.getElementById("create_all_button"),
+        let createAllBtn = document.getElementById("create_all_button"),
             createGoodBtn = document.getElementById("create_good_button"),
-            createPerfectBtn = document.getElementById("create_perfect_button");
+            createPerfectBtn = document.getElementById("create_perfect_button"),
+            likeBtns = document.getElementsByClassName("like_song_btn"),
+            savedAlert = document.getElementById("liked_song_alert");
 
+        function createPlaylistUrl() {
             let trackUris = document.getElementsByClassName("recommendation_uri");
-
             let createPlaylistUri = "",
                 featuresList = '<%= featuresList %>';
             let access_token = '<%= access_token %>';
@@ -176,6 +188,35 @@
             createPlaylistUri = createPlaylistUri.slice(0, -1);
             createAllBtn.href = "/create_playlist/" + access_token + "/" + createPlaylistUri + "/" + featuresList;
         }
+
+        function alertCreatedPlaylist(id) {
+            if (id === "create_perfect_button") {
+                savedAlert.textContent = 'Playlist Created with only "Perfect" Tracks!';
+            }else if(id === "create_good_button"){
+                savedAlert.textContent = 'Playlist Created with both "Perfect" & "Good" Tracks!';
+            }else{
+                savedAlert.textContent = 'Playlist Created with All Tracks!';
+            }
+            savedAlert.style.display = "initial";
+            setTimeout(function () {
+                savedAlert.style.display = "none";
+            }, 2000)
+        }
+        
+        createPerfectBtn.addEventListener("click", function() { alertCreatedPlaylist(this.id); });
+        createGoodBtn.addEventListener("click", function() { alertCreatedPlaylist(this.id); });
+        createAllBtn.addEventListener("click", function() { alertCreatedPlaylist(this.id); });
+
+        function alertSavedTrack(){
+            savedAlert.textContent = 'Track Saved to "Liked Songs" on Spotify!';
+            savedAlert.style.display = "initial";
+            setTimeout(function(){
+                savedAlert.style.display = "none";
+            }, 2000)
+        }
+        likeBtns.forEach(function(btn){
+            btn.addEventListener("click", alertSavedTrack);
+        })
 
         function checkMaxValues(feature, data, container) {
             let params = '<%= featuresParams %>';

@@ -16,194 +16,93 @@
         rel="stylesheet" />
     <!-- Material Design Bootstrap -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.15.0/css/mdb.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="/../css/style.css">
 </head>
 
 <body>
-    <div class="container-fluid">
+    <div class="container-fluid h-100">
         <div class="row">
             <div class="col">
-                <a href="https://github.com/jayParent/track_finder" target="_blank"><i
-                        class="fab fa-github text-dark mt-3 ml-1" aria-hidden="true" id="gh_logo"></i></a>
+                <a href="https://github.com/jayParent/track_finder" target="_blank"><i class="fab fa-github mt-3 ml-1"
+                        aria-hidden="true" id="gh_logo"></i></a>
+            </div>
+        </div>
+        <div class="row h-100 align-items-center text-center main_welcome">
+            <div class="col animated fadeInDown">
+                <button class="btn btn-custom-primary font-weight-bold main_welcome mt-5"
+                id="begin_btn">Begin</button>
+            </div>
+        </div>
+        <div class="row h-100 pick_tracks_btns">
+            <div class="col mx-auto text-center text-white animated fadeInUp">
+                <h1 class="mt-3">Pick up to 5 Tracks</h1>
+                <button type="button" class="btn btn-custom-secondary font-weight-bold" id="top_tracks_button">See All-Time
+                    Top Tracks</button>
+
+                <!-- Long term top tracks table -->
+                <table class="table table-sm text-white mt-2 scrollableBody" id="top_tracks_table"
+                    style="display: none;">
+                    <caption class="text-white text-center">All-Time Top Tracks</caption>
+                    <thead>
+                        <tr>
+                            <th>Track Title</th>
+                            <th>Artists</th>
+                            <th>Album</th>
+                        </tr>
+                    </thead>
+                    <tbody id="top_tracks_table_body">
+                        <% long_tracks.items.forEach(function(track){ %>
+                        <tr>
+                            <td class="trackTitle" data-track-id="<%= track.id %>" onclick="addTrackForAnalysis(this)">
+                                <%= track.name %>
+                            </td>
+                            <td><%= track.artists[0].name %> </td>
+                            <td><%= track.album.name %> </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+
+                <!-- Recent term top tracks table -->
+                <table class="table table-sm text-white mt-2 scrollableBody" id="recent_tracks_table"
+                    style="display: none;">
+                    <caption class="text-white text-center">Recent Top Tracks (last ~4 weeks)</caption>
+                    <thead>
+                        <tr>
+                            <th>Track Title</th>
+                            <th>Artists</th>
+                            <th>Album</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent_tracks_table_body">
+                        <% short_tracks.items.forEach(function(track){ %>
+                        <tr>
+                            <td class="trackTitle" data-track-id="<%= track.id %>" onclick="addTrackForAnalysis(this)">
+                                <%= track.name %>
+                            </td>
+                            <td><%= track.artists[0].name %> </td>
+                            <td><%= track.album.name %> </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-9 col-xl-6 mx-auto">
-                <div class="container-fluid" id="main_window">
-                    <div class="row">
-                        <div class="col mx-auto text-center text-white">
-                            <h1 class="mt-3">Pick up to 5 Tracks</h1>
-                            <button type="button" class="btn btn-outline-white font-weight-bold" id="top_tracks_button">My Top Tracks</button>
-                            <button type="button" class="btn btn-outline-white font-weight-bold" id="search_tracks_btn">Search For Tracks</button>
-                                
-                            <!-- Long term top tracks table -->
-                            <table class="table table-sm table-striped table-dark mt-2 mb-2 scrollableBody" id="top_tracks_table" style="display: none;">
-                                <caption class="text-white text-center">All-Time Top Tracks</caption>
-                                <thead>
-                                    <tr>
-                                        <th>Track Title</th>
-                                        <th>Artists</th>
-                                        <th>Album</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="top_tracks_table_body">
-                                    <% long_tracks.items.forEach(function(track){ %>
-                                    <tr>
-                                        <td class="trackTitle" data-track-id="<%= track.id %>" onclick="addTrackForAnalysis(this)">
-                                            <%= track.name %>
-                                        </td>
-                                        <td><%= track.artists[0].name %> </td>
-                                        <td><%= track.album.name %> </td>
-                                    </tr>
-                                    <% }) %>
-                                </tbody>
-                            </table>
-
-                            <!-- Recent term top tracks table -->
-                            <table class="table table-sm table-striped table-dark mt-2 mb-2 scrollableBody" id="recent_tracks_table" style="display: none;">
-                                <caption class="text-white text-center">Recent Top Tracks (last ~4 weeks)</caption>
-                                <thead>
-                                    <tr>
-                                        <th>Track Title</th>
-                                        <th>Artists</th>
-                                        <th>Album</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="recent_tracks_table_body">
-                                    <% short_tracks.items.forEach(function(track){ %>
-                                    <tr>
-                                        <td class="trackTitle" data-track-id="<%= track.id %>" onclick="addTrackForAnalysis(this)">
-                                            <%= track.name %>
-                                        </td>
-                                        <td><%= track.artists[0].name %> </td>
-                                        <td><%= track.album.name %> </td>
-                                    </tr>
-                                    <% }) %>
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-5 mx-auto">
-                            <div id="search_snippet" style="display: none;">
-                                <div class="input-group my-3">
-                                    <div class="input-group-prepend">
-                                      <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                    </div>
-                                    <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
-                                  </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col text-center">
-                            <div id="picked_tracks"></div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col text-center">
-                            <a href="/features/<%= access_token %>/" class="btn btn-outline-white font-weight-bold disabled" id="next_btn">Next</a>
-                        </div>
-                    </div>
-                </div>
+            <div class="col text-center">
+                <div id="picked_tracks"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center" id="next_btn_container">
+                <a href="/features/<%= access_token %>/"
+                    class="btn btn-custom-primary font-weight-bold pick_tracks_btns disabled" id="next_btn">Next</a>
             </div>
         </div>
     </div>
     </div>
-<script>
-    // Set multiple attributes at once on hmtl element
-    function setAttributes(element, attributes) {
-        for (var key in attributes) {
-            element.setAttribute(key, attributes[key]);
-        }
-    }
-
-    // Fill content with top tracks when button is pressed
-    let topTracksBtn = document.getElementById("top_tracks_button");
-    topTracksBtn.addEventListener("click", getTopTracks);
-
-    let topTracksTable = document.getElementById("top_tracks_table");
-    let recentTracksTable = document.getElementById("recent_tracks_table");
-    let searchSnippet = document.getElementById("search_snippet");
-
-    function getTopTracks() {
-        if(topTracksBtn.textContent == "My Top Tracks"){
-            topTracksBtn.textContent = "My Recent Top Tracks";
-            topTracksTable.style.display = "table";
-            recentTracksTable.style.display = "none";
-            searchSnippet.style.display = "none";
-        }else{
-            topTracksTable.style.display = "none";
-            recentTracksTable.style.display = "table";
-            searchSnippet.style.display = "none";
-            topTracksBtn.textContent = "My Top Tracks";
-        }
-        
-    }
-    
-    // Display search
-    document.getElementById("search_tracks_btn").addEventListener("click", getSearchSnippet);
-    function getSearchSnippet(){
-        topTracksTable.style.display = "none";
-        recentTracksTable.style.display = "none";
-        searchSnippet.style.display = "block";
-    }
-
-    // Add or remove tracks from list to analyse
-    let trackContainer = document.getElementById("picked_tracks");
-    let limit = 5,
-        count = 0;
-    let trackIds = [];
-    let trackTitles = [];
-
-    function addTrackForAnalysis(trackTitle) {
-        if (count < limit) {
-            let btn = document.createElement("button");
-            let title = trackTitle.innerHTML;
-            btn.innerHTML = title + " <i class='fas fa-times'></i>";
-            btn.classList = "btn btn-sm btn-outline-light-green";
-            let trackId = trackTitle.getAttribute("data-track-id");
-            btn.addEventListener("click", function () {
-                trackContainer.removeChild(btn);
-                trackIds.pop(trackId);
-                trackTitles.pop(title);
-                count--;
-                if(count === 0){
-                    nextBtn.classList.add("disabled");
-                }
-            });
-            trackIds.push(trackId);
-            trackTitles.push(title);
-            trackContainer.appendChild(btn);
-            count++;
-
-            if (count > 0) {
-                nextBtn.classList.remove("disabled");
-            }
-        }
-        
-    }
-
-    // Send tracks for analysis
-    let nextBtn = document.getElementById("next_btn");
-    
-    nextBtn.addEventListener("click", function () {
-        let idString = "";
-        let titleString = "";
-
-        trackIds.forEach(function (trackId) {
-            idString = idString + trackId + ",";
-        });
-
-        trackTitles.forEach(function (trackTitle) {
-            titleString += trackTitle;
-        })
-
-        idString = idString.slice(0, -1);
-        nextBtn.href = nextBtn.href + idString;
-    });
-</script>
+    <script src="/../scripts/scripts.js"></script>
+    <script src="/../scripts/main.js"></script>
 </body>
 
 </html>

@@ -13,6 +13,8 @@ app.set("view engine", "ejs");
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
 const redirect_uri = "https://spotify-track-finder.herokuapp.com/callback";
+// http://localhost:8888/callback
+// https://spotify-track-finder.herokuapp.com/callback
 
 app.listen(port, function () {
   console.log(`Server Started: ${port}`);
@@ -48,7 +50,7 @@ app.get("/login", function (req, res) {
   let state = generateRandomString(16);
   res.cookie(stateKey, state);
 
-  let scope = "user-read-email user-read-private user-top-read playlist-modify-public";
+  let scope = "user-read-private user-top-read playlist-modify-public user-library-modify";
   res.redirect(
     "https://accounts.spotify.com/authorize?" +
       querystring.stringify({
@@ -228,7 +230,6 @@ app.get("/create_playlist/:access_token/:trackUris/:featuresList", function (req
   let trackUris = req.params.trackUris,
   access_token = req.params.access_token,
   featuresList = req.params.featuresList;
-  console.log(trackUris);
 
   let options = {
     url: "https://api.spotify.com/v1/me",
@@ -258,6 +259,7 @@ fetch(options.url, {
 
     request.post(options, function(error, response, body){
       let playlistId = body.id;
+
       let options = {
         url: "https://api.spotify.com/v1/playlists/" + playlistId + "/tracks?uris=" + trackUris,
         headers: {
@@ -266,16 +268,29 @@ fetch(options.url, {
         json: true,
     };
       request.post(options, function(error, response, body){
-        res.redirect(
-          "/user?" +
-            querystring.stringify({
-              access_token: access_token
-            })
-        );
+        res.status(204).send();
       })
     });
   })
   .catch((err) => console.error(err));       
+});
+
+// Save a track to "Liked Songs"
+app.get("/save/:trackId/:access_token", function (req, res) {
+  let trackId = req.params.trackId,
+  access_token = req.params.access_token;
+
+  let options = {
+      url: "https://api.spotify.com/v1/me/tracks?ids=" + trackId,
+      headers: {
+      Authorization: "Bearer " + access_token,
+      },
+      json: true,
+  };
+  console.log(options.url);
+  request.put(options, function(error, response, body){
+    res.status(204).send();
+  });
 });
 
 app.get("*", function (req, res) {
@@ -283,4 +298,4 @@ app.get("*", function (req, res) {
 });
 
 // TODO
-// create playlist or create with good tracks only
+

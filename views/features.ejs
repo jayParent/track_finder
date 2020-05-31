@@ -23,65 +23,97 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col">
-                <a href="https://github.com/jayParent/track_finder" target="_blank"><i
-                        class="fab fa-github text-dark mt-3 ml-1" aria-hidden="true" id="gh_logo"></i></a>
+                <a href="https://github.com/jayParent/track_finder" target="_blank"><i class="fab fa-github mt-3 ml-1"
+                        aria-hidden="true" id="gh_logo"></i></a>
             </div>
         </div>
-        <div class="row">
+        <div class="row mt-5">
             <div class="col mx-auto">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-xl-8 mx-auto text-center">
-                            <table class="table table-responsive-sm table-sm table-dark my-3">
-                                <thead>
-                                    <tr>
-                                        <th>Track</th>
-                                        <th>Acousticness</th>
-                                        <th>Danceability</th>
-                                        <th>Energy</th>
-                                        <th>Instrumentalness</th>
-                                        <th>Liveness</th>
-                                        <th>Loudness</th>
-                                        <th>Speechiness</th>
-                                        <th>Valence</th>
-                                        <th>Tempo</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% for(var i = 0; i < tracks.audio_features.length; i++){ %>
-                                    <tr class="trackItem">
-                                        <td id="title<%= i %>"><%= titles.tracks[i].name %></td>
-                                        <td class="acousticness" id="a<%= i %>">
-                                            <%= tracks.audio_features[i].acousticness %></td>
-                                        <td class="danceability" id="d<%= i %>">
-                                            <%= tracks.audio_features[i].danceability %></td>
-                                        <td class="energy" id="e<%= i %>"><%= tracks.audio_features[i].energy %></td>
-                                        <td class="instrumentalness" id="ins<%= i %>">
-                                            <%= tracks.audio_features[i].instrumentalness %>
-                                        </td>
-                                        <td class="liveness" id="li<%= i %>"><%= tracks.audio_features[i].liveness %>
-                                        </td>
-                                        <td class="loudness"><%= tracks.audio_features[i].loudness %></td>
-                                        <td class="speechiness" id="s<%= i %>">
-                                            <%= tracks.audio_features[i].speechiness %></td>
-                                        <td class="valence" id="v<%= i %>"><%= tracks.audio_features[i].valence %></td>
-                                        <td class="tempo"><%= tracks.audio_features[i].tempo %></td>
-                                    </tr>
-                                    <% } %>
-                                    <tr class="bg-dark">
-                                        <td>Average</td>
-                                        <td id="avg_acousticness"></td>
-                                        <td id="avg_danceability"></td>
-                                        <td id="avg_energy"></td>
-                                        <td id="avg_instrumentalness"></td>
-                                        <td id="avg_liveness"></td>
-                                        <td id="avg_loudness"></td>
-                                        <td id="avg_speechiness"></td>
-                                        <td id="avg_valence"></td>
-                                        <td id="avg_tempo"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="card bg-dark text-center my-3">
+                                <table class="table table-responsive-sm table-sm text-white" id="features_table">
+                                    <thead>
+                                        <tr>
+                                            <th>Track</th>
+                                            <th data-toggle="tooltip" data-placement="top"
+                                                title="1.0 represents high confidence track is acoustic."
+                                                class="tooltip-custom">Acousticness <i
+                                                    class="far fa-question-circle"></i></th>
+                                            <th data-toggle="tooltip" data-placement="top"
+                                                title="A value of 0.0 is least danceable and 1.0 is most danceable."
+                                                class="tooltip-custom">Danceability <i
+                                                    class="far fa-question-circle"></i></th>
+                                            <th data-toggle="tooltip" data-placement="top"
+                                                title="Measure from 0.0 to 1.0, reprensents intensity and energy."
+                                                class="tooltip-custom">Energy <i class="far fa-question-circle"></i>
+                                            </th>
+                                            <th data-toggle="tooltip" data-placement="top"
+                                                title="Closer value to 1.0, greater likelyhood the track contains no vocals."
+                                                class="tooltip-custom">Instrumentalness <i
+                                                    class="far fa-question-circle"></i></th>
+                                            <th data-toggle="tooltip" data-placement="top"
+                                                title="A value of 0.8 provides a string likelyhood that the track is live."
+                                                class="tooltip-custom">Liveness <i class="far fa-question-circle"></i>
+                                            </th>
+                                            <th data-toggle="tooltip" data-placement="top"
+                                                title="Overall loudness of the track in decibels(dB)."
+                                                class="tooltip-custom">Loudness <i class="far fa-question-circle"></i>
+                                            </th>
+                                            <th data-toggle="tooltip" data-placement="top"
+                                                title="Values below 0.33 most likely represent music and other non-speech-like tracks."
+                                                class="tooltip-custom">Speechiness <i
+                                                    class="far fa-question-circle"></i></th>
+                                            <th data-toggle="tooltip" data-placement="top"
+                                                title="Measure from 0.0 to 1.0 describing the musical positiveness conveyed by the track."
+                                                class="tooltip-custom">Valence <i class="far fa-question-circle"></i>
+                                            </th>
+                                            <th data-toggle="tooltip" data-placement="top"
+                                                title="Overall estimated tempo in beats per minute(BPM)."
+                                                class="tooltip-custom">Tempo <i class="far fa-question-circle"></i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% for(var i = 0; i < tracks.audio_features.length; i++){ %>
+                                        <tr class="trackItem">
+                                            <td id="title<%= i %>"><%= titles.tracks[i].name %></td>
+                                            <td class="acousticness" id="a<%= i %>">
+                                                <%= tracks.audio_features[i].acousticness %></td>
+                                            <td class="danceability" id="d<%= i %>">
+                                                <%= tracks.audio_features[i].danceability %></td>
+                                            <td class="energy" id="e<%= i %>"><%= tracks.audio_features[i].energy %>
+                                            </td>
+                                            <td class="instrumentalness" id="ins<%= i %>">
+                                                <%= tracks.audio_features[i].instrumentalness %>
+                                            </td>
+                                            <td class="liveness" id="li<%= i %>">
+                                                <%= tracks.audio_features[i].liveness %>
+                                            </td>
+                                            <td class="loudness"><%= tracks.audio_features[i].loudness %></td>
+                                            <td class="speechiness" id="s<%= i %>">
+                                                <%= tracks.audio_features[i].speechiness %></td>
+                                            <td class="valence" id="v<%= i %>"><%= tracks.audio_features[i].valence %>
+                                            </td>
+                                            <td class="tempo"><%= tracks.audio_features[i].tempo %></td>
+                                        </tr>
+                                        <% } %>
+                                        <tr class="bg-dark">
+                                            <td>Average</td>
+                                            <td id="avg_acousticness"></td>
+                                            <td id="avg_danceability"></td>
+                                            <td id="avg_energy"></td>
+                                            <td id="avg_instrumentalness"></td>
+                                            <td id="avg_liveness"></td>
+                                            <td id="avg_loudness"></td>
+                                            <td id="avg_speechiness"></td>
+                                            <td id="avg_valence"></td>
+                                            <td id="avg_tempo"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
                         </div>
                     </div>
                     <div class="row">
@@ -101,8 +133,10 @@
                         <div class="col-xl-8 mx-auto">
                             <div class="card bg-dark text-white text-center my-3">
                                 <div class="card-header" id="checkbox_instructions">
-                                    <h2>Why?</h2>
-                                    <h6>What do you want the results to be based on?</h6>
+                                    <h2>What do you want the results to be based on?</h2>
+                                    <i data-toggle="tooltip" data-placement="top"
+                                        title="For bext results, choose 3-5 features that you think impact your taste the most."
+                                        class="far fa-question-circle tooltip-custom"></i>
                                 </div>
                                 <div class="card-body">
                                     <div class="btn-group btn-group-toggle flex-wrap" data-toggle="buttons">
@@ -142,8 +176,9 @@
                     </div>
                     <div class="row">
                         <div class="col text-center">
-                            <a class="btn btn-outline-white font-weight-bold" id="back_btn">Back</a>
-                            <a href="#checkbox_instructions" class="btn btn-outline-white font-weight-bold" id="next_btn">Next</a>
+                            <a class="btn btn-custom-primary font-weight-bold" id="back_btn">Back</a>
+                            <a href="#checkbox_instructions" class="btn btn-custom-primary font-weight-bold"
+                                id="next_btn">Next</a>
                         </div>
                     </div>
                     <div class="row">
@@ -222,15 +257,15 @@
         document.getElementById("avg_valence").textContent = audioFeaturesAvg.v.toPrecision(3);
         document.getElementById("avg_tempo").textContent = audioFeaturesAvg.t.toPrecision(3);
 
-        let a = document.getElementById("avg_acousticness").textContent,
-            d = document.getElementById("avg_danceability").textContent,
-            e = document.getElementById("avg_energy").textContent,
-            ins = document.getElementById("avg_instrumentalness").textContent,
-            li = document.getElementById("avg_liveness").textContent,
-            lo = document.getElementById("avg_loudness").textContent,
-            s = document.getElementById("avg_speechiness").textContent,
-            v = document.getElementById("avg_valence").textContent,
-            t = document.getElementById("avg_tempo").textContent;
+        let avg_acousticness = parseFloat(document.getElementById("avg_acousticness").textContent),
+            avg_danceability = parseFloat(document.getElementById("avg_danceability").textContent),
+            avg_energy = parseFloat(document.getElementById("avg_energy").textContent),
+            avg_instrumentalness = parseFloat(document.getElementById("avg_instrumentalness").textContent),
+            avg_liveness = parseFloat(document.getElementById("avg_liveness").textContent),
+            avg_loudness = parseFloat(document.getElementById("avg_loudness").textContent),
+            avg_speechiness = parseFloat(document.getElementById("avg_speechiness").textContent),
+            avg_valence = parseFloat(document.getElementById("avg_valence").textContent),
+            avg_tempo = parseFloat(document.getElementById("avg_tempo").textContent);
 
         // Audio features Line Chart
         var ctxL_audio = document.getElementById("audio_features_linechart").getContext("2d");
@@ -250,13 +285,13 @@
                     {
                         label: "Average",
                         data: [
-                            a,
-                            d,
-                            e,
-                            ins,
-                            li,
-                            s,
-                            v,
+                            avg_acousticness,
+                            avg_danceability,
+                            avg_energy,
+                            avg_instrumentalness,
+                            avg_liveness,
+                            avg_speechiness,
+                            avg_valence,
                         ],
                         borderColor: ["rgba(0, 0, 0)"],
                         backgroundColor: "rgba(255, 255, 255, 0)",
@@ -335,15 +370,6 @@
         function createSliders(e) {
             let id = e.target.id;
             let targetSlider, maxSlider, targetNumDisplay, maxNumDisplay, sliders;
-            let avg_acousticness = parseFloat(document.getElementById("avg_acousticness").textContent),
-                avg_danceability = parseFloat(document.getElementById("avg_danceability").textContent),
-                avg_energy = parseFloat(document.getElementById("avg_energy").textContent),
-                avg_instrumentalness = parseFloat(document.getElementById("avg_instrumentalness").textContent),
-                avg_liveness = parseFloat(document.getElementById("avg_liveness").textContent),
-                avg_loudness = parseFloat(document.getElementById("avg_loudness").textContent),
-                avg_speechiness = parseFloat(document.getElementById("avg_speechiness").textContent),
-                avg_valence = parseFloat(document.getElementById("avg_valence").textContent),
-                avg_tempo = parseFloat(document.getElementById("avg_tempo").textContent);
 
             function makeSliders(value, id) {
                 if (id === "Tempo") {
@@ -520,9 +546,9 @@
 
                 let url = "/recommendations/" + access_token + "/" + queryString + "/" + featuresList + "/" + trackIds;
                 nextBtn.href = url;
-            }else{
-                let instructions = document.getElementById("checkbox_instructions");
-                let alert = document.createElement("h6");
+            } else {
+                let instructions = document.getElementById("checkbox_instructions"),
+                    alert = document.createElement("h6");
                 alert.textContent = "Please select at least 1 audio feature.";
                 alert.setAttribute("class", "text-danger");
 
@@ -532,6 +558,11 @@
         }
 
         nextBtn.addEventListener("click", sendData);
+
+        // For Bootstrap tooltip
+        $(document).ready(function () {
+            $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+        });
     </script>
 </body>
 
