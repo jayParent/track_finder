@@ -1,9 +1,13 @@
 /* Global */
 html, body{
-    background-image: url(/imgs/main1.jpg);
-    background-size: cover;
-    background-position-y: center;
+    background-color: #121212;
     height: 100%;
+}
+
+#gh_logo{
+    font-size: 2rem;
+    position: absolute;
+    color: white;
 }
 
 .custom-green{
@@ -15,19 +19,38 @@ html, body{
 .custom-red{
     color: rgb(255, 51, 51);
 }
+.custom-purple{
+    color: #BB86FC;
+}
+.custom-deep-purple{
+    color: #3700B3;
+}
+
+.btn-custom-primary{
+    background-color: #BB86FC;
+    color: #000000;
+}
+
+.btn-custom-primary-variant{
+    background-color: #3700B3;
+    color: #ffffff;
+}
+  
+.btn-custom-secondary{
+    background-color: #03DAC5;
+    color: #000000;
+}
 
 .tooltip-custom{
   cursor: help;
 }
 
-/* Main */
-
-#gh_logo{
-    font-size: 2rem;
-    position: absolute;
-    color: white;
+/* Index */
+#more_info_container{
+    background-color: rgba(255, 255, 255, 0.6);
 }
 
+/* Main */
 .scrollableBody#top_tracks_table thead,
 tbody#top_tracks_table_body tr{
     display: table;
@@ -48,32 +71,22 @@ tbody#recent_tracks_table_body tr{
     max-height: 50vh;
 }
 
-#top_tracks_table, #recent_tracks_table,
-#features_table{
-    background-color: #121212;
+#top_tracks_table, #recent_tracks_table{
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.14)), #121212;
+    box-shadow: 0px 7px 8px rgba(0, 0, 0, 0.2), 0px 5px 22px rgba(0, 0, 0, 0.12), 0px 12px 17px rgba(0, 0, 0, 0.14);
 }
 
 .trackTitle{
     cursor: pointer;
 }
 
-.pick_tracks_btns{
+#next_btn_main{
     display: none;
 }
 
 #instructions_list{
     list-style: inside decimal;
     padding: 0;
-}
-
-.btn-custom-primary{
-  background-color: #BB86FC;
-  color: #000000;
-}
-
-.btn-custom-secondary{
-  background-color: #03DAC5;
-  color: #000000;
 }
 
 /* Recommendations */
@@ -83,5 +96,7 @@ tbody#recent_tracks_table_body tr{
 }
 
 @media screen and (max-width: 600px) {
-
+    #gh_logo{
+        display: none;
+    }
   }

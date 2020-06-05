@@ -22,14 +22,79 @@
   <div class="container-fluid h-100">
     <div class="row">
       <div class="col">
-        <a href="https://github.com/jayParent/track_finder" target="_blank" id="gh_logo"><i class="fab fa-github mt-3 ml-1" aria-hidden="true"></i></a>
+        <a href="https://github.com/jayParent/track_finder" target="_blank"><i class="fab fa-github mt-3 ml-1"
+          aria-hidden="true" id="gh_logo"></i></a>
       </div>
     </div>
-    <div class="row h-100 align-items-center text-center">
-      <div class="col animated fadeInDown" id="index_header">
-          <a href="/login" class="btn btn-custom-primary font-weight-bold">Login</a>
+    <div class="row h-25 justify-content-center text-center text-white mt-5">
+      <div class="col-lg-6 animated fadeInDown">
+        <h1 class="display-5">Spotify Track Finder</h1>
+        <p class="lead">Analyze your favorite Tracks, get Recommendations based on the Audio Features you choose</p>
+        <a href="/login" class="btn btn-custom-primary font-weight-bold my-5">Get Started</a>
+      </div>
+    </div>
+    <div class="row justify-content-center align-items-center h-75">
+      <div class="col-lg-6 animated fadeInUp mt-3">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <img class="img-fluid" src="/imgs/landing_page_demo.png" alt="Image of App Demo">
+            </div>
+          </div>
+          <div class="row text-center text-white">
+            <div class="col">
+              <p class="lead">More Info</p>
+              <a href="#more_info_container" class="display-4"><i class="fas fa-arrow-down custom-purple"></i></a>
+            </div>
+          </div>
+        </div>        
       </div>
     </div>
   </div>
-</body>
-</html>
+  <div class="container-fluid text-white" id="more_info_container">
+    <div class="row">
+      <div class="col-lg-3 mx-auto mt-5">
+        <div class="card bg-dark">
+          <img class="card-img-top" src="holder.js/100x180/" alt="">
+          <div class="card-body">
+            <h4 class="card-title">How does it work?</h4>
+            <ul>
+              <li>Pick up to 5 Tracks from your All-Time or Recent Favorites</li>
+              <li>Receive an Analysis of those Tracks</li>
+              <li>Adjust Spotify's Recommendation algorithm, based on what you think influences your taste the most</li>
+              <li>Get Recommendations based on the above</li>
+              <li>Optionally create a Spotify playlist with the results</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 mx-auto mt-5">
+        <div class="card bg-dark">
+          <img class="card-img-top" src="holder.js/100x180/" alt="">
+          <div class="card-body">
+            <h4 class="card-title">What is the goal?</h4>
+              <p>Finding new favorite songs that sound very similar to particular songs that you love.</p>
+              <p>Most recommendation algorithms base their results on genres, artists or listening habits of other users. The result is
+                often playlists containing songs with drastically different "feel" to those that you love the most.
+              </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 mx-auto mt-5">
+        <div class="card bg-dark">
+          <img class="card-img-top" src="holder.js/100x180/" alt="">
+          <div class="card-body">
+            <h4 class="card-title">Is it safe?</h4>
+              <p>The authentification is handled by Spotify, through their public API. We only ask the minimum permissions in order for
+                the app to function. These will be displayed when you log in. Your email adress remains private.
+              </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <%- include ("partials/footer") %>
+      </div>
+    </div>
+  </div>

@@ -40,6 +40,7 @@ let stateKey = "spotify_auth_state";
 app
   .use(cookieParser())
   .use(express.static(path.join(__dirname, 'static')))
+  .use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'))
   .use(cors());
 
 app.get("/", function (req, res) {
@@ -50,7 +51,7 @@ app.get("/login", function (req, res) {
   let state = generateRandomString(16);
   res.cookie(stateKey, state);
 
-  let scope = "user-read-private user-top-read playlist-modify-public user-library-modify";
+  let scope = "user-top-read playlist-modify-public user-library-modify";
   res.redirect(
     "https://accounts.spotify.com/authorize?" +
       querystring.stringify({
@@ -298,4 +299,6 @@ app.get("*", function (req, res) {
 });
 
 // TODO
+// White button bug on features and recommendations
+// page for when acess token expires or use refresh token
 

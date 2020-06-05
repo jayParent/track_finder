@@ -27,78 +27,75 @@
                         aria-hidden="true" id="gh_logo"></i></a>
             </div>
         </div>
-        <div class="row h-100 align-items-center text-center main_welcome">
-            <div class="col animated fadeInDown">
-                <button class="btn btn-custom-primary font-weight-bold main_welcome mt-5"
-                id="begin_btn">Begin</button>
-            </div>
-        </div>
-        <div class="row h-100 pick_tracks_btns">
-            <div class="col mx-auto text-center text-white animated fadeInUp">
-                <h1 class="mt-3">Pick up to 5 Tracks</h1>
-                <button type="button" class="btn btn-custom-secondary font-weight-bold" id="top_tracks_button">See All-Time
-                    Top Tracks</button>
-
-                <!-- Long term top tracks table -->
-                <table class="table table-sm text-white mt-2 scrollableBody" id="top_tracks_table"
-                    style="display: none;">
-                    <caption class="text-white text-center">All-Time Top Tracks</caption>
-                    <thead>
-                        <tr>
-                            <th>Track Title</th>
-                            <th>Artists</th>
-                            <th>Album</th>
-                        </tr>
-                    </thead>
-                    <tbody id="top_tracks_table_body">
-                        <% long_tracks.items.forEach(function(track){ %>
-                        <tr>
-                            <td class="trackTitle" data-track-id="<%= track.id %>" onclick="addTrackForAnalysis(this)">
-                                <%= track.name %>
-                            </td>
-                            <td><%= track.artists[0].name %> </td>
-                            <td><%= track.album.name %> </td>
-                        </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-
-                <!-- Recent term top tracks table -->
-                <table class="table table-sm text-white mt-2 scrollableBody" id="recent_tracks_table"
-                    style="display: none;">
-                    <caption class="text-white text-center">Recent Top Tracks (last ~4 weeks)</caption>
-                    <thead>
-                        <tr>
-                            <th>Track Title</th>
-                            <th>Artists</th>
-                            <th>Album</th>
-                        </tr>
-                    </thead>
-                    <tbody id="recent_tracks_table_body">
-                        <% short_tracks.items.forEach(function(track){ %>
-                        <tr>
-                            <td class="trackTitle" data-track-id="<%= track.id %>" onclick="addTrackForAnalysis(this)">
-                                <%= track.name %>
-                            </td>
-                            <td><%= track.artists[0].name %> </td>
-                            <td><%= track.album.name %> </td>
-                        </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col text-center">
-                <div id="picked_tracks"></div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col text-center" id="next_btn_container">
-                <a href="/features/<%= access_token %>/"
-                    class="btn btn-custom-primary font-weight-bold pick_tracks_btns disabled" id="next_btn">Next</a>
-            </div>
-        </div>
+        <div class="row h-100">
+            <div class="container">
+                <div class="row mt-5">
+                    <div class="col mx-auto text-center text-white animated fadeInUp">
+                        <h1 class="display-5" id="time_header">Your 50 most-played Tracks, Recently</h1>
+                        <p class="lead">Pick up to 5 tracks</p>
+                        <button type="button" class="btn btn-custom-secondary font-weight-bold" id="top_tracks_button">See All-Time Top Tracks</button>
+        
+                        <!-- Long term top tracks table -->
+                        <table class="table table-sm text-white mt-3 scrollableBody" id="top_tracks_table"
+                            style="display: none;">
+                            <caption class="text-white text-center">All-Time Top Tracks</caption>
+                            <thead>
+                                <tr>
+                                    <th>Track Title</th>
+                                    <th>Artists</th>
+                                    <th>Album</th>
+                                </tr>
+                            </thead>
+                            <tbody id="top_tracks_table_body">
+                                <% long_tracks.items.forEach(function(track){ %>
+                                <tr>
+                                    <td class="trackTitle" data-track-id="<%= track.id %>" onclick="addTrackForAnalysis(this)">
+                                        <%= track.name %>
+                                    </td>
+                                    <td><%= track.artists[0].name %> </td>
+                                    <td><%= track.album.name %> </td>
+                                </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+        
+                        <!-- Recent term top tracks table -->
+                        <table class="table table-sm text-white mt-3 scrollableBody" id="recent_tracks_table">
+                            <caption class="text-white text-center">Recent Top Tracks (last ~4 weeks)</caption>
+                            <thead>
+                                <tr>
+                                    <th>Track Title</th>
+                                    <th>Artists</th>
+                                    <th>Album</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent_tracks_table_body">
+                                <% short_tracks.items.forEach(function(track){ %>
+                                <tr>
+                                    <td class="trackTitle" data-track-id="<%= track.id %>" onclick="addTrackForAnalysis(this)">
+                                        <%= track.name %>
+                                    </td>
+                                    <td><%= track.artists[0].name %> </td>
+                                    <td><%= track.album.name %> </td>
+                                </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div> 
+                </div>
+                <div class="row">
+                    <div class="col text-center mt-3">
+                        <div id="picked_tracks"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col text-center mt-5" id="next_btn_container">
+                        <a href="/features/<%= access_token %>/"
+                            class="btn btn-custom-primary font-weight-bold disabled" id="next_btn_main">Next</a>
+                    </div>
+                </div>
+            </div>        
+        </div>   
     </div>
     </div>
     <script src="/../scripts/scripts.js"></script>

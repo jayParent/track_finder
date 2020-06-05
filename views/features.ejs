@@ -12,8 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <!-- Bootstrap core CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css"
-        rel="stylesheet" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
     <!-- Material Design Bootstrap -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.15.0/css/mdb.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/../css/style.css">
@@ -470,8 +469,9 @@
                         break;
                 }
 
-                let targetLabel = document.createElement("label");
-                let maxLabel = document.createElement("label");
+                let targetLabel = document.createElement("label"),
+                    maxLabel = document.createElement("label");
+
                 targetLabel.setAttribute("for", "target_" + id);
                 maxLabel.setAttribute("for", "max_" + id);
                 targetLabel.textContent = "Target " + id;
