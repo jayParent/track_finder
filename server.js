@@ -299,6 +299,8 @@ app.get("*", function (req, res) {
 });
 
 // TODO
-// White button bug on features and recommendations
+// Look at spotify app for ideas
+// BUG White button on features and recommendations
+// BUG blue sliders on herokuapp 
 // page for when acess token expires or use refresh token
 
