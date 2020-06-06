@@ -1,437 +1,429 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Track Finder</title>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" />
-    <!-- Google Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-    <!-- Bootstrap core CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css"
-        rel="stylesheet" />
-    <!-- Material Design Bootstrap -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.15.0/css/mdb.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/../css/style.css">
-</head>
-
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col">
-                <div class="alert alert-info" role="alert" style="display: none;" id="liked_song_alert"></div>
-            </div>
+<%- include ("partials/header") %>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <div class="alert alert-info" role="alert" style="display: none;" id="liked_song_alert"></div>
         </div>
-        <div class="row">
-            <div class="col">
-                <a href="https://github.com/jayParent/track_finder" target="_blank"><i class="fab fa-github mt-3 ml-1"
-                        aria-hidden="true" id="gh_logo"></i></a>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <a href="https://github.com/jayParent/track_finder" target="_blank"><i class="fab fa-github mt-3 ml-1"
+                    aria-hidden="true" id="gh_logo"></i></a>
         </div>
-        <div class="row mt-5">
-            <div class="col">
-                <!-- Recommendations header -->
-                <div class="text-center text-white mt-5 animated fadeInLeft">
-                    <h1>
-                        Recommendations
-                    </h1>
-                    <h4>
-                        <span class="custom-green">
-                            <span id="perfect_qty">0</span> Perfect -
-                        </span>
-                        <span class="custom-yellow">
-                            <span id="good_qty">0 </span> Good -
-                        </span>
-                        <span class="custom-red">
-                            <span id="acceptable_qty">0</span> Acceptable
-                        </span>
-                    </h4>
-                    <h2>Create Playlist</h2>
-                    <a href="" class="btn btn-custom-secondary font-weight-bold" id="create_perfect_button">Only
-                        Perfect</a>
-                    <a href="" class="btn btn-custom-secondary font-weight-bold" id="create_good_button">Perfect &
-                        Good</a>
-                    <a href="" class="btn btn-custom-secondary font-weight-bold" id="create_all_button">All Tracks</a>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col text-center animated fadeInLeft">
-                <a class="btn btn-custom-primary font-weight-bold" id="back_btn">Change Parameters</a>
-                <a href="" class="btn btn-custom-primary font-weight-bold">Refresh</a>
-            </div>
-        </div>
-        <div class="row">
-            <!-- Recommendations Cards -->
-            <% for(var i = 0; i < recommendations.tracks.length; i++){ %>
-            <div class="col-md-6 col-xl-4 mx-auto">
-                <div class="card track-card bg-dark my-3 mx-auto text-center text-white animated fadeInUpBig"
-                    id="track_card<%= i %>">
-                    <div class="card-header">
-                        <h4><a href="" class="text-white"><%= recommendations.tracks[i].name %></a></h4>
-                        <div style="display: none;" class="recommendation_uri"><%= recommendations.tracks[i].uri %></div>
-                        <p><%= recommendations.tracks[i].album.name %></p>
-                        <p>
-                            <i class="fas fa-fire text-danger"></i>
-                            <span class="track_popularity"><%= recommendations.tracks[i].popularity %></span>
-                        </p>
-
-                        <div id="acousticness<%= i %>" style="display: none;">
-                            <%= features.audio_features[i].acousticness %></div>
-                        <div id="danceability<%= i %>" style="display: none;">
-                            <%= features.audio_features[i].danceability %></div>
-                        <div id="energy<%= i %>" style="display: none;"><%= features.audio_features[i].energy %></div>
-                        <div id="instrumentalness<%= i %>" style="display: none;">
-                            <%= features.audio_features[i].instrumentalness %></div>
-                        <div id="liveness<%= i %>" style="display: none;"><%= features.audio_features[i].liveness %>
-                        </div>
-                        <div id="loudness<%= i %>" style="display: none;"><%= features.audio_features[i].loudness %>
-                        </div>
-                        <div id="speechiness<%= i %>" style="display: none;">
-                            <%= features.audio_features[i].speechiness %></div>
-                        <div id="valence<%= i %>" style="display: none;"><%= features.audio_features[i].valence %></div>
-                        <div id="tempo<%= i %>" style="display: none;"><%= features.audio_features[i].tempo %></div>
-
-                        <p class="card-feature-icons"></p>
-
-                        <% recommendations.tracks[i].artists.forEach(function(artist){ %>
-                        <a href="" class="btn btn-sm btn-outline-white font-weight-bold my-1 mx-1"><%= artist.name %>
-                        </a>
-                        <% }) %>
-
-                    </div>
-                    <div class="card-body">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col">
-                                    <% if(recommendations.tracks[i].preview_url != null){ %>
-                                    <iframe
-                                        src="https://open.spotify.com/embed/track/<%= recommendations.tracks[i].id %> "
-                                        width="300" height="80" frameborder="1" allowtransparency="true"
-                                        allow="encrypted-media"></iframe>
-                                    <% } %>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <a href="/save/<%= recommendations.tracks[i].id %>/<%= access_token %>"
-                                        class="btn btn-sm btn-outline-white font-weight-bold like_song_btn"><i
-                                            class="fas fa-heart"></i> Add to "Liked Songs"</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <% } %>
-        </div>
-        <div class="row">
-            <div class="col">
-                <%- include ("partials/footer") %>
+    </div>
+    <div class="row mt-5">
+        <div class="col">
+            <!-- Recommendations header -->
+            <div class="text-center text-white mt-5 animated fadeInLeft">
+                <h1>
+                    Recommendations
+                </h1>
+                <h4>
+                    <span class="custom-green">
+                        <span id="perfect_qty">0</span> Perfect -
+                    </span>
+                    <span class="custom-yellow">
+                        <span id="good_qty">0 </span> Good -
+                    </span>
+                    <span class="custom-red">
+                        <span id="acceptable_qty">0</span> Acceptable
+                    </span>
+                </h4>
+                <h2>Create Playlist</h2>
+                <a href="" class="btn btn-custom-secondary font-weight-bold" id="create_perfect_button">Only
+                    Perfect</a>
+                <a href="" class="btn btn-custom-secondary font-weight-bold" id="create_good_button">Perfect &
+                    Good</a>
+                <a href="" class="btn btn-custom-secondary font-weight-bold" id="create_all_button">All Tracks</a>
             </div>
         </div>
     </div>
-    <script>
-        // Set multiple attributes at once on hmtl element
-        function setAttributes(element, attributes) {
-            for (var key in attributes) {
-                element.setAttribute(key, attributes[key]);
-            }
+    <div class="row">
+        <div class="col text-center animated fadeInLeft">
+            <a class="btn btn-secondary " id="back_btn">Change Parameters</a>
+            <a href="" class="btn btn-secondary ">Refresh</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="container">
+                <div class="row">
+                    <!-- Recommendations Cards -->
+                    <% for(var i = 0; i < recommendations.tracks.length; i++){ %>
+                    <div class="col-md-6 col-xl-4 mx-auto">
+                        <div class="card track-card bg-dark my-3 mx-auto text-center text-white animated fadeInUpBig"
+                            id="track_card<%= i %>">
+                            <div class="card-header">
+                                <h4><a href="" class="text-white"><%= recommendations.tracks[i].name %></a></h4>
+                                <div style="display: none;" class="recommendation_uri">
+                                    <%= recommendations.tracks[i].uri %></div>
+                                <p><%= recommendations.tracks[i].album.name %></p>
+                                <p>
+                                    <i class="fas fa-fire text-danger"></i>
+                                    <span class="track_popularity"><%= recommendations.tracks[i].popularity %></span>
+                                </p>
+
+                                <div id="acousticness<%= i %>" style="display: none;">
+                                    <%= features.audio_features[i].acousticness %></div>
+                                <div id="danceability<%= i %>" style="display: none;">
+                                    <%= features.audio_features[i].danceability %></div>
+                                <div id="energy<%= i %>" style="display: none;"><%= features.audio_features[i].energy %>
+                                </div>
+                                <div id="instrumentalness<%= i %>" style="display: none;">
+                                    <%= features.audio_features[i].instrumentalness %></div>
+                                <div id="liveness<%= i %>" style="display: none;">
+                                    <%= features.audio_features[i].liveness %>
+                                </div>
+                                <div id="loudness<%= i %>" style="display: none;">
+                                    <%= features.audio_features[i].loudness %>
+                                </div>
+                                <div id="speechiness<%= i %>" style="display: none;">
+                                    <%= features.audio_features[i].speechiness %></div>
+                                <div id="valence<%= i %>" style="display: none;">
+                                    <%= features.audio_features[i].valence %></div>
+                                <div id="tempo<%= i %>" style="display: none;"><%= features.audio_features[i].tempo %>
+                                </div>
+
+                                <p class="card-feature-icons"></p>
+
+                                <% recommendations.tracks[i].artists.forEach(function(artist){ %>
+                                <a href="" class="btn btn-sm btn-outline-white  my-1 mx-1"><%= artist.name %>
+                                </a>
+                                <% }) %>
+
+                            </div>
+                            <div class="card-body">
+                                <div class="container">
+                                    <div class="row">
+                                        <!-- <div class="col">
+                            <% if(recommendations.tracks[i].preview_url != null){ %>
+                            <iframe
+                                src="https://open.spotify.com/embed/track/<%= recommendations.tracks[i].id %> "
+                                width="300" height="80" frameborder="1" allowtransparency="true"
+                                allow="encrypted-media"></iframe>
+                            <% } %>
+                        </div> -->
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <a href="/save/<%= recommendations.tracks[i].id %>/<%= access_token %>"
+                                                class="btn btn-sm btn-outline-white  like_song_btn"><i
+                                                    class="fas fa-heart"></i> Add to "Liked Songs"</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col">
+            <%- include ("partials/footer") %>
+        </div>
+    </div>
+</div>
+<script>
+    // Set multiple attributes at once on hmtl element
+    function setAttributes(element, attributes) {
+        for (var key in attributes) {
+            element.setAttribute(key, attributes[key]);
         }
+    }
 
-        // Back button
-        document.getElementById("back_btn").addEventListener("click", goBack);
-        function goBack() {
-            window.history.back();
-        }
+    // Back button
+    document.getElementById("back_btn").addEventListener("click", goBack);
+    function goBack() {
+        window.history.back();
+    }
 
-        let createAllBtn = document.getElementById("create_all_button"),
-            createGoodBtn = document.getElementById("create_good_button"),
-            createPerfectBtn = document.getElementById("create_perfect_button"),
-            likeBtns = document.getElementsByClassName("like_song_btn"),
-            savedAlert = document.getElementById("liked_song_alert");
+    let createAllBtn = document.getElementById("create_all_button"),
+        createGoodBtn = document.getElementById("create_good_button"),
+        createPerfectBtn = document.getElementById("create_perfect_button"),
+        likeBtns = document.getElementsByClassName("like_song_btn"),
+        savedAlert = document.getElementById("liked_song_alert");
 
-        function createPlaylistUrl() {
-            let trackUris = document.getElementsByClassName("recommendation_uri");
-            let createPlaylistUri = "",
-                featuresList = '<%= featuresList %>';
-            let access_token = '<%= access_token %>';
+    function createPlaylistUrl() {
+        let trackUris = document.getElementsByClassName("recommendation_uri");
+        let createPlaylistUri = "",
+            featuresList = '<%= featuresList %>';
+        let access_token = '<%= access_token %>';
 
-            // Perfect
-            for (var i = 0; i < trackUris.length; i++) {
-                if(trackUris[i].classList.contains("perfect")){
-                    createPlaylistUri = createPlaylistUri + trackUris[i].innerHTML + ",";
-                }
-            }
-            createPlaylistUri = createPlaylistUri.slice(0, -1);
-            createPerfectBtn.href = "/create_playlist/" + access_token + "/" + createPlaylistUri + "/" + featuresList;
-            createPlaylistUri = "";
-
-            // Good
-            for (var i = 0; i < trackUris.length; i++) {
-                if(trackUris[i].classList.contains("good") || trackUris[i].classList.contains("perfect")){
-                    createPlaylistUri = createPlaylistUri + trackUris[i].innerHTML + ",";
-                }
-            }
-            createPlaylistUri = createPlaylistUri.slice(0, -1);
-            createGoodBtn.href = "/create_playlist/" + access_token + "/" + createPlaylistUri + "/" + featuresList;
-            createPlaylistUri = "";
-            
-            // Acceptable
-            for (var i = 0; i < trackUris.length; i++) {
+        // Perfect
+        for (var i = 0; i < trackUris.length; i++) {
+            if (trackUris[i].classList.contains("perfect")) {
                 createPlaylistUri = createPlaylistUri + trackUris[i].innerHTML + ",";
             }
-            createPlaylistUri = createPlaylistUri.slice(0, -1);
-            createAllBtn.href = "/create_playlist/" + access_token + "/" + createPlaylistUri + "/" + featuresList;
         }
+        createPlaylistUri = createPlaylistUri.slice(0, -1);
+        createPerfectBtn.href = "/create_playlist/" + access_token + "/" + createPlaylistUri + "/" + featuresList;
+        createPlaylistUri = "";
 
-        function alertCreatedPlaylist(id) {
-            if (id === "create_perfect_button") {
-                savedAlert.textContent = 'Playlist Created with only "Perfect" Tracks!';
-            }else if(id === "create_good_button"){
-                savedAlert.textContent = 'Playlist Created with both "Perfect" & "Good" Tracks!';
-            }else{
-                savedAlert.textContent = 'Playlist Created with All Tracks!';
-            }
-            savedAlert.style.display = "initial";
-            setTimeout(function () {
-                savedAlert.style.display = "none";
-            }, 2000)
-        }
-        
-        createPerfectBtn.addEventListener("click", function() { alertCreatedPlaylist(this.id); });
-        createGoodBtn.addEventListener("click", function() { alertCreatedPlaylist(this.id); });
-        createAllBtn.addEventListener("click", function() { alertCreatedPlaylist(this.id); });
-
-        function alertSavedTrack(){
-            savedAlert.textContent = 'Track Saved to "Liked Songs" on Spotify!';
-            savedAlert.style.display = "initial";
-            setTimeout(function(){
-                savedAlert.style.display = "none";
-            }, 2000)
-        }
-        likeBtns.forEach(function(btn){
-            btn.addEventListener("click", alertSavedTrack);
-        })
-
-        function checkMaxValues(feature, data, container) {
-            let params = '<%= featuresParams %>';
-            if (params.includes(feature)) {
-                let max_value, difference;
-                let perfect = true,
-                    good = true,
-                    result = "";
-
-                if (feature === "max_Tempo") {
-                    max_value = parseFloat(params.split(feature + "=").pop());
-
-                    if (data < max_value) {
-                        container.classList.add("custom-green");
-                    } else if ((data - max_value) <= 10) {
-                        container.classList.add("custom-yellow");
-                        perfect = false;
-                    } else {
-                        container.classList.add("custom-red");
-                        perfect = false, good = false;
-                    }
-
-                } else if (feature === "max_Loudness") {
-                    max_value = parseFloat(params.split(feature + "=").pop());
-                    let difference = Math.abs(max_value - data);
-
-                    if (data < max_value) {
-                        container.classList.add("custom-green");
-                    } else if (difference < 3) {
-                        container.classList.add("custom-yellow");
-                        perfect = false;
-                    } else {
-                        container.classList.add("custom-red");
-                        perfect = false, good = false;
-                    }
-
-                } else {
-                    max_value = parseFloat(params.split(feature + "=").pop());
-
-                    if (data < max_value) {
-                        container.classList.add("custom-green");
-                    } else if ((data - max_value) <= 0.1) {
-                        container.classList.add("custom-yellow");
-                        perfect = false;
-                    } else {
-                        container.classList.add("custom-red");
-                        perfect = false, good = false;
-                    }
-                }
-
-                if (perfect) {
-                    result = "perfect";
-                } else if (good) {
-                    result = "good";
-                } else {
-                    result = "acceptable";
-                }
-                return result;
+        // Good
+        for (var i = 0; i < trackUris.length; i++) {
+            if (trackUris[i].classList.contains("good") || trackUris[i].classList.contains("perfect")) {
+                createPlaylistUri = createPlaylistUri + trackUris[i].innerHTML + ",";
             }
         }
+        createPlaylistUri = createPlaylistUri.slice(0, -1);
+        createGoodBtn.href = "/create_playlist/" + access_token + "/" + createPlaylistUri + "/" + featuresList;
+        createPlaylistUri = "";
 
-        function getTrackScore(featureData, featureCluster, uri) {
-            let perfect = true, good = true;
-            featureData.forEach(function (feature) {
-                if (feature.classList.contains("good") || feature.classList.contains("acceptable")) {
+        // Acceptable
+        for (var i = 0; i < trackUris.length; i++) {
+            createPlaylistUri = createPlaylistUri + trackUris[i].innerHTML + ",";
+        }
+        createPlaylistUri = createPlaylistUri.slice(0, -1);
+        createAllBtn.href = "/create_playlist/" + access_token + "/" + createPlaylistUri + "/" + featuresList;
+    }
+
+    function alertCreatedPlaylist(id) {
+        if (id === "create_perfect_button") {
+            savedAlert.textContent = 'Playlist Created with only "Perfect" Tracks!';
+        } else if (id === "create_good_button") {
+            savedAlert.textContent = 'Playlist Created with both "Perfect" & "Good" Tracks!';
+        } else {
+            savedAlert.textContent = 'Playlist Created with All Tracks!';
+        }
+        savedAlert.style.display = "initial";
+        setTimeout(function () {
+            savedAlert.style.display = "none";
+        }, 2000)
+    }
+
+    createPerfectBtn.addEventListener("click", function () { alertCreatedPlaylist(this.id); });
+    createGoodBtn.addEventListener("click", function () { alertCreatedPlaylist(this.id); });
+    createAllBtn.addEventListener("click", function () { alertCreatedPlaylist(this.id); });
+
+    function alertSavedTrack() {
+        savedAlert.textContent = 'Track Saved to "Liked Songs" on Spotify!';
+        savedAlert.style.display = "initial";
+        setTimeout(function () {
+            savedAlert.style.display = "none";
+        }, 2000)
+    }
+    likeBtns.forEach(function (btn) {
+        btn.addEventListener("click", alertSavedTrack);
+    })
+
+    function checkMaxValues(feature, data, container) {
+        let params = '<%= featuresParams %>';
+        if (params.includes(feature)) {
+            let max_value, difference;
+            let perfect = true,
+                good = true,
+                result = "";
+
+            if (feature === "max_Tempo") {
+                max_value = parseFloat(params.split(feature + "=").pop());
+
+                if (data < max_value) {
+                    container.classList.add("custom-green");
+                } else if ((data - max_value) <= 10) {
+                    container.classList.add("custom-yellow");
                     perfect = false;
-                    if (feature.classList.contains("acceptable")) {
-                        good = false;
-                    }
+                } else {
+                    container.classList.add("custom-red");
+                    perfect = false, good = false;
                 }
-            })
-            if (perfect) {
-                featureCluster.classList.add("perfect");
-                uri.classList.add("perfect");
-            } else if (good) {
-                featureCluster.classList.add("good");
-                uri.classList.add("good");
+
+            } else if (feature === "max_Loudness") {
+                max_value = parseFloat(params.split(feature + "=").pop());
+                let difference = Math.abs(max_value - data);
+
+                if (data < max_value) {
+                    container.classList.add("custom-green");
+                } else if (difference < 3) {
+                    container.classList.add("custom-yellow");
+                    perfect = false;
+                } else {
+                    container.classList.add("custom-red");
+                    perfect = false, good = false;
+                }
+
             } else {
-                featureCluster.classList.add("acceptable");
-                uri.classList.add("acceptable");
-            }
-        }
+                max_value = parseFloat(params.split(feature + "=").pop());
 
-        function updateScoreCounters() {
-            let perfectCounter = document.getElementById("perfect_qty"),
-                goodCounter = document.getElementById("good_qty"),
-                acceptableCounter = document.getElementById("acceptable_qty"),
-                featureClusters = document.getElementsByClassName("card-feature-icons"),
-                perfectCount = 0,
-                goodCount = 0,
-                acceptableCount = 0;
-
-            featureClusters.forEach(function (cluster) {
-                if (cluster.classList.contains("perfect")) {
-                    perfectCount++;
-                } else if (cluster.classList.contains("good")) {
-                    goodCount++;
-                } else if (cluster.classList.contains("acceptable")) {
-                    acceptableCount++;
+                if (data < max_value) {
+                    container.classList.add("custom-green");
+                } else if ((data - max_value) <= 0.1) {
+                    container.classList.add("custom-yellow");
+                    perfect = false;
+                } else {
+                    container.classList.add("custom-red");
+                    perfect = false, good = false;
                 }
-            })
-            perfectCounter.innerHTML = perfectCount, goodCounter.innerHTML = goodCount, acceptableCounter.innerHTML = acceptableCount;
+            }
+
+            if (perfect) {
+                result = "perfect";
+            } else if (good) {
+                result = "good";
+            } else {
+                result = "acceptable";
+            }
+            return result;
         }
+    }
 
-        window.onload = function () {
-            let featureClusters = document.getElementsByClassName("card-feature-icons"),
-                recommendationUris = document.getElementsByClassName("recommendation_uri");
-            let featuresString = '<%= featuresList %>';
-            let featuresOptions = ["Acousticness", "Danceability", "Energy", "Instrumentalness",
-                "Liveness", "Loudness", "Speechiness", "Valence", "Tempo"];
-            let data, feature, result;
+    function getTrackScore(featureData, featureCluster, uri) {
+        let perfect = true, good = true;
+        featureData.forEach(function (feature) {
+            if (feature.classList.contains("good") || feature.classList.contains("acceptable")) {
+                perfect = false;
+                if (feature.classList.contains("acceptable")) {
+                    good = false;
+                }
+            }
+        })
+        if (perfect) {
+            featureCluster.classList.add("perfect");
+            uri.classList.add("perfect");
+        } else if (good) {
+            featureCluster.classList.add("good");
+            uri.classList.add("good");
+        } else {
+            featureCluster.classList.add("acceptable");
+            uri.classList.add("acceptable");
+        }
+    }
 
-            for (var j = 0; j < featureClusters.length; j++) {
-                let featureData = featureClusters[j].children;
+    function updateScoreCounters() {
+        let perfectCounter = document.getElementById("perfect_qty"),
+            goodCounter = document.getElementById("good_qty"),
+            acceptableCounter = document.getElementById("acceptable_qty"),
+            featureClusters = document.getElementsByClassName("card-feature-icons"),
+            perfectCount = 0,
+            goodCount = 0,
+            acceptableCount = 0;
 
-                for (var i = 0; i < featuresOptions.length; i++) {
-                    if (featuresString.includes(featuresOptions[i])) {
-                        let container = document.createElement("span");
-                        featureClusters[j].appendChild(container);
+        featureClusters.forEach(function (cluster) {
+            if (cluster.classList.contains("perfect")) {
+                perfectCount++;
+            } else if (cluster.classList.contains("good")) {
+                goodCount++;
+            } else if (cluster.classList.contains("acceptable")) {
+                acceptableCount++;
+            }
+        })
+        perfectCounter.innerHTML = perfectCount, goodCounter.innerHTML = goodCount, acceptableCounter.innerHTML = acceptableCount;
+    }
 
-                        switch (featuresOptions[i]) {
-                            case "Acousticness":
-                                feature = "max_Acousticness";
-                                data = parseFloat(document.getElementById("acousticness" + j).textContent).toPrecision(3);
-                                container.innerHTML = '<i class="fas fa-guitar"></i> ' + data;
-                                setAttributes(container, { "class": "mx-2 feature", "data-toggle": "tooltip", "data-placement": "right", "title": "Acousticness. 1.0 represents high confidence track is acoustic.", "style": "cursor: help" })
-                                result = checkMaxValues(feature, data, container);
-                                container.classList.add(result);
-                                break;
+    window.onload = function () {
+        let featureClusters = document.getElementsByClassName("card-feature-icons"),
+            recommendationUris = document.getElementsByClassName("recommendation_uri");
+        let featuresString = '<%= featuresList %>';
+        let featuresOptions = ["Acousticness", "Danceability", "Energy", "Instrumentalness",
+            "Liveness", "Loudness", "Speechiness", "Valence", "Tempo"];
+        let data, feature, result;
 
-                            case "Danceability":
-                                feature = "max_Danceability";
-                                data = parseFloat(document.getElementById("danceability" + j).textContent).toPrecision(3);
-                                container.innerHTML = '<i class="fas fa-child"></i> ' + data;
-                                setAttributes(container, { "class": "mx-2 feature", "data-toggle": "tooltip", "data-placement": "right", "title": "Danceability. A value of 0.0 is least danceable and 1.0 is most danceable.", "style": "cursor: help" })
-                                result = checkMaxValues(feature, data, container);
-                                container.classList.add(result);
-                                break;
+        for (var j = 0; j < featureClusters.length; j++) {
+            let featureData = featureClusters[j].children;
 
-                            case "Energy":
-                                feature = "max_Energy";
-                                data = parseFloat(document.getElementById("energy" + j).textContent).toPrecision(3);
-                                container.innerHTML = '<i class="fas fa-battery-three-quarters"></i> ' + data;
-                                setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Energy. Measure from 0.0 to 1.0, reprensents intensity and energy.", "style": "cursor: help" })
-                                result = checkMaxValues(feature, data, container);
-                                container.classList.add(result);
-                                break;
+            for (var i = 0; i < featuresOptions.length; i++) {
+                if (featuresString.includes(featuresOptions[i])) {
+                    let container = document.createElement("span");
+                    featureClusters[j].appendChild(container);
 
-                            case "Instrumentalness":
-                                feature = "max_Instrumentalness";
-                                data = parseFloat(document.getElementById("instrumentalness" + j).textContent).toPrecision(3);
-                                container.innerHTML = '<i class="far fa-surprise"></i> ' + data;
-                                setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Instrumentalness. Closer value to 1.0, greater likelyhood the track contains no vocals.", "style": "cursor: help" })
-                                result = checkMaxValues(feature, data, container);
-                                container.classList.add(result);
-                                break;
+                    switch (featuresOptions[i]) {
+                        case "Acousticness":
+                            feature = "max_Acousticness";
+                            data = parseFloat(document.getElementById("acousticness" + j).textContent).toPrecision(3);
+                            container.innerHTML = '<i class="fas fa-guitar"></i> ' + data;
+                            setAttributes(container, { "class": "mx-2 feature", "data-toggle": "tooltip", "data-placement": "right", "title": "Acousticness. 1.0 represents high confidence track is acoustic.", "style": "cursor: help" })
+                            result = checkMaxValues(feature, data, container);
+                            container.classList.add(result);
+                            break;
 
-                            case "Liveness":
-                                feature = "max_Liveness";
-                                data = parseFloat(document.getElementById("liveness" + j).textContent).toPrecision(3);
-                                container.innerHTML = '<i class="fas fa-tv"></i> ' + data;
-                                setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Liveness. A value of 0.8 provides a string likelyhood that the track is live.", "style": "cursor: help" })
-                                result = checkMaxValues(feature, data, container);
-                                container.classList.add(result);
-                                break;
+                        case "Danceability":
+                            feature = "max_Danceability";
+                            data = parseFloat(document.getElementById("danceability" + j).textContent).toPrecision(3);
+                            container.innerHTML = '<i class="fas fa-child"></i> ' + data;
+                            setAttributes(container, { "class": "mx-2 feature", "data-toggle": "tooltip", "data-placement": "right", "title": "Danceability. A value of 0.0 is least danceable and 1.0 is most danceable.", "style": "cursor: help" })
+                            result = checkMaxValues(feature, data, container);
+                            container.classList.add(result);
+                            break;
 
-                            case "Loudness":
-                                feature = "max_Loudness";
-                                data = parseFloat(document.getElementById("loudness" + j).textContent).toPrecision(3);
-                                container.innerHTML = '<i class="fas fa-volume-up"></i> ' + data;
-                                setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Loudness. Overall loudness of the track in decibels(dB).", "style": "cursor: help" })
-                                result = checkMaxValues(feature, data, container);
-                                container.classList.add(result);
-                                break;
+                        case "Energy":
+                            feature = "max_Energy";
+                            data = parseFloat(document.getElementById("energy" + j).textContent).toPrecision(3);
+                            container.innerHTML = '<i class="fas fa-battery-three-quarters"></i> ' + data;
+                            setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Energy. Measure from 0.0 to 1.0, reprensents intensity and energy.", "style": "cursor: help" })
+                            result = checkMaxValues(feature, data, container);
+                            container.classList.add(result);
+                            break;
 
-                            case "Speechiness":
-                                feature = "max_Speechiness";
-                                data = parseFloat(document.getElementById("speechiness" + j).textContent).toPrecision(3);
-                                container.innerHTML = '<i class="far fa-comment-dots"></i> ' + data;
-                                setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Speechiness. Values below 0.33 most likely represent music and other non-speech-like tracks.", "style": "cursor: help" })
-                                result = checkMaxValues(feature, data, container);
-                                container.classList.add(result);
-                                break;
+                        case "Instrumentalness":
+                            feature = "max_Instrumentalness";
+                            data = parseFloat(document.getElementById("instrumentalness" + j).textContent).toPrecision(3);
+                            container.innerHTML = '<i class="far fa-surprise"></i> ' + data;
+                            setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Instrumentalness. Closer value to 1.0, greater likelyhood the track contains no vocals.", "style": "cursor: help" })
+                            result = checkMaxValues(feature, data, container);
+                            container.classList.add(result);
+                            break;
 
-                            case "Valence":
-                                feature = "max_Valence";
-                                data = parseFloat(document.getElementById("valence" + j).textContent).toPrecision(3);
-                                container.innerHTML = '<i class="far fa-smile-beam"></i> ' + data;
-                                setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Valence. Measure from 0.0 to 1.0 describing the musical positiveness conveyed by the track.", "style": "cursor: help" })
-                                result = checkMaxValues(feature, data, container);
-                                container.classList.add(result);
-                                break;
+                        case "Liveness":
+                            feature = "max_Liveness";
+                            data = parseFloat(document.getElementById("liveness" + j).textContent).toPrecision(3);
+                            container.innerHTML = '<i class="fas fa-tv"></i> ' + data;
+                            setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Liveness. A value of 0.8 provides a string likelyhood that the track is live.", "style": "cursor: help" })
+                            result = checkMaxValues(feature, data, container);
+                            container.classList.add(result);
+                            break;
 
-                            case "Tempo":
-                                feature = "max_Tempo";
-                                data = parseFloat(document.getElementById("tempo" + j).textContent).toPrecision(3);
-                                container.innerHTML = '<i class="fas fa-drum"></i> ' + data;
-                                setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Tempo. Overall estimated tempo in beats per minute(BPM).", "style": "cursor: help" })
-                                result = checkMaxValues(feature, data, container);
-                                container.classList.add(result);
-                                break;
-                        }
+                        case "Loudness":
+                            feature = "max_Loudness";
+                            data = parseFloat(document.getElementById("loudness" + j).textContent).toPrecision(3);
+                            container.innerHTML = '<i class="fas fa-volume-up"></i> ' + data;
+                            setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Loudness. Overall loudness of the track in decibels(dB).", "style": "cursor: help" })
+                            result = checkMaxValues(feature, data, container);
+                            container.classList.add(result);
+                            break;
+
+                        case "Speechiness":
+                            feature = "max_Speechiness";
+                            data = parseFloat(document.getElementById("speechiness" + j).textContent).toPrecision(3);
+                            container.innerHTML = '<i class="far fa-comment-dots"></i> ' + data;
+                            setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Speechiness. Values below 0.33 most likely represent music and other non-speech-like tracks.", "style": "cursor: help" })
+                            result = checkMaxValues(feature, data, container);
+                            container.classList.add(result);
+                            break;
+
+                        case "Valence":
+                            feature = "max_Valence";
+                            data = parseFloat(document.getElementById("valence" + j).textContent).toPrecision(3);
+                            container.innerHTML = '<i class="far fa-smile-beam"></i> ' + data;
+                            setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Valence. Measure from 0.0 to 1.0 describing the musical positiveness conveyed by the track.", "style": "cursor: help" })
+                            result = checkMaxValues(feature, data, container);
+                            container.classList.add(result);
+                            break;
+
+                        case "Tempo":
+                            feature = "max_Tempo";
+                            data = parseFloat(document.getElementById("tempo" + j).textContent).toPrecision(3);
+                            container.innerHTML = '<i class="fas fa-drum"></i> ' + data;
+                            setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Tempo. Overall estimated tempo in beats per minute(BPM).", "style": "cursor: help" })
+                            result = checkMaxValues(feature, data, container);
+                            container.classList.add(result);
+                            break;
                     }
                 }
-                getTrackScore(featureData, featureClusters[j], recommendationUris[j]);
             }
-            createPlaylistUrl();
-            updateScoreCounters();
+            getTrackScore(featureData, featureClusters[j], recommendationUris[j]);
         }
+        createPlaylistUrl();
+        updateScoreCounters();
+    }
 
-        // For Bootstrap tooltip
-        $(document).ready(function () {
-            $("body").tooltip({ selector: '[data-toggle=tooltip]' });
-        });
-    </script>
+    // For Bootstrap tooltip
+    $(document).ready(function () {
+        $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+    });
+</script>
 </body>
 
 </html>

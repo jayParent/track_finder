@@ -1,6 +1,6 @@
 /* Global */
 html, body{
-    background-color: #121212;
+    background-color: #292929;
     height: 100%;
 }
 
@@ -50,6 +50,10 @@ html, body{
     background-color: rgba(255, 255, 255, 0.6);
 }
 
+#more_info_arrow:hover{
+    color: #985EFF;
+}
+
 /* Main */
 .scrollableBody#top_tracks_table thead,
 tbody#top_tracks_table_body tr{
@@ -69,11 +73,6 @@ tbody#recent_tracks_table_body tr{
     display: block;
     overflow-y: scroll;
     max-height: 50vh;
-}
-
-#top_tracks_table, #recent_tracks_table{
-    background: linear-gradient(0deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.14)), #121212;
-    box-shadow: 0px 7px 8px rgba(0, 0, 0, 0.2), 0px 5px 22px rgba(0, 0, 0, 0.12), 0px 12px 17px rgba(0, 0, 0, 0.14);
 }
 
 .trackTitle{
@@ -96,7 +95,7 @@ tbody#recent_tracks_table_body tr{
 }
 
 @media screen and (max-width: 600px) {
-    #gh_logo{
+    /* #gh_logo{
         display: none;
-    }
+    } */
   }

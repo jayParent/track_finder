@@ -1,25 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Track Finder</title>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" />
-    <!-- Google Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-    <!-- Bootstrap core CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css"
-        rel="stylesheet" />
-    <!-- Material Design Bootstrap -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.15.0/css/mdb.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/../css/style.css">
-</head>
-
-<body>
+<%- include ("partials/header") %>
     <div class="container-fluid h-100">
         <div class="row">
             <div class="col">
@@ -29,20 +8,37 @@
         </div>
         <div class="row h-100">
             <div class="container">
-                <div class="row mt-5">
-                    <div class="col mx-auto text-center text-white animated fadeInUp">
-                        <h1 class="display-5" id="time_header">Your 50 most-played Tracks, Recently</h1>
+                <div class="row mt-5 align-items-center">     
+                    <div class="col-8 mx-auto mt-2 text-white animated fadeInUp" style="z-index: 2;">
+                        <button type="button" class="btn btn-custom-secondary" id="top_tracks_button">See All-Time Top Tracks</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-custom-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Playlists
+                            </button>
+                            <div class="dropdown-menu">
+                            <% playlists.items.forEach(function(playlist){ %>
+                                <a class="dropdown-item" href="#"><%= playlist.name %></a>
+                            <% }) %> 
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="col-4 mx-auto mt-2 animated fadeInUp">
+                        <img src="<%= profile.images[0].url %>" alt="Profile Picture" class="img-thumbnail">
+                    </div> 
+                </div>
+                <div class="row">
+                    <div class="col text-center text-white mt-3">
+                        <h2 class="display-5" id="time_header">Your 50 most-played Tracks, Recently</h2>
                         <p class="lead">Pick up to 5 tracks</p>
-                        <button type="button" class="btn btn-custom-secondary font-weight-bold" id="top_tracks_button">See All-Time Top Tracks</button>
-        
+
                         <!-- Long term top tracks table -->
-                        <table class="table table-sm text-white mt-3 scrollableBody" id="top_tracks_table"
+                        <table class="table table-sm bg-transparent text-white mt-3 scrollableBody" id="top_tracks_table"
                             style="display: none;">
-                            <caption class="text-white text-center">All-Time Top Tracks</caption>
+                            <caption class="text-center text-white">All-Time Top Tracks</caption>
                             <thead>
                                 <tr>
-                                    <th>Track Title</th>
-                                    <th>Artists</th>
+                                    <th>Title</th>
+                                    <th>Artist</th>
                                     <th>Album</th>
                                 </tr>
                             </thead>
@@ -60,8 +56,8 @@
                         </table>
         
                         <!-- Recent term top tracks table -->
-                        <table class="table table-sm text-white mt-3 scrollableBody" id="recent_tracks_table">
-                            <caption class="text-white text-center">Recent Top Tracks (last ~4 weeks)</caption>
+                        <table class="table table-sm bg-transparent text-white mt-3 scrollableBody" id="recent_tracks_table">
+                            <caption class="text-center text-white">Recent Top Tracks (last ~4 weeks)</caption>
                             <thead>
                                 <tr>
                                     <th>Track Title</th>
@@ -81,25 +77,23 @@
                                 <% }) %>
                             </tbody>
                         </table>
-                    </div> 
-                </div>
-                <div class="row">
-                    <div class="col text-center mt-3">
+
+                        <!-- Playlist items table -->
                         <div id="picked_tracks"></div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col text-center mt-5" id="next_btn_container">
                         <a href="/features/<%= access_token %>/"
-                            class="btn btn-custom-primary font-weight-bold disabled" id="next_btn_main">Next</a>
+                            class="btn btn-secondary disabled" id="next_btn_main">Next</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <%- include ("partials/footer") %>
                     </div>
                 </div>
             </div>        
         </div>   
     </div>
     </div>
-    <script src="/../scripts/scripts.js"></script>
-    <script src="/../scripts/main.js"></script>
-</body>
-
-</html>

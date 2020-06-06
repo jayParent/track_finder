@@ -39,8 +39,9 @@ let stateKey = "spotify_auth_state";
 
 app
   .use(cookieParser())
-  .use(express.static(path.join(__dirname, 'static')))
-  .use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'))
+  .use(express.static(path.join(__dirname, "static")))
+  .use("/css", express.static(__dirname + "/node_modules/bootstrap/dist/css"))
+  .use("/css", express.static(__dirname + "/node_modules/mdbootstrap/css"))
   .use(cors());
 
 app.get("/", function (req, res) {
@@ -51,7 +52,7 @@ app.get("/login", function (req, res) {
   let state = generateRandomString(16);
   res.cookie(stateKey, state);
 
-  let scope = "user-top-read playlist-modify-public user-library-modify";
+  let scope = "user-top-read playlist-read-private playlist-modify-public user-library-modify";
   res.redirect(
     "https://accounts.spotify.com/authorize?" +
       querystring.stringify({
@@ -109,10 +110,9 @@ app.get("/callback", function (req, res) {
           "/user?" +
             querystring.stringify({
               access_token: access_token,
-              refresh_token: refresh_token
+              refresh_token: refresh_token,
             })
         );
-
       } else {
         res.redirect(
           "/#" +
@@ -136,23 +136,52 @@ app.get("/?:access_token", function (req, res) {
   };
   fetch(options.url, { headers: options.headers })
     .then((res) => res.json())
-    .then((res) => long_tracks = res)
-    .then(function(){
+    .then((res) => (long_tracks = res))
+    .then(function () {
       let options = {
         url: "https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=50&offset=0",
         headers: { Authorization: "Bearer " + access_token },
         json: true,
       };
-      fetch(options.url, {headers: options.headers})
-      .then((res) => res.json())
-      .then((res) => short_tracks = res)
-      .then(function(){
-        res.render("main", { long_tracks: long_tracks, short_tracks: short_tracks, access_token: access_token });
-      })
-      .catch((err) => console.log(err));
+      fetch(options.url, { headers: options.headers })
+        .then((res) => res.json())
+        .then((res) => (short_tracks = res))
+        .then(function () {
+          // Get user profile
+          let options = {
+            url: "https://api.spotify.com/v1/me",
+            headers: { Authorization: "Bearer " + access_token },
+            json: true,
+          };
+          fetch(options.url, { headers: options.headers })
+            .then((res) => res.json())
+            .then((res) => (profile = res))
+            .then(function () {
+              // Get user playlists
+              let options = {
+                url: "https://api.spotify.com/v1/me/playlists",
+                headers: { Authorization: "Bearer " + access_token },
+                json: true,
+              };
+              fetch(options.url, { headers: options.headers })
+                .then((res) => res.json())
+                .then((res) => (playlists = res))
+                .then(function () {
+                  res.render("main", {
+                    long_tracks: long_tracks,
+                    short_tracks: short_tracks,
+                    access_token: access_token,
+                    profile: profile,
+                    playlists: playlists,
+                  });
+                })
+                .catch((err) => console.log(err));
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
     })
     .catch((err) => console.log(err));
-  
 });
 
 app.get("/features/:access_token/:trackIds", function (req, res) {
@@ -179,7 +208,12 @@ app.get("/features/:access_token/:trackIds", function (req, res) {
         .then((res) => res.json())
         .then((res) => (titles = res))
         .then(function () {
-          res.render("features", { tracks: data, titles: titles, access_token: access_token, trackIds: trackIds });
+          res.render("features", {
+            tracks: data,
+            titles: titles,
+            access_token: access_token,
+            trackIds: trackIds,
+          });
         })
         .catch((err) => console.log(err));
     })
@@ -203,9 +237,8 @@ app.get("/recommendations/:access_token/:queryString/:featuresList/:trackIds", f
     .then((res) => res.json())
     .then((res) => (data = res))
     .then(function () {
-
       let recommendationIds = "";
-      data.tracks.forEach(function(track){
+      data.tracks.forEach(function (track) {
         recommendationIds = recommendationIds + track.id + ",";
       });
       recommendationIds = recommendationIds.slice(0, -1);
@@ -215,13 +248,18 @@ app.get("/recommendations/:access_token/:queryString/:featuresList/:trackIds", f
         headers: { Authorization: "Bearer " + access_token },
         json: true,
       };
-      fetch(options.url, {headers: options.headers})
-      .then((res) => res.json())
-      .then((res) => featuresData = res)
-      .then(function(){
-        res.render("recommendations", { recommendations: data, featuresList: featuresList, features: featuresData, featuresParams: queryString, access_token: access_token });
-      })
-      
+      fetch(options.url, { headers: options.headers })
+        .then((res) => res.json())
+        .then((res) => (featuresData = res))
+        .then(function () {
+          res.render("recommendations", {
+            recommendations: data,
+            featuresList: featuresList,
+            features: featuresData,
+            featuresParams: queryString,
+            access_token: access_token,
+          });
+        });
     })
     .catch((err) => console.log(err));
 });
@@ -229,67 +267,68 @@ app.get("/recommendations/:access_token/:queryString/:featuresList/:trackIds", f
 // Create playlist with recommendations"
 app.get("/create_playlist/:access_token/:trackUris/:featuresList", function (req, res) {
   let trackUris = req.params.trackUris,
-  access_token = req.params.access_token,
-  featuresList = req.params.featuresList;
+    access_token = req.params.access_token,
+    featuresList = req.params.featuresList;
 
   let options = {
     url: "https://api.spotify.com/v1/me",
     headers: {
-    Authorization: "Bearer " + access_token,
+      Authorization: "Bearer " + access_token,
     },
     json: true,
-};
+  };
 
-fetch(options.url, {
-  headers: options.headers,
-})
-  .then((res) => res.json())
-  .then((res) => (userInfo = res))
-  .then(function (){
-    let options = {
-      url: "https://api.spotify.com/v1/users/" + userInfo.id + "/playlists",
-      headers: { Authorization: "Bearer " + access_token },
-      body: {
-        name: "Recommendations by TrackFinder",
-        description:
-          "Based on the tracks you picked, trying to match the following audio features: " + featuresList,
-        public: true,
-      },
-      json: true,
-    };
-
-    request.post(options, function(error, response, body){
-      let playlistId = body.id;
-
+  fetch(options.url, {
+    headers: options.headers,
+  })
+    .then((res) => res.json())
+    .then((res) => (userInfo = res))
+    .then(function () {
       let options = {
-        url: "https://api.spotify.com/v1/playlists/" + playlistId + "/tracks?uris=" + trackUris,
-        headers: {
-        Authorization: "Bearer " + access_token,
+        url: "https://api.spotify.com/v1/users/" + userInfo.id + "/playlists",
+        headers: { Authorization: "Bearer " + access_token },
+        body: {
+          name: "Recommendations by TrackFinder",
+          description:
+            "Based on the tracks you picked, trying to match the following audio features: " +
+            featuresList,
+          public: true,
         },
         json: true,
-    };
-      request.post(options, function(error, response, body){
-        res.status(204).send();
-      })
-    });
-  })
-  .catch((err) => console.error(err));       
+      };
+
+      request.post(options, function (error, response, body) {
+        let playlistId = body.id;
+
+        let options = {
+          url: "https://api.spotify.com/v1/playlists/" + playlistId + "/tracks?uris=" + trackUris,
+          headers: {
+            Authorization: "Bearer " + access_token,
+          },
+          json: true,
+        };
+        request.post(options, function (error, response, body) {
+          res.status(204).send();
+        });
+      });
+    })
+    .catch((err) => console.error(err));
 });
 
 // Save a track to "Liked Songs"
 app.get("/save/:trackId/:access_token", function (req, res) {
   let trackId = req.params.trackId,
-  access_token = req.params.access_token;
+    access_token = req.params.access_token;
 
   let options = {
-      url: "https://api.spotify.com/v1/me/tracks?ids=" + trackId,
-      headers: {
+    url: "https://api.spotify.com/v1/me/tracks?ids=" + trackId,
+    headers: {
       Authorization: "Bearer " + access_token,
-      },
-      json: true,
+    },
+    json: true,
   };
   console.log(options.url);
-  request.put(options, function(error, response, body){
+  request.put(options, function (error, response, body) {
     res.status(204).send();
   });
 });
@@ -301,6 +340,5 @@ app.get("*", function (req, res) {
 // TODO
 // Look at spotify app for ideas
 // BUG White button on features and recommendations
-// BUG blue sliders on herokuapp 
+// BUG blue sliders on herokuapp
 // page for when acess token expires or use refresh token
-
