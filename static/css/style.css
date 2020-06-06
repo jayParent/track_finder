@@ -54,6 +54,10 @@ html, body{
     color: #985EFF;
 }
 
+#index_header_row{
+    position: relative;
+    z-index: 2;
+}
 /* Main */
 .scrollableBody#top_tracks_table thead,
 tbody#top_tracks_table_body tr{

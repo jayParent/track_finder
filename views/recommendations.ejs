@@ -13,35 +13,50 @@
     </div>
     <div class="row mt-5">
         <div class="col">
-            <!-- Recommendations header -->
-            <div class="text-center text-white mt-5 animated fadeInLeft">
-                <h1>
-                    Recommendations
-                </h1>
-                <h4>
-                    <span class="custom-green">
-                        <span id="perfect_qty">0</span> Perfect -
-                    </span>
-                    <span class="custom-yellow">
-                        <span id="good_qty">0 </span> Good -
-                    </span>
-                    <span class="custom-red">
-                        <span id="acceptable_qty">0</span> Acceptable
-                    </span>
-                </h4>
-                <h2>Create Playlist</h2>
-                <a href="" class="btn btn-custom-secondary font-weight-bold" id="create_perfect_button">Only
-                    Perfect</a>
-                <a href="" class="btn btn-custom-secondary font-weight-bold" id="create_good_button">Perfect &
-                    Good</a>
-                <a href="" class="btn btn-custom-secondary font-weight-bold" id="create_all_button">All Tracks</a>
+            <div class="container text-center text-white mt-5 animated fadeInLeft" style="z-index: 2; position: relative;">
+                <div class="row">
+                    <div class="col">
+                        <!-- Recommendations header -->
+                        <h1>Recommendations</h1>
+                        <h4>
+                            <span class="custom-green">
+                                <span id="perfect_qty">0</span> Perfect -
+                            </span>
+                            <span class="custom-yellow">
+                                <span id="good_qty">0 </span> Good -
+                            </span>
+                            <span class="custom-red">
+                                <span id="acceptable_qty">0</span> Acceptable
+                            </span>
+                        </h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <a class="btn btn-secondary" id="back_btn">Change Parameters</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col text-center text-white my-3 animated fadeInLeft">
+                        <h2>Create Playlist</h2>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-custom-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Type of Playlist
+                            </button>
+                            <div class="dropdown-menu">
+                                <span class="dropdown-header">Tracks to Include in Playlist</span>
+                                <a href="" class="dropdown-item" id="create_perfect_button">Only
+                                    Perfect</a>
+                                <div class="dropdown-divider"></div>
+                                <a href="" class="dropdown-item" id="create_good_button">Perfect &
+                                    Good</a>
+                                <div class="dropdown-divider"></div>
+                                <a href="" class="dropdown-item" id="create_all_button">All Tracks</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col text-center animated fadeInLeft">
-            <a class="btn btn-secondary " id="back_btn">Change Parameters</a>
-            <a href="" class="btn btn-secondary ">Refresh</a>
         </div>
     </div>
     <div class="row">
@@ -55,12 +70,13 @@
                             id="track_card<%= i %>">
                             <div class="card-header">
                                 <h4><a href="" class="text-white"><%= recommendations.tracks[i].name %></a></h4>
-                                <div style="display: none;" class="recommendation_uri">
-                                    <%= recommendations.tracks[i].uri %></div>
+                                <div style="display: none;" class="recommendation_uri"><%= recommendations.tracks[i].uri %></div>
                                 <p><%= recommendations.tracks[i].album.name %></p>
                                 <p>
                                     <i class="fas fa-fire text-danger"></i>
                                     <span class="track_popularity"><%= recommendations.tracks[i].popularity %></span>
+                                    <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top"
+                                        title="Track Popularity"></i>
                                 </p>
 
                                 <div id="acousticness<%= i %>" style="display: none;">
@@ -87,7 +103,7 @@
                                 <p class="card-feature-icons"></p>
 
                                 <% recommendations.tracks[i].artists.forEach(function(artist){ %>
-                                <a href="" class="btn btn-sm btn-outline-white  my-1 mx-1"><%= artist.name %>
+                                <a href="" class="btn btn-sm btn-outline-white my-1 mx-1"><%= artist.name %>
                                 </a>
                                 <% }) %>
 
@@ -96,18 +112,18 @@
                                 <div class="container">
                                     <div class="row">
                                         <!-- <div class="col">
-                            <% if(recommendations.tracks[i].preview_url != null){ %>
-                            <iframe
-                                src="https://open.spotify.com/embed/track/<%= recommendations.tracks[i].id %> "
-                                width="300" height="80" frameborder="1" allowtransparency="true"
-                                allow="encrypted-media"></iframe>
-                            <% } %>
-                        </div> -->
+                                            <% if(recommendations.tracks[i].preview_url != null){ %>
+                                            <iframe
+                                                src="https://open.spotify.com/embed/track/<%= recommendations.tracks[i].id %> "
+                                                width="300" height="80" frameborder="1" allowtransparency="true"
+                                                allow="encrypted-media"></iframe>
+                                            <% } %>
+                                         </div> -->
                                     </div>
                                     <div class="row">
                                         <div class="col">
                                             <a href="/save/<%= recommendations.tracks[i].id %>/<%= access_token %>"
-                                                class="btn btn-sm btn-outline-white  like_song_btn"><i
+                                                class="btn btn-sm btn-outline-secondary like_song_btn"><i
                                                     class="fas fa-heart"></i> Add to "Liked Songs"</a>
                                         </div>
                                     </div>
@@ -119,8 +135,13 @@
                 </div>
             </div>
         </div>
-
     </div>
+    <div class="row">
+        <div class="col text-center text-dark my-3">
+          <a href="#top" class="display-4"><i class="fas fa-arrow-up text-secondary"></i></a>
+          <p class="lead text-white">Back to Top</p>
+        </div>
+      </div>
     <div class="row">
         <div class="col">
             <%- include ("partials/footer") %>

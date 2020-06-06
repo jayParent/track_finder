@@ -8,27 +8,15 @@
         </div>
         <div class="row h-100">
             <div class="container">
-                <div class="row mt-5 align-items-center">     
-                    <div class="col-8 mx-auto mt-2 text-white animated fadeInUp" style="z-index: 2;">
-                        <button type="button" class="btn btn-custom-secondary" id="top_tracks_button">See All-Time Top Tracks</button>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-custom-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Playlists
-                            </button>
-                            <div class="dropdown-menu">
-                            <% playlists.items.forEach(function(playlist){ %>
-                                <a class="dropdown-item" href="#"><%= playlist.name %></a>
-                            <% }) %> 
-                            </div>
-                        </div>    
-                    </div>
-                    <div class="col-4 mx-auto mt-2 animated fadeInUp">
+                <div class="row mt-5 align-items-center justify-content-center animated fadeInUp">     
+                    <div class="col-4 mx-auto mt-2">
                         <img src="<%= profile.images[0].url %>" alt="Profile Picture" class="img-thumbnail">
-                    </div> 
+                    </div>                
                 </div>
                 <div class="row">
-                    <div class="col text-center text-white mt-3">
+                    <div class="col text-center text-white mt-3 animated fadeInUp">
                         <h2 class="display-5" id="time_header">Your 50 most-played Tracks, Recently</h2>
+                        <button type="button" class="btn btn-custom-secondary" id="top_tracks_button">See All-Time Top Tracks</button>
                         <p class="lead">Pick up to 5 tracks</p>
 
                         <!-- Long term top tracks table -->
@@ -77,8 +65,6 @@
                                 <% }) %>
                             </tbody>
                         </table>
-
-                        <!-- Playlist items table -->
                         <div id="picked_tracks"></div>
                     </div>
                 </div>
@@ -88,7 +74,7 @@
                             class="btn btn-secondary disabled" id="next_btn_main">Next</a>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" id="main_footer">
                     <div class="col">
                         <%- include ("partials/footer") %>
                     </div>
@@ -97,3 +83,4 @@
         </div>   
     </div>
     </div>
+    <script src="/../scripts/main.js"></script>

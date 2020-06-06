@@ -58,6 +58,7 @@ function addTrackForAnalysis(trackTitle) {
       nextBtn.classList.remove("disabled");
     }
   }
+  window.location.href = "#main_footer";
 }
 
 // Send tracks for analysis

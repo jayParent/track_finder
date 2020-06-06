@@ -52,7 +52,7 @@ app.get("/login", function (req, res) {
   let state = generateRandomString(16);
   res.cookie(stateKey, state);
 
-  let scope = "user-top-read playlist-read-private playlist-modify-public user-library-modify";
+  let scope = "user-top-read playlist-modify-public user-library-modify";
   res.redirect(
     "https://accounts.spotify.com/authorize?" +
       querystring.stringify({
@@ -288,7 +288,7 @@ app.get("/create_playlist/:access_token/:trackUris/:featuresList", function (req
         url: "https://api.spotify.com/v1/users/" + userInfo.id + "/playlists",
         headers: { Authorization: "Bearer " + access_token },
         body: {
-          name: "Recommendations by TrackFinder",
+          name: "TrackFinder Recommendations",
           description:
             "Based on the tracks you picked, trying to match the following audio features: " +
             featuresList,
@@ -298,18 +298,18 @@ app.get("/create_playlist/:access_token/:trackUris/:featuresList", function (req
       };
 
       request.post(options, function (error, response, body) {
-        let playlistId = body.id;
+          let playlistId = body.id;
 
-        let options = {
-          url: "https://api.spotify.com/v1/playlists/" + playlistId + "/tracks?uris=" + trackUris,
-          headers: {
-            Authorization: "Bearer " + access_token,
-          },
-          json: true,
-        };
-        request.post(options, function (error, response, body) {
-          res.status(204).send();
-        });
+          let options = {
+            url: "https://api.spotify.com/v1/playlists/" + playlistId + "/tracks?uris=" + trackUris,
+            headers: {
+              Authorization: "Bearer " + access_token,
+            },
+            json: true,
+          };
+          request.post(options, function (error, response, body) {
+            res.status(204).send();  
+          });
       });
     })
     .catch((err) => console.error(err));
@@ -327,7 +327,6 @@ app.get("/save/:trackId/:access_token", function (req, res) {
     },
     json: true,
   };
-  console.log(options.url);
   request.put(options, function (error, response, body) {
     res.status(204).send();
   });
@@ -338,7 +337,6 @@ app.get("*", function (req, res) {
 });
 
 // TODO
-// Look at spotify app for ideas
-// BUG White button on features and recommendations
-// BUG blue sliders on herokuapp
+// background color dropdown menu recommendations page
 // page for when acess token expires or use refresh token
+// [FEATURE] most perfect track on recommendations page with ifram to play it, calculate difference in audio features and pick best one 
