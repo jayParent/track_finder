@@ -30,6 +30,10 @@
                             </span>
                         </h4>
                     </div>
+                    <div class="col">
+                        <h3>Best Track</h3>
+
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col">
@@ -72,11 +76,10 @@
                                 <h4><a href="" class="text-white"><%= recommendations.tracks[i].name %></a></h4>
                                 <div style="display: none;" class="recommendation_uri"><%= recommendations.tracks[i].uri %></div>
                                 <p><%= recommendations.tracks[i].album.name %></p>
-                                <p>
+                                <p data-toggle="tooltip" data-placement="top"
+                                title="Track Popularity" style="cursor: help;">
                                     <i class="fas fa-fire text-danger"></i>
                                     <span class="track_popularity"><%= recommendations.tracks[i].popularity %></span>
-                                    <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top"
-                                        title="Track Popularity"></i>
                                 </p>
 
                                 <div id="acousticness<%= i %>" style="display: none;">
@@ -234,7 +237,7 @@
     function checkMaxValues(feature, data, container) {
         let params = '<%= featuresParams %>';
         if (params.includes(feature)) {
-            let max_value, difference;
+            let max_value, totalDifference;
             let perfect = true,
                 good = true,
                 result = "";

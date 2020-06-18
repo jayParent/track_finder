@@ -47,7 +47,7 @@ html, body{
 
 /* Index */
 #more_info_container{
-    background-color: rgba(255, 255, 255, 0.6);
+    background-color: #292929;
 }
 
 #more_info_arrow:hover{
@@ -57,6 +57,10 @@ html, body{
 #index_header_row{
     position: relative;
     z-index: 2;
+}
+
+.custom-light-card{
+    background-color: #424242;
 }
 /* Main */
 .scrollableBody#top_tracks_table thead,
