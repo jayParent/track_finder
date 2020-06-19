@@ -30,10 +30,6 @@
                             </span>
                         </h4>
                     </div>
-                    <div class="col">
-                        <h3>Best Track</h3>
-
-                    </div>
                 </div>
                 <div class="row">
                     <div class="col">
@@ -103,7 +99,7 @@
                                 <div id="tempo<%= i %>" style="display: none;"><%= features.audio_features[i].tempo %>
                                 </div>
 
-                                <p class="card-feature-icons"></p>
+                                <p class="card-maxFeature-icons"></p>
 
                                 <% recommendations.tracks[i].artists.forEach(function(artist){ %>
                                 <a href="" class="btn btn-sm btn-outline-white my-1 mx-1"><%= artist.name %>
@@ -114,14 +110,10 @@
                             <div class="card-body">
                                 <div class="container">
                                     <div class="row">
-                                        <!-- <div class="col">
-                                            <% if(recommendations.tracks[i].preview_url != null){ %>
-                                            <iframe
-                                                src="https://open.spotify.com/embed/track/<%= recommendations.tracks[i].id %> "
-                                                width="300" height="80" frameborder="1" allowtransparency="true"
-                                                allow="encrypted-media"></iframe>
-                                            <% } %>
-                                         </div> -->
+                                        <div class="col" id="<%= recommendations.tracks[i].id %>">
+                                            <button class="btn btn-sm btn-outline-secondary" onclick="getTrackIframe(this, this.parentElement)">Play Track</button>
+                                
+                                        </div>
                                     </div>
                                     <div class="row">
                                         <div class="col">
@@ -234,20 +226,20 @@
         btn.addEventListener("click", alertSavedTrack);
     })
 
-    function checkMaxValues(feature, data, container) {
+    function checkMaxValues(maxFeature, data, container) {
         let params = '<%= featuresParams %>';
-        if (params.includes(feature)) {
-            let max_value, totalDifference;
+        if (params.includes(maxFeature)) {
+            let maxValue;
             let perfect = true,
                 good = true,
-                result = "";
+                featureScore = "";
 
-            if (feature === "max_Tempo") {
-                max_value = parseFloat(params.split(feature + "=").pop());
+            if (maxFeature === "max_Tempo") {
+                maxValue = parseFloat(params.split(maxFeature + "=").pop());
 
-                if (data < max_value) {
+                if (data < maxValue) {
                     container.classList.add("custom-green");
-                } else if ((data - max_value) <= 10) {
+                } else if ((data - maxValue) <= 10) {
                     container.classList.add("custom-yellow");
                     perfect = false;
                 } else {
@@ -255,11 +247,11 @@
                     perfect = false, good = false;
                 }
 
-            } else if (feature === "max_Loudness") {
-                max_value = parseFloat(params.split(feature + "=").pop());
-                let difference = Math.abs(max_value - data);
+            } else if (maxFeature === "max_Loudness") {
+                maxValue = parseFloat(params.split(maxFeature + "=").pop());
+                let difference = Math.abs(maxValue - data);
 
-                if (data < max_value) {
+                if (data < maxValue) {
                     container.classList.add("custom-green");
                 } else if (difference < 3) {
                     container.classList.add("custom-yellow");
@@ -270,11 +262,11 @@
                 }
 
             } else {
-                max_value = parseFloat(params.split(feature + "=").pop());
+                maxValue = parseFloat(params.split(maxFeature + "=").pop());
 
-                if (data < max_value) {
+                if (data < maxValue) {
                     container.classList.add("custom-green");
-                } else if ((data - max_value) <= 0.1) {
+                } else if ((data - maxValue) <= 0.1) {
                     container.classList.add("custom-yellow");
                     perfect = false;
                 } else {
@@ -284,22 +276,22 @@
             }
 
             if (perfect) {
-                result = "perfect";
+                featureScore = "perfect";
             } else if (good) {
-                result = "good";
+                featureScore = "good";
             } else {
-                result = "acceptable";
+                featureScore = "acceptable";
             }
-            return result;
+            return featureScore;
         }
     }
 
     function getTrackScore(featureData, featureCluster, uri) {
         let perfect = true, good = true;
-        featureData.forEach(function (feature) {
-            if (feature.classList.contains("good") || feature.classList.contains("acceptable")) {
+        featureData.forEach(function (maxFeature) {
+            if (maxFeature.classList.contains("good") || maxFeature.classList.contains("acceptable")) {
                 perfect = false;
-                if (feature.classList.contains("acceptable")) {
+                if (maxFeature.classList.contains("acceptable")) {
                     good = false;
                 }
             }
@@ -320,7 +312,7 @@
         let perfectCounter = document.getElementById("perfect_qty"),
             goodCounter = document.getElementById("good_qty"),
             acceptableCounter = document.getElementById("acceptable_qty"),
-            featureClusters = document.getElementsByClassName("card-feature-icons"),
+            featureClusters = document.getElementsByClassName("card-maxFeature-icons"),
             perfectCount = 0,
             goodCount = 0,
             acceptableCount = 0;
@@ -337,13 +329,21 @@
         perfectCounter.innerHTML = perfectCount, goodCounter.innerHTML = goodCount, acceptableCounter.innerHTML = acceptableCount;
     }
 
+    function getTrackIframe(button, iFrameContainer){
+        let iFrame = document.createElement("iframe");
+        setAttributes(iFrame, { "src": "https://open.spotify.com/embed/track/" + iFrameContainer.id, "width": "300", "height": "80", "frameborder": "1",
+                                "allowtransparency": "true", "allow": "encrypted-media" });
+        iFrameContainer.appendChild(iFrame);
+        button.style.display = "none";
+    }
+
     window.onload = function () {
-        let featureClusters = document.getElementsByClassName("card-feature-icons"),
+        let featureClusters = document.getElementsByClassName("card-maxFeature-icons"),
             recommendationUris = document.getElementsByClassName("recommendation_uri");
         let featuresString = '<%= featuresList %>';
         let featuresOptions = ["Acousticness", "Danceability", "Energy", "Instrumentalness",
             "Liveness", "Loudness", "Speechiness", "Valence", "Tempo"];
-        let data, feature, result;
+        let data, maxFeature, targetFeature, featureScore, featureDifference;
 
         for (var j = 0; j < featureClusters.length; j++) {
             let featureData = featureClusters[j].children;
@@ -355,84 +355,84 @@
 
                     switch (featuresOptions[i]) {
                         case "Acousticness":
-                            feature = "max_Acousticness";
+                            maxFeature = "max_Acousticness";
                             data = parseFloat(document.getElementById("acousticness" + j).textContent).toPrecision(3);
                             container.innerHTML = '<i class="fas fa-guitar"></i> ' + data;
-                            setAttributes(container, { "class": "mx-2 feature", "data-toggle": "tooltip", "data-placement": "right", "title": "Acousticness. 1.0 represents high confidence track is acoustic.", "style": "cursor: help" })
-                            result = checkMaxValues(feature, data, container);
-                            container.classList.add(result);
+                            setAttributes(container, { "class": "mx-2 maxFeature", "data-toggle": "tooltip", "data-placement": "right", "title": "Acousticness. 1.0 represents high confidence track is acoustic.", "style": "cursor: help" })
+                            featureScore = checkMaxValues(maxFeature, data, container);
+                            container.classList.add(featureScore);
                             break;
 
                         case "Danceability":
-                            feature = "max_Danceability";
+                            maxFeature = "max_Danceability";
                             data = parseFloat(document.getElementById("danceability" + j).textContent).toPrecision(3);
                             container.innerHTML = '<i class="fas fa-child"></i> ' + data;
-                            setAttributes(container, { "class": "mx-2 feature", "data-toggle": "tooltip", "data-placement": "right", "title": "Danceability. A value of 0.0 is least danceable and 1.0 is most danceable.", "style": "cursor: help" })
-                            result = checkMaxValues(feature, data, container);
-                            container.classList.add(result);
+                            setAttributes(container, { "class": "mx-2 maxFeature", "data-toggle": "tooltip", "data-placement": "right", "title": "Danceability. A value of 0.0 is least danceable and 1.0 is most danceable.", "style": "cursor: help" })
+                            featureScore = checkMaxValues(maxFeature, data, container);
+                            container.classList.add(featureScore);
                             break;
 
                         case "Energy":
-                            feature = "max_Energy";
+                            maxFeature = "max_Energy";
                             data = parseFloat(document.getElementById("energy" + j).textContent).toPrecision(3);
                             container.innerHTML = '<i class="fas fa-battery-three-quarters"></i> ' + data;
                             setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Energy. Measure from 0.0 to 1.0, reprensents intensity and energy.", "style": "cursor: help" })
-                            result = checkMaxValues(feature, data, container);
-                            container.classList.add(result);
+                            featureScore = checkMaxValues(maxFeature, data, container);
+                            container.classList.add(featureScore);
                             break;
 
                         case "Instrumentalness":
-                            feature = "max_Instrumentalness";
+                            maxFeature = "max_Instrumentalness";
                             data = parseFloat(document.getElementById("instrumentalness" + j).textContent).toPrecision(3);
                             container.innerHTML = '<i class="far fa-surprise"></i> ' + data;
                             setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Instrumentalness. Closer value to 1.0, greater likelyhood the track contains no vocals.", "style": "cursor: help" })
-                            result = checkMaxValues(feature, data, container);
-                            container.classList.add(result);
+                            featureScore = checkMaxValues(maxFeature, data, container);
+                            container.classList.add(featureScore);
                             break;
 
                         case "Liveness":
-                            feature = "max_Liveness";
+                            maxFeature = "max_Liveness";
                             data = parseFloat(document.getElementById("liveness" + j).textContent).toPrecision(3);
                             container.innerHTML = '<i class="fas fa-tv"></i> ' + data;
                             setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Liveness. A value of 0.8 provides a string likelyhood that the track is live.", "style": "cursor: help" })
-                            result = checkMaxValues(feature, data, container);
-                            container.classList.add(result);
+                            featureScore = checkMaxValues(maxFeature, data, container);
+                            container.classList.add(featureScore);
                             break;
 
                         case "Loudness":
-                            feature = "max_Loudness";
+                            maxFeature = "max_Loudness";
                             data = parseFloat(document.getElementById("loudness" + j).textContent).toPrecision(3);
                             container.innerHTML = '<i class="fas fa-volume-up"></i> ' + data;
                             setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Loudness. Overall loudness of the track in decibels(dB).", "style": "cursor: help" })
-                            result = checkMaxValues(feature, data, container);
-                            container.classList.add(result);
+                            featureScore = checkMaxValues(maxFeature, data, container);
+                            container.classList.add(featureScore);
                             break;
 
                         case "Speechiness":
-                            feature = "max_Speechiness";
+                            maxFeature = "max_Speechiness";
                             data = parseFloat(document.getElementById("speechiness" + j).textContent).toPrecision(3);
                             container.innerHTML = '<i class="far fa-comment-dots"></i> ' + data;
                             setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Speechiness. Values below 0.33 most likely represent music and other non-speech-like tracks.", "style": "cursor: help" })
-                            result = checkMaxValues(feature, data, container);
-                            container.classList.add(result);
+                            featureScore = checkMaxValues(maxFeature, data, container);
+                            container.classList.add(featureScore);
                             break;
 
                         case "Valence":
-                            feature = "max_Valence";
+                            maxFeature = "max_Valence";
                             data = parseFloat(document.getElementById("valence" + j).textContent).toPrecision(3);
                             container.innerHTML = '<i class="far fa-smile-beam"></i> ' + data;
                             setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Valence. Measure from 0.0 to 1.0 describing the musical positiveness conveyed by the track.", "style": "cursor: help" })
-                            result = checkMaxValues(feature, data, container);
-                            container.classList.add(result);
+                            featureScore = checkMaxValues(maxFeature, data, container);
+                            container.classList.add(featureScore);
                             break;
 
                         case "Tempo":
-                            feature = "max_Tempo";
+                            maxFeature = "max_Tempo";
                             data = parseFloat(document.getElementById("tempo" + j).textContent).toPrecision(3);
                             container.innerHTML = '<i class="fas fa-drum"></i> ' + data;
                             setAttributes(container, { "class": "mx-2", "data-toggle": "tooltip", "data-placement": "right", "title": "Tempo. Overall estimated tempo in beats per minute(BPM).", "style": "cursor: help" })
-                            result = checkMaxValues(feature, data, container);
-                            container.classList.add(result);
+                            featureScore = checkMaxValues(maxFeature, data, container);
+                            container.classList.add(featureScore);
                             break;
                     }
                 }
