@@ -68,6 +68,7 @@ tbody#top_tracks_table_body tr{
     display: table;
     width: 100%;
     table-layout: fixed;
+    background-color: #292929;
 }
 
 .scrollableBody#recent_tracks_table thead,
@@ -75,6 +76,7 @@ tbody#recent_tracks_table_body tr{
     display: table;
     width: 100%;
     table-layout: fixed;
+    background-color: #292929;
 }
 
 #top_tracks_table_body, #recent_tracks_table_body{
