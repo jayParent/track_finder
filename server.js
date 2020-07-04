@@ -287,7 +287,7 @@ app.get("/create_playlist/:access_token/:trackUris/:featuresList", function (req
         url: "https://api.spotify.com/v1/users/" + userInfo.id + "/playlists",
         headers: { Authorization: "Bearer " + access_token },
         body: {
-          name: "TrackFinder Recommendations",
+          name: "Analyse-aud.io Recommendations",
           description:
             "Based on the tracks you picked, trying to match the following audio features: " +
             featuresList,
