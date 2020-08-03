@@ -52,13 +52,16 @@ function addTrackForAnalysis(trackTitle) {
     trackIds.push(trackId);
     trackTitles.push(title);
     trackContainer.appendChild(btn);
+
+    if(count === 0)
+      window.location.href = "#main_footer";
+      
     count++;
 
     if (count > 0) {
       nextBtn.classList.remove("disabled");
     }
   }
-  window.location.href = "#main_footer";
 }
 
 // Send tracks for analysis
