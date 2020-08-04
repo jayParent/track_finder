@@ -31,56 +31,35 @@
       </div>
     </div>
   </div>
-  <div class="container-fluid text-white" id="more_info_container">
+  <div class="container-fluid text-white text-center" id="more_info_container">
     <div class="row">
-      <div class="col-lg-3 d-flex align-items-stretch mx-auto mt-5">
-        <div class="card custom-light-card align-items-center">
-          <img class="card-img-top" src="/imgs/index_img_1.jpg" alt="">
-          <div class="card-body">
-            <h4 class="card-title">How does it work?</h4>
-            <ul>
-              <li>Pick up to 5 Tracks from your All-Time or Recent Favorites</li>
-              <li>Receive an Analysis of those Tracks</li>
-              <li>Adjust Spotify's Recommendation algorithm, based on what you think influences your taste the most</li>
-              <li>Get Recommendations based on the above</li>
-              <li>Optionally create a Spotify playlist with the results</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 d-flex align-items-stretch mx-auto mt-5">
-        <div class="card custom-light-card">
-          <img class="card-img-top" src="/imgs/index_img_2.jpg" alt="">
-          <div class="card-body">
-            <h4 class="card-title">What is the goal?</h4>
-              <p>Finding new favorite songs that sound very similar to particular songs that you love.</p>
-              <p>Most recommendation algorithms base their results on genres, artists or listening habits of other users. The result is
-                often playlists containing songs with drastically different "feel" to those that you love the most.
-              </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 d-flex align-items-stretch mx-auto mt-5">
-        <div class="card custom-light-card">
-          <img class="card-img-top" src="/imgs/index_img_3.jpg" alt="">
-          <div class="card-body">
-            <h4 class="card-title">Is it safe?</h4>
-              <p>The authentification is handled by Spotify, through their public API. We only ask the minimum permissions the app needs to function.
-                These will be displayed when you log in. Your email adress remains private.
-              </p>
-          </div>
-        </div>
+      <div class="col">
+        <h1 class="display-5 my-5">How does it work?</h1>
       </div>
     </div>
-    <div class="row">
-      <div class="col text-center text-white my-3">
-        <a href="#top" class="display-4"><i class="fas fa-arrow-up text-secondary"></i></a>
-        <p class="lead">Get Started</p>
+    <div class="row align-items-center">
+      <div class="col-8 col-lg-3 mx-auto">
+        <img class="img-fluid" src="/imgs/ud_search.svg" alt="">
+        <h4 class="mt-3 mb-5">Browse your favorite tracks.</h4>
       </div>
+      <div class="col-8 col-lg-3 mx-auto">
+        <img class="img-fluid" src="/imgs/ud_preferences.svg" alt="">
+        <h4 class="mt-3 mb-5">Understand and adjust your preferences.</h4>
+      </div>
+      <div class="col-8 col-lg-3 mx-auto">
+        <img class="img-fluid" src="/imgs/ud_music.svg" alt="">
+        <h4 class="mt-3 mb-5">Discover new music.</h4>
+      </div>
+    </div>
+    <div class="row justify-content-center my-5">
+        <div class="col text-center text-white">
+          <a href="#top" class="display-4"><i class="fas fa-arrow-up text-secondary"></i></a>
+          <p class="lead">Get Started</p>
+        </div>
     </div>
     <div class="row">
       <div class="col">
         <%- include ("partials/footer") %>
       </div>
-    </div>
+    </div>  
   </div>
