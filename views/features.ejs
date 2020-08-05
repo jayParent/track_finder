@@ -1,23 +1,34 @@
 <%- include ("partials/header") %>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col">
-                <a href="https://github.com/jayParent/track_finder" target="_blank"><i class="fab fa-github mt-3 ml-1"
-                        aria-hidden="true" id="gh_logo"></i></a>
+    <div class="container-fluid h-100">
+        <div class="row h-50">
+            <div class="col-6">
+                <img src="/imgs/ud_music2.svg" alt="" class="img-fluid">
+            </div>
+            <div class="col-6">
+                <button class="btn btn-default">See Details or whatever</button>
             </div>
         </div>
-        <div class="row mt-5">
+        <div class="row h-50">
+            <div class="col-6">
+                <button class="btn btn-default">Don't care</button>
+            </div>
+            <div class="col-6">
+                <img src="/imgs/ud_question.svg" alt="" class="img-fluid">
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
             <div class="col mx-auto">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-xl-8 mx-auto">
                             <div class="card bg-dark text-white text-center my-3">
                                 <div class="card-header">
-                                    <h4 class="card-title">Audio Features</h4>
-                                    <h6>Click on a track to hide it</h6>
+                                    <h4 class="card-title">Acousticness</h4>
                                 </div>
                                 <div class="card-body graph-card" style="padding: 0;">
-                                    <canvas id="audio_features_linechart" style="min-height: 50vh;"></canvas>
+                                    <canvas id="acousticness_linechart"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -45,15 +56,6 @@
                                         <label class="btn btn-elegant active">
                                             <input type="checkbox" autocomplete="off" id="Instrumentalness">
                                             Instrumentalness
-                                        </label>
-                                        <label class="btn btn-elegant active">
-                                            <input type="checkbox" autocomplete="off" id="Liveness"> Liveness
-                                        </label>
-                                        <label class="btn btn-elegant active">
-                                            <input type="checkbox" autocomplete="off" id="Loudness"> Loudness
-                                        </label>
-                                        <label class="btn btn-elegant active">
-                                            <input type="checkbox" autocomplete="off" id="Speechiness"> Speechiness
                                         </label>
                                         <label class="btn btn-elegant active">
                                             <input type="checkbox" autocomplete="off" id="Valence"> Valence
@@ -92,76 +94,8 @@
             }
         }
 
-        // Calculate average audio features for picked tracks
-        function calcAvgAudioFeatures() {
-            let acousticnessObj = document.getElementsByClassName("acousticness"),
-                danceabilityObj = document.getElementsByClassName("danceability"),
-                energyObj = document.getElementsByClassName("energy"),
-                instrumentalnessObj = document.getElementsByClassName("instrumentalness"),
-                livenessObj = document.getElementsByClassName("liveness"),
-                loudnessObj = document.getElementsByClassName("loudness"),
-                speechinessObj = document.getElementsByClassName("speechiness"),
-                valenceObj = document.getElementsByClassName("valence"),
-                tempoObj = document.getElementsByClassName("tempo");
-
-            let audioFeaturesAvg = { a: 0, d: 0, e: 0, ins: 0, li: 0, lo: 0, s: 0, v: 0, t: 0 }
-
-            for (var i = 0; i < acousticnessObj.length; i++) {
-                var value = parseFloat(acousticnessObj[i].textContent);
-                audioFeaturesAvg.a += value;
-                value = parseFloat(danceabilityObj[i].textContent);
-                audioFeaturesAvg.d += value;
-                value = parseFloat(energyObj[i].textContent);
-                audioFeaturesAvg.e += value;
-                value = parseFloat(instrumentalnessObj[i].textContent);
-                audioFeaturesAvg.ins += value;
-                value = parseFloat(livenessObj[i].textContent);
-                audioFeaturesAvg.li += value;
-                value = parseFloat(loudnessObj[i].textContent);
-                audioFeaturesAvg.lo += value;
-                value = parseFloat(speechinessObj[i].textContent);
-                audioFeaturesAvg.s += value;
-                value = parseFloat(valenceObj[i].textContent);
-                audioFeaturesAvg.v += value;
-                value = parseFloat(tempoObj[i].textContent);
-                audioFeaturesAvg.t += value;
-            }
-            audioFeaturesAvg.a /= acousticnessObj.length;
-            audioFeaturesAvg.d /= danceabilityObj.length;
-            audioFeaturesAvg.e /= energyObj.length;
-            audioFeaturesAvg.ins /= instrumentalnessObj.length;
-            audioFeaturesAvg.li /= livenessObj.length;
-            audioFeaturesAvg.lo /= loudnessObj.length;
-            audioFeaturesAvg.s /= speechinessObj.length;
-            audioFeaturesAvg.v /= valenceObj.length;
-            audioFeaturesAvg.t /= tempoObj.length;
-
-            return audioFeaturesAvg;
-        };
-
-        let audioFeaturesAvg = calcAvgAudioFeatures();
-        document.getElementById("avg_acousticness").textContent = audioFeaturesAvg.a.toPrecision(3);
-        document.getElementById("avg_danceability").textContent = audioFeaturesAvg.d.toPrecision(3);
-        document.getElementById("avg_energy").textContent = audioFeaturesAvg.e.toPrecision(3);
-        document.getElementById("avg_instrumentalness").textContent = audioFeaturesAvg.ins.toPrecision(3);
-        document.getElementById("avg_liveness").textContent = audioFeaturesAvg.li.toPrecision(3);
-        document.getElementById("avg_loudness").textContent = audioFeaturesAvg.lo.toPrecision(3);
-        document.getElementById("avg_speechiness").textContent = audioFeaturesAvg.s.toPrecision(3);
-        document.getElementById("avg_valence").textContent = audioFeaturesAvg.v.toPrecision(3);
-        document.getElementById("avg_tempo").textContent = audioFeaturesAvg.t.toPrecision(3);
-
-        let avg_acousticness = parseFloat(document.getElementById("avg_acousticness").textContent),
-            avg_danceability = parseFloat(document.getElementById("avg_danceability").textContent),
-            avg_energy = parseFloat(document.getElementById("avg_energy").textContent),
-            avg_instrumentalness = parseFloat(document.getElementById("avg_instrumentalness").textContent),
-            avg_liveness = parseFloat(document.getElementById("avg_liveness").textContent),
-            avg_loudness = parseFloat(document.getElementById("avg_loudness").textContent),
-            avg_speechiness = parseFloat(document.getElementById("avg_speechiness").textContent),
-            avg_valence = parseFloat(document.getElementById("avg_valence").textContent),
-            avg_tempo = parseFloat(document.getElementById("avg_tempo").textContent);
-
         // Audio features Line Chart
-        var ctxL_audio = document.getElementById("audio_features_linechart").getContext("2d");
+        var ctxL_audio = document.getElementById("acousticness_linechart").getContext("2d");
         var myLineChart = new Chart(ctxL_audio, {
             type: "line",
             data: {
