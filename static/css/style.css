@@ -98,6 +98,27 @@ tbody#recent_tracks_table_body tr{
     padding: 0;
 }
 
+#picked_tracks_row{
+    display: none;
+}
+
+#main_top_tracks_row{
+    display: none;
+}
+
+#main_search_results_col{
+    display: none;
+}
+
+/* Features */
+#features_table_row{
+    display: none;
+}
+
+.noPaddingCard{
+    padding: 0;
+}
+
 /* Recommendations */
 #liked_song_alert{
   position: fixed;

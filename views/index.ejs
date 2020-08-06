@@ -1,6 +1,6 @@
 <%- include ("partials/header") %>
   <div class="container-fluid h-100">
-    <div class="row">
+    <div class="row" id="index_top_page">
       <div class="col">
         <a href="https://github.com/jayParent/track_finder" target="_blank"><i class="fab fa-github mt-3 ml-1"
           aria-hidden="true" id="gh_logo"></i></a>
@@ -21,10 +21,9 @@
               <img class="img-fluid" src="/imgs/landing_page_demo.png" alt="Image of App Demo">
             </div>
           </div>
-          <div class="row text-center text-white">
+          <div class="row text-center text-white mt-5">
             <div class="col">
-              <p class="lead">More Info</p>
-              <a href="#more_info_container" class="display-4"><i class="fas fa-arrow-down text-secondary"></i></a>
+              <a class="display-4" id="index_more_info_arrow"><i class="fas fa-arrow-down text-secondary"></i></a>
             </div>
           </div>
         </div>        
@@ -53,7 +52,7 @@
     </div>
     <div class="row justify-content-center my-5">
         <div class="col text-center text-white">
-          <a href="#top" class="display-4"><i class="fas fa-arrow-up text-secondary"></i></a>
+          <a class="display-4" id="index_get_started_arrow"><i class="fas fa-arrow-up text-secondary"></i></a>
           <p class="lead">Get Started</p>
         </div>
     </div>
@@ -63,3 +62,4 @@
       </div>
     </div>  
   </div>
+  <script src="/../scripts/landing.js"></script>

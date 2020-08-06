@@ -1,12 +1,63 @@
 // Selectors
-let topTracksBtn = document.getElementById("top_tracks_button"),
-  topTracksTable = document.getElementById("top_tracks_table"),
-  recentTracksTable = document.getElementById("recent_tracks_table"),
-  trackContainer = document.getElementById("picked_tracks"),
-  nextBtn = document.getElementById("next_btn_main"),
-  header = document.getElementById("time_header");
+const topTracksRow = document.getElementById("main_top_tracks_row");
+const topTracksBtn = document.getElementById("top_tracks_button")
+const topTracksTable = document.getElementById("top_tracks_table");
+const recentTracksTable = document.getElementById("recent_tracks_table");
 
-  topTracksBtn.addEventListener("click", getTopTracks);
+const trackContainer = document.getElementById("picked_tracks");
+
+const searchRow = document.getElementById("main_search_row");
+const searchForm = document.getElementById("search_track_form");
+const searchResultsCol = document.getElementById("main_search_results_col");
+const resultsTable = document.getElementById("main_results_table");
+
+const seeTracksBtn = document.getElementById("main_see_fav_tracks_btn");
+const backToSearch = document.getElementById("main_back_to_search_btn");
+
+const trackContainerRow = document.getElementById("picked_tracks_row");
+const nextBtn = document.getElementById("next_btn_main");
+const header = document.getElementById("time_header");
+
+const access_token = document.getElementById("access_token").innerHTML;
+
+topTracksBtn.addEventListener("click", getTopTracks);
+
+seeTracksBtn.addEventListener("click", () => {
+  searchRow.style.display = "none";
+  searchResultsCol.style.display = "none";
+  topTracksRow.style.display = "initial";
+});
+
+backToSearch.addEventListener("click", () => {
+  searchRow.classList.add("h-75");
+  searchRow.style.display = "flex";
+  topTracksRow.style.display = "none";
+});
+
+searchForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  let query = e.target[0].value;
+  let options = {
+    url: "https://api.spotify.com/v1/search?q=" + query + "&type=track&market=US&limit=10&offset=0",
+    headers: {
+      Authorization: "Bearer " + access_token,
+    },
+    json: true,
+  };
+
+  res = fetch(options.url, {headers: options.headers})
+    .then((res) => res.json())
+    .then(res => {console.log(res)})
+    .catch(err => {console.log(err)})
+  
+  fillResultsTable(res);
+});
+
+function fillResultsTable(res){
+  searchResultsCol.style.display = "initial";
+  searchRow.classList.remove("h-75");
+}
   
 // Fill content with top tracks when button is pressed
 function getTopTracks() {
@@ -31,6 +82,7 @@ let limit = 5,
 
 function addTrackForAnalysis(trackTitle) {
   nextBtn.style.display = "initial";
+  trackContainerRow.style.display = "initial";
   if (count < limit) {
     let btn = document.createElement("button"),
       title = trackTitle.innerHTML,
@@ -53,8 +105,10 @@ function addTrackForAnalysis(trackTitle) {
     trackTitles.push(title);
     trackContainer.appendChild(btn);
 
-    if(count === 0)
-      window.location.href = "#main_footer";
+    if(count === 0){
+      let view = document.getElementById("main_footer");
+      view.scrollIntoView({behavior: "smooth"});
+    }
       
     count++;
 
