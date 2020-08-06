@@ -89,7 +89,7 @@ function addTrackForAnalysis(trackTitle) {
       trackId = trackTitle.getAttribute("data-track-id");
 
     btn.innerHTML = title + " <i class='fas fa-times'></i>";
-    btn.classList = "btn btn-sm btn-outline-white font-weight-bold";
+    btn.classList = "btn btn-sm btn-outline-white font-weight-bold animated flipInX";
     
     btn.addEventListener("click", function () {
       trackContainer.removeChild(btn);
@@ -98,6 +98,7 @@ function addTrackForAnalysis(trackTitle) {
       count--;
       if (count === 0) {
         nextBtn.classList.add("disabled");
+        trackContainerRow.style.display = "none";
       }
     });
 
