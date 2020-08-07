@@ -152,7 +152,7 @@ function addTrackForAnalysis(trackTitle) {
 nextBtn.addEventListener("click", function () {
   let idString = "",
     titleString = "";
-
+    
   trackIds.forEach(function (trackId) {
     idString = idString + trackId + ",";
   });

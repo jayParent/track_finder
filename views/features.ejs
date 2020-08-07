@@ -85,24 +85,103 @@
                 </div>
             </div>
         </div>
-        <div class="row" style="height: 50vh;">
-            <div class="col-5 mx-auto">
-                <img src="/imgs/ud_mello.svg" alt="" class="img-fluid">
-            </div>
-            <div class="col-5 mx-auto">
-                <h1>Lorem ipsum dolor sit amet.</h1>
+        <div class="row mt-5 ml-lg-3">
+            <div class="col-lg-6">
+                <div class="jumbotron text-white bg-dark">
+                    <h1 class="display-4">Your Results!</h1>
+                    <p>When you have a better understanding of the features that make you love these <%= trackCount %> tracks, you may adjust the sliders to your liking, then get your recommendations.</p>
+                    <a href="" class="btn btn-secondary">See Details</a>
+                    <hr class="my-4">
+                    <p>
+                        <fieldset>
+                            <legend>If you don't care about all this and just want a new playlist, click here!</legend>
+                            <a class="btn btn-secondary" href="#" role="button">Easy Mode</a>
+                        </fieldset>
+                    </p>
+                  </div>
             </div>
         </div>
-        <div class="row" style="height: 50vh;">
-            <div class="col-5 mx-auto">
-                <h1>Lorem ipsum dolor sit amet.</h1>
+        <div class="row mt-5">
+            <div class="col-lg-6 mx-auto text-center text-white">
+                <h3>Average value for your <%= trackCount %> picked tracks</h3>
             </div>
-            <div class="col-5 mx-auto">
-                <img src="/imgs/ud_notes.svg" alt="" class="img-fluid">
+        </div>
+        <div class="row my-5 mx-5">
+            <div class="col-md-3 align-self-center mt-5">
+                <img src="/imgs/ud_acousticness.svg" alt="" class="img-fluid">
+            </div>
+            <div class="col-md-3 text-white text-center align-self-center mt-3">
+                <div class="card bg-dark">
+                    <div class="card-body">
+                        <canvas id="acousticness_pieChart"></canvas>
+                        <h6 class="my-3">Acousticness</h6>
+                        <p id="pie_chart_avg_acousticness"></p>
+                    </div>
+                </div>   
+            </div>
+            <div class="col-md-3 align-self-center mt-5">
+                <img src="/imgs/ud_dance.svg" alt="" class="img-fluid">
+            </div>
+            <div class="col-md-3 text-white text-center align-self-center mt-3">
+                <div class="card bg-dark">
+                    <div class="card-body">
+                        <canvas id="danceability_pieChart"></canvas>
+                        <h6 class="my-3">Danceability</h6>
+                        <p id="pie_chart_avg_danceability"></p>
+                    </div>
+                </div>  
+            </div>
+            <div class="col-md-3 align-self-center mt-5">
+                <img src="/imgs/ud_energy.svg" alt="" class="img-fluid">
+            </div>
+            <div class="col-md-3 text-white text-center align-self-center mt-3">
+                <div class="card bg-dark">
+                    <div class="card-body">
+                        <canvas id="energy_pieChart"></canvas>
+                        <h6 class="my-3">Energy</h6>
+                        <p id="pie_chart_avg_energy"></p>
+                    </div>
+                </div>     
+            </div>
+            <div class="col-md-3 align-self-center mt-5">
+                <img src="/imgs/ud_instrumentalness.svg" alt="" class="img-fluid">
+            </div>
+            <div class="col-md-3 text-white text-center align-self-center mt-3">
+                <div class="card bg-dark">
+                    <div class="card-body">
+                        <canvas id="instrumentalness_pieChart"></canvas>
+                        <h6 class="my-3">Instrumentalness</h6>
+                        <p id="pie_chart_avg_instrumentalness"></p>
+                    </div>
+                </div>     
+            </div>
+            <div class="col-md-3 align-self-center mt-5">
+                <img src="/imgs/ud_valence.svg" alt="" class="img-fluid">
+            </div>
+            <div class="col-md-3 text-white text-center align-self-center mt-3">
+                <div class="card bg-dark">
+                    <div class="card-body">
+                        <canvas id="valence_pieChart"></canvas>
+                        <h6 class="my-3">Valence (Happiness)</h6>
+                        <p id="pie_chart_avg_valence"></p>
+                    </div>
+                </div>          
+            </div>
+            <div class="col-md-3 align-self-center mt-5">
+                <img src="/imgs/ud_tempo.svg" alt="" class="img-fluid">
+            </div>
+            <div class="col-md-3 text-white text-center align-self-center mt-3">
+                <div class="card bg-dark">
+                    <div class="card-body">
+                        <canvas id="tempo_pieChart"></canvas>
+                        <h6 class="my-3">Tempo</h6>
+                        <p id="pie_chart_avg_tempo"></p>
+                    </div>
+                </div>  
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-6 mx-auto noPaddingCard">
+            <div class="col-lg-10 mx-auto noPaddingCard">
                 <div class="card bg-dark text-white text-center my-3">
                     <div class="card-header">
                         <h4 class="card-title">Audio Features</h4>
@@ -119,9 +198,9 @@
                 <div class="card bg-dark text-white text-center my-3">
                     <div class="card-header" id="checkbox_instructions">
                         <h2>What do you want the results to be based on?</h2>
-                        <i data-toggle="tooltip" data-placement="top"
+                        <!-- <i data-toggle="tooltip" data-placement="top"
                             title="For bext results, choose 3-5 features that you think impact your taste the most."
-                            class="far fa-question-circle tooltip-custom"></i>
+                            class="far fa-question-circle tooltip-custom"></i> -->
                     </div>
                     <div class="card-body">
                         <div class="btn-group btn-group-toggle flex-wrap" data-toggle="buttons">
@@ -178,13 +257,10 @@
                 danceabilityObj = document.getElementsByClassName("danceability"),
                 energyObj = document.getElementsByClassName("energy"),
                 instrumentalnessObj = document.getElementsByClassName("instrumentalness"),
-                livenessObj = document.getElementsByClassName("liveness"),
-                loudnessObj = document.getElementsByClassName("loudness"),
-                speechinessObj = document.getElementsByClassName("speechiness"),
                 valenceObj = document.getElementsByClassName("valence"),
                 tempoObj = document.getElementsByClassName("tempo");
 
-            let audioFeaturesAvg = { a: 0, d: 0, e: 0, ins: 0, li: 0, lo: 0, s: 0, v: 0, t: 0 }
+            let audioFeaturesAvg = { a: 0, d: 0, e: 0, ins: 0, v: 0, t: 0 };
 
             for (var i = 0; i < acousticnessObj.length; i++) {
                 var value = parseFloat(acousticnessObj[i].textContent);
@@ -195,12 +271,6 @@
                 audioFeaturesAvg.e += value;
                 value = parseFloat(instrumentalnessObj[i].textContent);
                 audioFeaturesAvg.ins += value;
-                value = parseFloat(livenessObj[i].textContent);
-                audioFeaturesAvg.li += value;
-                value = parseFloat(loudnessObj[i].textContent);
-                audioFeaturesAvg.lo += value;
-                value = parseFloat(speechinessObj[i].textContent);
-                audioFeaturesAvg.s += value;
                 value = parseFloat(valenceObj[i].textContent);
                 audioFeaturesAvg.v += value;
                 value = parseFloat(tempoObj[i].textContent);
@@ -210,9 +280,6 @@
             audioFeaturesAvg.d /= danceabilityObj.length;
             audioFeaturesAvg.e /= energyObj.length;
             audioFeaturesAvg.ins /= instrumentalnessObj.length;
-            audioFeaturesAvg.li /= livenessObj.length;
-            audioFeaturesAvg.lo /= loudnessObj.length;
-            audioFeaturesAvg.s /= speechinessObj.length;
             audioFeaturesAvg.v /= valenceObj.length;
             audioFeaturesAvg.t /= tempoObj.length;
 
@@ -224,9 +291,6 @@
         document.getElementById("avg_danceability").textContent = audioFeaturesAvg.d.toPrecision(3);
         document.getElementById("avg_energy").textContent = audioFeaturesAvg.e.toPrecision(3);
         document.getElementById("avg_instrumentalness").textContent = audioFeaturesAvg.ins.toPrecision(3);
-        document.getElementById("avg_liveness").textContent = audioFeaturesAvg.li.toPrecision(3);
-        document.getElementById("avg_loudness").textContent = audioFeaturesAvg.lo.toPrecision(3);
-        document.getElementById("avg_speechiness").textContent = audioFeaturesAvg.s.toPrecision(3);
         document.getElementById("avg_valence").textContent = audioFeaturesAvg.v.toPrecision(3);
         document.getElementById("avg_tempo").textContent = audioFeaturesAvg.t.toPrecision(3);
 
@@ -234,73 +298,8 @@
             avg_danceability = parseFloat(document.getElementById("avg_danceability").textContent),
             avg_energy = parseFloat(document.getElementById("avg_energy").textContent),
             avg_instrumentalness = parseFloat(document.getElementById("avg_instrumentalness").textContent),
-            avg_liveness = parseFloat(document.getElementById("avg_liveness").textContent),
-            avg_loudness = parseFloat(document.getElementById("avg_loudness").textContent),
-            avg_speechiness = parseFloat(document.getElementById("avg_speechiness").textContent),
             avg_valence = parseFloat(document.getElementById("avg_valence").textContent),
             avg_tempo = parseFloat(document.getElementById("avg_tempo").textContent);
-
-        // Audio features Line Chart
-        var ctxL_audio = document.getElementById("audio_features_linechart").getContext("2d");
-        var myLineChart = new Chart(ctxL_audio, {
-            type: "line",
-            data: {
-                labels: [
-                    "Acousticness",
-                    "Danceability",
-                    "Energy",
-                    "Instrumentalness",
-                    "Valence",
-                ],
-                datasets: [
-                    {
-                        label: "Average",
-                        data: [
-                            avg_acousticness,
-                            avg_danceability,
-                            avg_energy,
-                            avg_instrumentalness,
-                            avg_valence,
-                        ],
-                        borderColor: ["rgba(0, 0, 0)"],
-                        backgroundColor: "rgba(255, 255, 255, 0)",
-                        borderWidth: 3,
-                    },
-                ],
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            min: 0,
-                            max: 1,
-                            fontColor: "white"
-                        }
-                    }],
-                    xAxes: [{
-                        ticks: {
-                            fontColor: "white",
-                            autoSkip: false
-                        }
-                    }]
-                },
-                layout: {
-                    padding: {
-                        left: 0,
-                        right: 0,
-                        top: 0,
-                        bottom: 0
-                    }
-                },
-                legend: {
-                    labels: {
-                        fontColor: "white"
-                    }
-                }
-            },
-        });
 
         window.onload = function () {
             let trackItems = document.getElementsByClassName("trackItem");
@@ -532,6 +531,7 @@
             $("body").tooltip({ selector: '[data-toggle=tooltip]' });
         });
     </script>
+    <script src="/scripts/charts.js"></script>
 </body>
 
 </html>

@@ -207,11 +207,13 @@ app.get("/features/:access_token/:trackIds", function (req, res) {
         .then((res) => res.json())
         .then((res) => (titles = res))
         .then(function () {
+          let trackCount = trackIds.split(',').length;
           res.render("features", {
             tracks: data,
             titles: titles,
             access_token: access_token,
             trackIds: trackIds,
+            trackCount: trackCount
           });
         })
         .catch((err) => console.log(err));
