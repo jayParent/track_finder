@@ -12,7 +12,7 @@ app.set("view engine", "ejs");
 
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
-const redirect_uri = "http://localhost:8888/callback";
+const redirect_uri = "http://www.analyse-aud.io/callback";
 // http://www.analyse-aud.io/callback
 // http://localhost:8888/callback
 app.listen(port, function () {
@@ -334,8 +334,3 @@ app.get("/save/:trackId/:access_token", function (req, res) {
 app.get("*", function (req, res) {
   res.redirect("/");
 });
-
-// TODO
-// background color dropdown menu recommendations page
-// page for when acess token expires or use refresh token
-// [FEATURE] most perfect track on recommendations page with iframe to play it, calculate difference in audio features and pick best one 

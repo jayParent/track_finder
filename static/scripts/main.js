@@ -9,7 +9,9 @@ const trackContainer = document.getElementById("picked_tracks");
 const searchRow = document.getElementById("main_search_row");
 const searchForm = document.getElementById("search_track_form");
 const searchResultsCol = document.getElementById("main_search_results_col");
+
 const resultsTable = document.getElementById("main_results_table");
+const resultsTableBody = document.getElementById("main_results_tbody");
 
 const seeTracksBtn = document.getElementById("main_see_fav_tracks_btn");
 const backToSearch = document.getElementById("main_back_to_search_btn");
@@ -29,8 +31,8 @@ seeTracksBtn.addEventListener("click", () => {
 });
 
 backToSearch.addEventListener("click", () => {
-  searchRow.classList.add("h-75");
   searchRow.style.display = "flex";
+  searchRow.classList.remove("h-75");
   topTracksRow.style.display = "none";
 });
 
@@ -48,15 +50,42 @@ searchForm.addEventListener("submit", (e) => {
 
   res = fetch(options.url, {headers: options.headers})
     .then((res) => res.json())
-    .then(res => {console.log(res)})
+    .then((res) => fillResultsTable(res))
     .catch(err => {console.log(err)})
   
-  fillResultsTable(res);
 });
 
 function fillResultsTable(res){
   searchResultsCol.style.display = "initial";
   searchRow.classList.remove("h-75");
+  
+  while(resultsTableBody.firstChild){
+    resultsTableBody.removeChild(resultsTableBody.firstChild);
+  }
+
+  res.tracks.items.forEach(track => {
+    let row = document.createElement("tr");
+
+    let title = document.createElement("td");
+    setAttributes(title, {"class": "trackTitle", "data-track-id": track.id, "onclick": "addTrackForAnalysis(this)"});
+    title.textContent = track.name;
+
+    let artist = document.createElement("td");
+    let artists = [];
+    track.artists.forEach((a) => {
+      artists.push(a.name);
+    });
+    artist.textContent = artists.join(', ');
+
+    let album = document.createElement("td");
+    album.textContent = track.album.name;
+
+    row.appendChild(title);
+    row.appendChild(artist);
+    row.appendChild(album);
+    
+    resultsTableBody.appendChild(row);
+  });
 }
   
 // Fill content with top tracks when button is pressed
@@ -89,7 +118,7 @@ function addTrackForAnalysis(trackTitle) {
       trackId = trackTitle.getAttribute("data-track-id");
 
     btn.innerHTML = title + " <i class='fas fa-times'></i>";
-    btn.classList = "btn btn-sm btn-outline-white font-weight-bold animated flipInX";
+    btn.classList = "btn btn-sm btn-outline-white font-weight-bold animated fadeInDownBig";
     
     btn.addEventListener("click", function () {
       trackContainer.removeChild(btn);
@@ -97,8 +126,9 @@ function addTrackForAnalysis(trackTitle) {
       trackTitles.pop(title);
       count--;
       if (count === 0) {
-        nextBtn.classList.add("disabled");
+        nextBtn.style.display = "none";
         trackContainerRow.style.display = "none";
+        searchRow.classList.add("h-75");
       }
     });
 
