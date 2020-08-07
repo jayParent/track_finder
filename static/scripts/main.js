@@ -41,7 +41,7 @@ searchForm.addEventListener("submit", (e) => {
 
   let query = e.target[0].value;
   let options = {
-    url: "https://api.spotify.com/v1/search?q=" + query + "&type=track&market=US&limit=10&offset=0",
+    url: "https://api.spotify.com/v1/search?q=" + query + "&type=track,artist,album&market=US&limit=20&offset=0",
     headers: {
       Authorization: "Bearer " + access_token,
     },
@@ -128,7 +128,6 @@ function addTrackForAnalysis(trackTitle) {
       if (count === 0) {
         nextBtn.style.display = "none";
         trackContainerRow.style.display = "none";
-        searchRow.classList.add("h-75");
       }
     });
 
