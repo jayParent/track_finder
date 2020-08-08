@@ -90,12 +90,12 @@
                 <div class="jumbotron text-white bg-dark">
                     <h1 class="display-4">Your Results!</h1>
                     <p>When you have a better understanding of the features that make you love these <%= trackCount %> tracks, you may adjust the sliders to your liking, then get your recommendations.</p>
-                    <a href="" class="btn btn-secondary">See Details</a>
+                    <a class="btn btn-secondary" role="button" id="features_see_details_btn">See Details</a>
                     <hr class="my-4">
                     <p>
                         <fieldset>
                             <legend>If you don't care about all this and just want a new playlist, click here!</legend>
-                            <a class="btn btn-secondary" href="#" role="button">Easy Mode</a>
+                            <a class="btn btn-secondary" role="button" id="features_easy_mode_btn">Easy Mode</a>
                         </fieldset>
                     </p>
                   </div>
@@ -103,7 +103,7 @@
         </div>
         <div class="row mt-5">
             <div class="col-lg-6 mx-auto text-center text-white">
-                <h3>Average value for your <%= trackCount %> picked tracks</h3>
+                <h2 class="" id="see_details_view">Average value for your <%= trackCount %> picked tracks</h2>
             </div>
         </div>
         <div class="row my-5 mx-5">
@@ -114,8 +114,8 @@
                 <div class="card bg-dark">
                     <div class="card-body">
                         <canvas id="acousticness_pieChart"></canvas>
-                        <h6 class="my-3">Acousticness</h6>
-                        <p id="pie_chart_avg_acousticness"></p>
+                        <h6 class="my-3 font">Acousticness</h6>
+                        <p id="pie_chart_avg_acousticness" class="display-4 animated pulse slower infinite"></p>
                     </div>
                 </div>   
             </div>
@@ -127,7 +127,7 @@
                     <div class="card-body">
                         <canvas id="danceability_pieChart"></canvas>
                         <h6 class="my-3">Danceability</h6>
-                        <p id="pie_chart_avg_danceability"></p>
+                        <p id="pie_chart_avg_danceability" class="display-4 animated pulse slower infinite"></p>
                     </div>
                 </div>  
             </div>
@@ -139,7 +139,7 @@
                     <div class="card-body">
                         <canvas id="energy_pieChart"></canvas>
                         <h6 class="my-3">Energy</h6>
-                        <p id="pie_chart_avg_energy"></p>
+                        <p id="pie_chart_avg_energy" class="display-4 animated pulse slower infinite"></p>
                     </div>
                 </div>     
             </div>
@@ -151,7 +151,7 @@
                     <div class="card-body">
                         <canvas id="instrumentalness_pieChart"></canvas>
                         <h6 class="my-3">Instrumentalness</h6>
-                        <p id="pie_chart_avg_instrumentalness"></p>
+                        <p id="pie_chart_avg_instrumentalness" class="display-4 animated pulse slower infinite"></p>
                     </div>
                 </div>     
             </div>
@@ -163,7 +163,7 @@
                     <div class="card-body">
                         <canvas id="valence_pieChart"></canvas>
                         <h6 class="my-3">Valence (Happiness)</h6>
-                        <p id="pie_chart_avg_valence"></p>
+                        <p id="pie_chart_avg_valence" class="display-4 animated pulse slower infinite"></p>
                     </div>
                 </div>          
             </div>
@@ -175,7 +175,7 @@
                     <div class="card-body">
                         <canvas id="tempo_pieChart"></canvas>
                         <h6 class="my-3">Tempo</h6>
-                        <p id="pie_chart_avg_tempo"></p>
+                        <p id="pie_chart_avg_tempo" class="display-4 animated pulse slower infinite"></p>
                     </div>
                 </div>  
             </div>
@@ -532,6 +532,7 @@
         });
     </script>
     <script src="/scripts/charts.js"></script>
+    <script src="/scripts/features.js"></script>
 </body>
 
 </html>

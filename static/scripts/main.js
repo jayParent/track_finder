@@ -104,30 +104,34 @@ function getTopTracks() {
 }
 
 // Add or remove tracks from list to analyse
-let limit = 5,
-  count = 0,
-  trackIds = [],
-  trackTitles = [];
+let limit = 5;
+let count = 0;
+let trackIds = [];
+let trackTitles = [];
 
 function addTrackForAnalysis(trackTitle) {
   nextBtn.style.display = "initial";
   trackContainerRow.style.display = "initial";
-  if (count < limit) {
-    let btn = document.createElement("button"),
-      title = trackTitle.innerHTML,
-      trackId = trackTitle.getAttribute("data-track-id");
+  if (count < limit && !trackTitle.classList.contains("chosenTrack")) {
+    let btn = document.createElement("button");
+    let title = trackTitle.innerHTML;
+    let trackId = trackTitle.getAttribute("data-track-id");
+
+    trackTitle.classList.toggle("chosenTrack");
 
     btn.innerHTML = title + " <i class='fas fa-times'></i>";
-    btn.classList = "btn btn-sm btn-outline-white font-weight-bold animated fadeInDownBig";
+    btn.classList = "btn btn-sm btn-outline-white font-weight-bold chosenTrackBtn animated fadeInDownBig";
     
     btn.addEventListener("click", function () {
       trackContainer.removeChild(btn);
       trackIds.pop(trackId);
       trackTitles.pop(title);
+      trackTitle.classList.toggle("chosenTrack");
       count--;
       if (count === 0) {
         nextBtn.style.display = "none";
         trackContainerRow.style.display = "none";
+        searchRow.classList.add("h-75");
       }
     });
 
@@ -145,7 +149,17 @@ function addTrackForAnalysis(trackTitle) {
     if (count > 0) {
       nextBtn.classList.remove("disabled");
     }
+  }else if(count >= limit){
+    indicateTrackLimitReached();
   }
+}
+
+function indicateTrackLimitReached(){
+  let btns = document.getElementsByClassName("chosenTrackBtn");
+  btns.forEach(btn => {
+    btn.classList.remove("fadeInDownBig");
+    btn.classList.add("pulse");
+  });
 }
 
 // Send tracks for analysis

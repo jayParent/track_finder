@@ -1,7 +1,9 @@
 /* Global */
 html, body{
     background-color: #292929;
+    background-image: url("/imgs/bg.svg");
     height: 100%;
+    /* background by SVGBackgrounds.com */
 }
 
 #gh_logo{
@@ -110,6 +112,10 @@ tbody#recent_tracks_table_body tr{
     display: none;
 }
 
+.chosenTrack{
+    color: #1DB954;
+}
+
 /* Features */
 #features_table_row{
     display: none;
@@ -125,8 +131,9 @@ tbody#recent_tracks_table_body tr{
   z-index: 1;
 }
 
-@media screen and (max-width: 600px) {
-    /* #gh_logo{
-        display: none;
-    } */
-  }
+#iFrameContainer{
+    top: 0;
+    right: 0;
+    z-index: 99;
+    position: fixed;
+}

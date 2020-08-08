@@ -1,6 +1,7 @@
 <%- include ("partials/header") %>
+<div class="col" id="iFrameContainer"></div>
 <div class="container-fluid">
-    <div class="row">
+    <div class="row" id="recommendations_top_page">
         <div class="col">
             <div class="alert alert-info" role="alert" style="display: none;" id="liked_song_alert"></div>
         </div>
@@ -40,7 +41,7 @@
                     <div class="col text-center text-white my-3 animated fadeInLeft">
                         <h2>Create Playlist</h2>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-custom-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Type of Playlist
                             </button>
                             <div class="dropdown-menu">
@@ -69,7 +70,7 @@
                         <div class="card track-card bg-dark my-3 mx-auto text-center text-white animated fadeInUpBig"
                             id="track_card<%= i %>">
                             <div class="card-header">
-                                <h4><a href="" class="text-white"><%= recommendations.tracks[i].name %></a></h4>
+                                <h4><%= recommendations.tracks[i].name %></h4>
                                 <div style="display: none;" class="recommendation_uri"><%= recommendations.tracks[i].uri %></div>
                                 <p><%= recommendations.tracks[i].album.name %></p>
                                 <p data-toggle="tooltip" data-placement="top"
@@ -111,8 +112,7 @@
                                 <div class="container">
                                     <div class="row">
                                         <div class="col" id="<%= recommendations.tracks[i].id %>">
-                                            <button class="btn btn-sm btn-outline-secondary" onclick="getTrackIframe(this, this.parentElement)">Play Track</button>
-                                
+                                            <button class="btn btn-sm btn-outline-secondary" onclick="getTrackIframe(this, this.parentElement, iFrameContainer)">Play Track</button>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -133,7 +133,7 @@
     </div>
     <div class="row">
         <div class="col text-center text-dark my-3">
-          <a href="#top" class="display-4"><i class="fas fa-arrow-up text-secondary"></i></a>
+          <a class="display-4" id="recommendations_back_top_btn"><i class="fas fa-arrow-up text-secondary"></i></a>
           <p class="lead text-white">Back to Top</p>
         </div>
       </div>
@@ -156,6 +156,8 @@
     function goBack() {
         window.history.back();
     }
+
+    const iFrameContainer = document.getElementById("iFrameContainer");
 
     let createAllBtn = document.getElementById("create_all_button"),
         createGoodBtn = document.getElementById("create_good_button"),
@@ -329,12 +331,11 @@
         perfectCounter.innerHTML = perfectCount, goodCounter.innerHTML = goodCount, acceptableCounter.innerHTML = acceptableCount;
     }
 
-    function getTrackIframe(button, iFrameContainer){
+    function getTrackIframe(button, parentElement, iFrameContainer){
         let iFrame = document.createElement("iframe");
-        setAttributes(iFrame, { "src": "https://open.spotify.com/embed/track/" + iFrameContainer.id, "width": "300", "height": "80", "frameborder": "1",
+        setAttributes(iFrame, { "src": "https://open.spotify.com/embed/track/" + parentElement.id, "width": "300", "height": "80", "frameborder": "1",
                                 "allowtransparency": "true", "allow": "encrypted-media" });
         iFrameContainer.appendChild(iFrame);
-        button.style.display = "none";
     }
 
     window.onload = function () {
@@ -448,6 +449,7 @@
         $("body").tooltip({ selector: '[data-toggle=tooltip]' });
     });
 </script>
+<script src="/scripts/recommendations.js"></script>
 </body>
 
 </html>
