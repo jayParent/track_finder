@@ -335,6 +335,7 @@
         let iFrame = document.createElement("iframe");
         setAttributes(iFrame, { "src": "https://open.spotify.com/embed/track/" + parentElement.id, "width": "300", "height": "80", "frameborder": "1",
                                 "allowtransparency": "true", "allow": "encrypted-media" });
+        iFrameContainer.innerHTML = "";
         iFrameContainer.appendChild(iFrame);
     }
 
