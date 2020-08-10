@@ -244,13 +244,6 @@
     </div>
     </div>
     <script>
-        // Set multiple attributes at once on hmtl element
-        function setAttributes(element, attributes) {
-            for (var key in attributes) {
-                element.setAttribute(key, attributes[key]);
-            }
-        }
-
         // Calculate average audio features for picked tracks
         function calcAvgAudioFeatures() {
             let acousticnessObj = document.getElementsByClassName("acousticness"),
@@ -526,11 +519,8 @@
 
         nextBtn.addEventListener("click", sendData);
 
-        // For Bootstrap tooltip
-        $(document).ready(function () {
-            $("body").tooltip({ selector: '[data-toggle=tooltip]' });
-        });
     </script>
+    <script src="/scripts/scripts.js"></script>
     <script src="/scripts/charts.js"></script>
     <script src="/scripts/features.js"></script>
 </body>

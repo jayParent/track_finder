@@ -12,7 +12,7 @@ app.set("view engine", "ejs");
 
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
-const redirect_uri = "http://www.analyse-aud.io/callback";
+const redirect_uri = "http://localhost:8888/callback";
 // http://www.analyse-aud.io/callback
 // http://localhost:8888/callback
 app.listen(port, function () {
