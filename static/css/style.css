@@ -1,4 +1,8 @@
 /* Global */
+* {
+    font-family: 'Cairo', sans-serif;
+}
+
 html, body{
     background-color: #292929;
     background-image: url("/imgs/bg.svg");
