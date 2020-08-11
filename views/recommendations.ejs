@@ -144,13 +144,6 @@
     </div>
 </div>
 <script>
-    // Set multiple attributes at once on hmtl element
-    function setAttributes(element, attributes) {
-        for (var key in attributes) {
-            element.setAttribute(key, attributes[key]);
-        }
-    }
-
     // Back button
     document.getElementById("back_btn").addEventListener("click", goBack);
     function goBack() {
@@ -158,17 +151,16 @@
     }
 
     const iFrameContainer = document.getElementById("iFrameContainer");
-
-    let createAllBtn = document.getElementById("create_all_button"),
-        createGoodBtn = document.getElementById("create_good_button"),
-        createPerfectBtn = document.getElementById("create_perfect_button"),
-        likeBtns = document.getElementsByClassName("like_song_btn"),
-        savedAlert = document.getElementById("liked_song_alert");
+    const createAllBtn = document.getElementById("create_all_button");
+    const createGoodBtn = document.getElementById("create_good_button");
+    const createPerfectBtn = document.getElementById("create_perfect_button");
+    const likeBtns = document.getElementsByClassName("like_song_btn");
+    const savedAlert = document.getElementById("liked_song_alert");
 
     function createPlaylistUrl() {
         let trackUris = document.getElementsByClassName("recommendation_uri");
-        let createPlaylistUri = "",
-            featuresList = '<%= featuresList %>';
+        let createPlaylistUri = "";
+        let featuresList = '<%= featuresList %>';
         let access_token = '<%= access_token %>';
 
         // Perfect
@@ -444,12 +436,8 @@
         createPlaylistUrl();
         updateScoreCounters();
     }
-
-    // For Bootstrap tooltip
-    $(document).ready(function () {
-        $("body").tooltip({ selector: '[data-toggle=tooltip]' });
-    });
 </script>
+<script src="/scripts/scripts.js"></script>
 <script src="/scripts/recommendations.js"></script>
 </body>
 
