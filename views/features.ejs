@@ -245,15 +245,19 @@
     </div>
     <script>
         // Send data to next page
-        let nextBtn = document.getElementById("next_btn_features");
+        const access_token = '<%= access_token %>';
+        let trackIds = '<%= trackIds %>';
+        let queryString = "limit=40&seed_tracks=";
+        const nextBtn = document.getElementById("next_btn_features");
+        const easyModeBtn = document.getElementById("features_easy_mode_btn");
+
         let checkedBtnCount = 0;
+
+        nextBtn.addEventListener("click", sendData);
+        easyModeBtn.addEventListener("click", easyMode);
 
         function sendData() {
             if (checkedBtnCount > 0) {
-                let access_token = '<%= access_token %>';
-                let trackIds = '<%= trackIds %>';
-                let queryString = "limit=40&seed_tracks=";
-
                 trackIds += "&";
                 queryString += trackIds;
 
@@ -261,7 +265,7 @@
                 let featureDisplays = document.getElementsByClassName("feature-display");
                 let featureData = new Object();
                 for (var i = 0; i < featureDisplays.length; i++) {
-                    let key = featureDisplays[i].id;
+                    let key = featureDisplays[i].id.toLowerCase();
                     let value = parseFloat(featureDisplays[i].textContent);
                     featureData[key] = value;
                 }
@@ -273,8 +277,8 @@
                 queryString = queryString.slice(0, -1);
 
                 // Desired Audio features
-                let featuresList = "",
-                    checkBoxes = document.getElementsByTagName("input");
+                let featuresList = "";
+                let checkBoxes = document.getElementsByTagName("input");
 
                 for (var i = 0; i < checkBoxes.length; i++) {
                     if (checkBoxes[i].type === "checkbox" && checkBoxes[i].checked === true) {
@@ -286,8 +290,8 @@
                 let url = "/recommendations/" + access_token + "/" + queryString + "/" + featuresList + "/" + trackIds;
                 nextBtn.href = url;
             } else {
-                let instructions = document.getElementById("checkbox_instructions"),
-                    alert = document.createElement("h6");
+                let instructions = document.getElementById("checkbox_instructions");
+                let alert = document.createElement("h6");
                 alert.textContent = "Please select at least 1 audio feature.";
                 alert.setAttribute("class", "text-danger");
 
@@ -296,8 +300,30 @@
 
         }
 
-        nextBtn.addEventListener("click", sendData);
+        function easyMode() {
+            queryString += trackIds;
 
+            let audioFeatures = {
+                "danceability": audioFeaturesAvg.d, "energy": audioFeaturesAvg.e, "instrumentalness": audioFeaturesAvg.ins,
+                "valence": audioFeaturesAvg.v, "tempo": audioFeaturesAvg.t
+            };
+
+            let maxTempo = audioFeaturesAvg.t + 10;
+            let featuresList = ["Danceability", "Energy", "Instrumentalness", "Valence", "Tempo"];
+            featuresList = featuresList.join(', ');
+
+            const entries = Object.entries(audioFeatures);
+            for (const [key, value] of entries) {
+                if(key === "tempo"){
+                    queryString += `&target_${key.toLowerCase()}=${value}&max_${key.toLowerCase()}=${maxTempo}`;
+                }else{
+                    queryString += `&target_${key.toLowerCase()}=${value}&max_${key.toLowerCase()}=${value + 0.05}`;
+                }
+            }
+
+            let url = "/recommendations/" + access_token + "/" + queryString + "/" + featuresList + "/" + trackIds;
+            easyModeBtn.href = url;
+            }
     </script>
     <script src="/scripts/scripts.js"></script>
     <script src="/scripts/features.js"></script>
