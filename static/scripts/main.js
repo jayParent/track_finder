@@ -32,8 +32,11 @@ seeTracksBtn.addEventListener("click", () => {
 
 backToSearch.addEventListener("click", () => {
   searchRow.style.display = "flex";
-  searchRow.classList.remove("h-75");
   topTracksRow.style.display = "none";
+  
+  if(count > 0){
+    searchRow.classList.remove("h-75");
+  }
 });
 
 searchForm.addEventListener("submit", (e) => {
