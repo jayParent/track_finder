@@ -192,11 +192,11 @@
 
     function alertCreatedPlaylist(id) {
         if (id === "create_perfect_button") {
-            savedAlert.textContent = 'Playlist Created with only "Perfect" Tracks!';
+            savedAlert.textContent = 'Liste de lecture crée avec chansons "Parfaites"!';
         } else if (id === "create_good_button") {
-            savedAlert.textContent = 'Playlist Created with both "Perfect" & "Good" Tracks!';
+            savedAlert.textContent = 'Liste de lecture crée avec chansons "Parfaites" & "Bonnes"!';
         } else {
-            savedAlert.textContent = 'Playlist Created with All Tracks!';
+            savedAlert.textContent = 'Liste de lecture crée avec toutes les chansons!';
         }
         savedAlert.style.display = "initial";
         setTimeout(function () {
@@ -209,7 +209,7 @@
     createAllBtn.addEventListener("click", function () { alertCreatedPlaylist(this.id); });
 
     function alertSavedTrack() {
-        savedAlert.textContent = 'Track Saved to "Liked Songs" on Spotify!';
+        savedAlert.textContent = 'Chanson ajoutée à "Liked Songs" sur Spotify!';
         savedAlert.style.display = "initial";
         setTimeout(function () {
             savedAlert.style.display = "none";
