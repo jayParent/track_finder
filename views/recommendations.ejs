@@ -18,13 +18,13 @@
                 <div class="row">
                     <div class="col">
                         <!-- Recommendations header -->
-                        <h1>Recommendations</h1>
+                        <h1>Recommandations</h1>
                         <h4>
                             <span class="custom-green">
-                                <span id="perfect_qty">0</span> Perfect -
+                                <span id="perfect_qty">0</span> Parfaites -
                             </span>
                             <span class="custom-yellow">
-                                <span id="good_qty">0 </span> Good -
+                                <span id="good_qty">0 </span> Bonnes -
                             </span>
                             <span class="custom-red">
                                 <span id="acceptable_qty">0</span> Acceptable
@@ -34,25 +34,24 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <a class="btn btn-secondary" id="back_btn">Change Parameters</a>
+                        <a class="btn btn-secondary" id="back_btn">Changer Paramètres</a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col text-center text-white my-3 animated fadeInLeft">
-                        <h2>Create Playlist</h2>
+                        <h2>Créer une list de lecture</h2>
                         <div class="btn-group">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Type of Playlist
+                            Type de liste de lecture
                             </button>
                             <div class="dropdown-menu">
-                                <span class="dropdown-header">Tracks to Include in Playlist</span>
-                                <a href="" class="dropdown-item" id="create_perfect_button">Only
-                                    Perfect</a>
+                                <span class="dropdown-header">Chansons à inclure</span>
+                                <a href="" class="dropdown-item" id="create_perfect_button">Parfaites seulement</a>
                                 <div class="dropdown-divider"></div>
-                                <a href="" class="dropdown-item" id="create_good_button">Perfect &
-                                    Good</a>
+                                <a href="" class="dropdown-item" id="create_good_button">Parfaites &
+                                    Bonnes</a>
                                 <div class="dropdown-divider"></div>
-                                <a href="" class="dropdown-item" id="create_all_button">All Tracks</a>
+                                <a href="" class="dropdown-item" id="create_all_button">Toutes</a>
                             </div>
                         </div>
                     </div>
@@ -112,14 +111,14 @@
                                 <div class="container">
                                     <div class="row">
                                         <div class="col" id="<%= recommendations.tracks[i].id %>">
-                                            <button class="btn btn-sm btn-outline-secondary" onclick="getTrackIframe(this, this.parentElement, iFrameContainer)">Play Track</button>
+                                            <button class="btn btn-sm btn-outline-secondary" onclick="getTrackIframe(this, this.parentElement, iFrameContainer)">Jouer</button>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col">
                                             <a href="/save/<%= recommendations.tracks[i].id %>/<%= access_token %>"
                                                 class="btn btn-sm btn-outline-secondary like_song_btn"><i
-                                                    class="fas fa-heart"></i> Add to "Liked Songs"</a>
+                                                    class="fas fa-heart"></i> Aimer</a>
                                         </div>
                                     </div>
                                 </div>
@@ -134,7 +133,7 @@
     <div class="row">
         <div class="col text-center text-dark my-3">
           <a class="display-4" id="recommendations_back_top_btn"><i class="fas fa-arrow-up text-secondary"></i></a>
-          <p class="lead text-white">Back to Top</p>
+          <p class="lead text-white">Retour en haut</p>
         </div>
       </div>
     <div class="row">

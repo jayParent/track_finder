@@ -88,14 +88,14 @@
         <div class="row mt-5 ml-lg-3">
             <div class="col-lg-6">
                 <div class="jumbotron text-white bg-dark">
-                    <h1 class="display-4">Your Results!</h1>
-                    <p>When you have a better understanding of the features that make you love these <%= trackCount %> tracks, you may adjust the sliders to your liking, then get your recommendations.</p>
-                    <a class="btn btn-secondary" role="button" id="features_see_details_btn">See Details</a>
+                    <h1 class="display-4">Tes résultats!</h1>
+                    <p>Une fois avoir mieux compris ce qui influence tes goûts musicaux, tu peux choisir les descriptifs appropriés et ajuster leur valeur. Les recommandations seront ensuite générées.</p>
+                    <a class="btn btn-secondary" role="button" id="features_see_details_btn">Plus de détails</a>
                     <hr class="my-4">
                     <p>
                         <fieldset>
-                            <legend>If you don't care about all this and just want a new playlist, click here!</legend>
-                            <a class="btn btn-secondary" role="button" id="features_easy_mode_btn">Easy Mode</a>
+                            <legend>Pour obtenir une liste de lecture avec les paramètres de base, clique ici!</legend>
+                            <a class="btn btn-secondary" role="button" id="features_easy_mode_btn">Mode Rapide</a>
                         </fieldset>
                     </p>
                   </div>
@@ -103,7 +103,7 @@
         </div>
         <div class="row mt-5">
             <div class="col-lg-6 mx-auto text-center text-white">
-                <h2 class="" id="see_details_view">Average value for your <%= trackCount %> picked tracks (Values range from 0 to 1)</h2>
+                <h2 class="" id="see_details_view">Valeurs moyennes pour tes <%= trackCount %> chansons choisis.</h2>
             </div>
         </div>
         <div class="row my-5 mx-5">
@@ -184,8 +184,8 @@
             <div class="col-lg-10 mx-auto noPaddingCard">
                 <div class="card bg-dark text-white text-center my-3">
                     <div class="card-header">
-                        <h4 class="card-title">Audio Features</h4>
-                        <h6>Click on a track to hide it</h6>
+                        <h4 class="card-title">Descriptifs</h4>
+                        <h6>Clique sur une chanson pour la cacher</h6>
                     </div>
                     <div class="card-body graph-card" style="padding: 0;">
                         <canvas id="audio_features_linechart" style="min-height: 50vh;"></canvas>
@@ -197,10 +197,7 @@
             <div class="col-lg-6 mx-auto noPaddingCard">
                 <div class="card bg-dark text-white text-center my-3">
                     <div class="card-header" id="checkbox_instructions">
-                        <h2>What do you want the results to be based on?</h2>
-                        <!-- <i data-toggle="tooltip" data-placement="top"
-                            title="For bext results, choose 3-5 features that you think impact your taste the most."
-                            class="far fa-question-circle tooltip-custom"></i> -->
+                        <h2>Sur quoi veux tu que les résultats soient basés?</h2>
                     </div>
                     <div class="card-body">
                         <div class="btn-group btn-group-toggle flex-wrap" data-toggle="buttons">
@@ -231,9 +228,9 @@
         </div>
         <div class="row">
             <div class="col text-center my-5">
-                <a class="btn btn-secondary font-weight-bold" id="back_btn">Back</a>
+                <a class="btn btn-secondary font-weight-bold" id="back_btn">Retour</a>
                 <a href="#checkbox_instructions" class="btn btn-secondary font-weight-bold"
-                    id="next_btn_features">Next</a>
+                    id="next_btn_features">Terminer</a>
             </div>
         </div>
         <div class="row">

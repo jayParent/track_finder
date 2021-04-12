@@ -53,7 +53,10 @@ function createPieChart(feature, featureValue){
 
 function setAverageFeatureValue(feature, featureValue){
     const avgFeature = document.getElementById("pie_chart_avg_" + feature);
-    avgFeature.textContent = featureValue.toPrecision(3);
+    if(feature != "tempo")
+      avgFeature.textContent = Math.floor(featureValue * 100) + "%";
+    else
+      avgFeature.textContent = featureValue.toPrecision(3);
 }
 
 // Audio features Line Chart

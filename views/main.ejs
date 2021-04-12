@@ -2,7 +2,7 @@
     <div class="container-fluid h-100">
         <div class="row">
             <div class="col text-center text-white mt-5">
-                <h1>Hello <%= profile.display_name.split(' ')[0] %>,  please pick up to 5 tracks.</h1>
+                <h1>Bonjour <%= profile.display_name.split(' ')[0] %>,  choisis jusqu’à 5 chansons.</h1>
                 <p id="access_token" style="display: none;"><%= access_token %></p>
             </div>
         </div>
@@ -11,12 +11,12 @@
                 <div class="card bg-dark">
                     <div class="card-body">
                         <form class="form-inline d-flex justify-content-center md-form form-sm active-purple-2 mt-2" id="search_track_form">
-                            <input class="form-control form-control-sm mr-3 w-75 text-white" type="text" placeholder="Search for a track, artist or album"
+                            <input class="form-control form-control-sm mr-3 w-75 text-white" type="text" placeholder="Rechercher une chanson, un artiste ou un album"
                             aria-label="Search">
-                            <button class="btn btn-sm btn-secondary">Search</button>
+                            <button class="btn btn-sm btn-secondary">Rechercher</button>
                         </form>
-                        <h6>Don't know what to search for?</h6>
-                        <button class="btn btn-secondary" id="main_see_fav_tracks_btn">See your favorite tracks</button>
+                        <h6>Tu ne sais pas quoi chercher?</h6>
+                        <button class="btn btn-secondary" id="main_see_fav_tracks_btn">Voir mes chansons les plus écoutées</button>
                     </div>
                 </div>
             </div>
@@ -71,7 +71,7 @@
                             <caption class="text-center text-white">Recent Top Tracks (last ~4 weeks)</caption>
                             <thead>
                                 <tr>
-                                    <th>Track Title</th>
+                                    <th>Title</th>
                                     <th>Artists</th>
                                     <th>Album</th>
                                 </tr>
